@@ -224,7 +224,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   		}
 		
 	$sql = "INSERT INTO `cr_settings` (`siteurl`, `owner`, `notificationemail`, `adminemailaddress`, `norehearsalemail`, `yesrehearsal`, `newusermessage`) VALUES
-('http://example.com/rota', 'A church', 'Dear [name]\r\n\r\nThis is a message to remind you that you are on the rota for the service on [date] in [location]\r\n\r\n[rehearsal]\r\n \r\nThis is how you currently appear on the rota: \r\n \r\n[rotaoutput]\r\n \r\nIf you have arranged a swap, please let us know.\r\n\r\nMany thanks for your continued service!\r\nChurch Support Staff\r\n \r\nThis is an automatically generated email. To view the whole rota, please go to [siteurl] and login with your username [username]', 'info@examplerota.com', 'There will be no rehearsal. Please come at 9.30 on Sunday morning for setup and soundcheck.', 'There will be a rehearsal for this service', 'Dear [name]\r\n\r\nThis email contains important information for you because you are on one or more teams at the church.\r\n\r\nYou have been added as a new user to the Church Rota system at [siteurl].\r\n\r\nYour user login details are as follows:\r\nUsername: [username]\r\nPassword: [password]\r\n\r\nPlease make sure your contact details are correct. We also recommend you immediately change your password to something unique and memorable.\r\n\r\nHave a look around. It''s designed to be very simple to use. One of the key features is that you can click on \"Show only my events\" for a condensed view showing only those events where you are scheduled to do something. If nothing shows up - lucky you! Maybe you would like to volunteer for something new?\r\n\r\nIf you have any questions, please feel free to get in contact with us.\r\n\r\nMany thanks for your continued service!\r\nKV Support Staff')";
+('http://example.com/rota', 'A church', 'Dear [name]\r\n\r\nThis is a message to remind you that you are on the rota for the service on [date] in [location]\r\n\r\n[rehearsal]\r\n \r\nThis is how you currently appear on the rota: \r\n \r\n[rotaoutput]\r\n \r\nIf you have arranged a swap, please let us know.\r\n\r\nMany thanks for your continued service!\r\nChurch Support Staff\r\n \r\nThis is an automatically generated email. To view the whole rota, please go to [siteurl] and login with your username [username]', 'info@examplerota.com', 'There will be no rehearsal. Please come at 9.30 on Sunday morning for setup and soundcheck.', 'There will be a rehearsal for this service', 'Dear [name]\r\n\r\nThis email contains important information for you because you are on one or more teams at the church.\r\n\r\nYou have been added as a new user to the Church Rota system at [siteurl].\r\n\r\nYour user login details are as follows:\r\nUsername: [username]\r\nPassword: [password]\r\n\r\nPlease make sure your contact details are correct. We also recommend you immediately change your password to something unique and memorable.\r\n\r\nHave a look around. It''s designed to be very simple to use. One of the key features is that you can click on \"Show only my events\" for a condensed view showing only those events where you are scheduled to do something. If nothing shows up - lucky you! Maybe you would like to volunteer for something new?\r\n\r\nIf you have any questions, please feel free to get in contact with us.\r\n\r\nMany thanks for your continued service!\r\nChurch Support Staff')";
 	if (!mysql_query($sql))
  	 	{
   		die('Error: ' . mysql_error());
@@ -316,7 +316,7 @@ include('includes/header.php');
 <div class="elementBackground">
 <h2>Welcome to the Church Rota</h2>
 <p>Thank you for choosing to install Church Rota. We have searched the database configuration files and have been able to connect,
-so we this is the last stage in the installation. Simply enter an administator username and password and you will be ready to go..</p>
+so this is the last stage in the installation. Simply enter an administator details and you will be ready to go...</p>
 
 <form action="install.php" method="post" id="addUser">
 		<fieldset>
@@ -327,7 +327,7 @@ so we this is the last stage in the installation. Simply enter an administator u
 			<input name="lastname" id="lastname" type="text"  placeholder="Enter last name" />
 			
 			<label for="email">Email:</label>
-			<input id="email" name="email" type="text" placeholder="Enter  email address" />
+			<input id="email" name="email" type="text" placeholder="Enter email address" />
 			
 			<label for="mobile">Mobile number:</label>
 			<input id="mobile" name="mobile" type="text"  placeholder="Enter their mobile number" />
@@ -344,15 +344,8 @@ so we this is the last stage in the installation. Simply enter an administator u
 <div id="right">
 
 </div>
-	
-<div id="footer">
-	<div id="footercontent">
-	Church management system powered by Church Rota.<br />
-	Church Rota is released under the <a href="license.php">GPL License</a> and is copyright &copy; David Bunce 2011.<br /></div>
-	</div>
-</div>
 
-</div>
-
-</body>
-</html>
+<? 
+$owner='A Church';
+$version='0.0.0';
+include('includes/footer.php'); ?>

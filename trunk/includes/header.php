@@ -17,18 +17,16 @@
     along with Church Rota.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <!DOCTYPE html>
+
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<title>Church Rota - <? echo $owner; ?></title>
 	<link rel="stylesheet" type="text/css" href="includes/style.css" />
 	<link rel="stylesheet" type="text/css" href="includes/jquery-ui.css" />
+	<link rel="stylesheet" type="text/css" href="css/reveal.css">
 	<script src="includes/jquery.js" language="javascript" type="text/javascript"></script>
-	<? if($formatting == "true") { ?>
-	<script src="includes/churchrota.js" language="javascript" type="text/javascript"></script>
-    <script src="includes/jquery.jeditable.js" language="javascript" type="text/javascript"></script>
-	<script src="includes/jquery-ui.js" language="javascript" type="text/javascript"></script>
-	<script src="includes/timepicker.js" language="javascript" type="text/javascript"></script>
+	<script src="includes/jquery.reveal.js" type="text/javascript"></script>
 	<script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -42,6 +40,13 @@
   })();
 
 </script>
+	<? if(isset($formatting) && $formatting == "true") { ?>
+	<script src="includes/churchrota.js" language="javascript" type="text/javascript"></script>
+    <script src="includes/jquery.jeditable.js" language="javascript" type="text/javascript"></script>
+	<script src="includes/jquery-ui.js" language="javascript" type="text/javascript"></script>
+	<script src="includes/timepicker.js" language="javascript" type="text/javascript"></script>
+	
+	
 	<script src="includes/tiny_mce/tiny_mce.js" type="text/javascript"></script>
 	<script type="text/javascript" >
 		tinyMCE.init({
@@ -63,7 +68,7 @@
 			timeFormat: 'hh:mm:ss'
 		});
 		
-		$('.edit_area').editable('<? echo $sendurl; ?>', {
+		$('.edit_area').editable('<? if(isset($sendurl)) echo $sendurl; ?>', {
 			type : 'textarea',
 			cancel    : 'Cancel',
         	 submit    : 'OK',
@@ -77,7 +82,7 @@
          		window.location.reload();
    			}
 		});
-		$('.edit').editable('<? echo $sendurl; ?>', {
+		$('.edit').editable('<? if(isset($sendurl)) echo $sendurl; ?>', {
 			"submitdata": function () {
 			return {
 				editableaction: 'edit',
@@ -99,7 +104,7 @@
 		$(document).ready(function()
 		{
   			$(".elementContent").hide();
-			<? if($hidefirst != true) { ?> 
+			<? if(isset($hidefirst) && $hidefirst != true) { ?> 
 			$(".elementContent:first").show()
 			$('.elementHead:first').removeClass('arrowwaiting').addClass('arrowactive'); 
 			<? } ?>
@@ -156,7 +161,7 @@
 </head>
 <body>
 <div id="toTop">
-Back to top
+<a href="#logo">Back to top</a>
 </div>
 
 <div id="container">
@@ -168,7 +173,6 @@ Back to top
 			
 			<li <?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='resources.php'? 'class="active"' : '');?> ><a href="resources.php">Resources</a></li>
 			<li <?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='discussion.php'? 'class="active"' : '');?>
-			<?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='discussiontopic.php'? 'class="active"' : '');?>><a href="discussion.php">Discussion</a></li>
 			<? if(!isAdmin()) { ?><li <?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='addUser.php'? 'class="active"' : '');?>><a href="addUser.php?action=edit&id=<? echo $_SESSION['userid']; ?>">My account</a></li><? } ?>
 			<? }
 			if(isAdmin()) { ?>

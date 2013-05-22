@@ -69,8 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$comment = trim($comment);
 	$comment = mysql_real_escape_string($comment);
 	$editbandID = $_POST['band'];
-	
-
 
 	if($action == "edit") {
 		$sql = "UPDATE cr_events SET date = '$date', rehearsalDate = '$rehearsaldateactual', location = '$location', 
@@ -100,28 +98,46 @@ if(isset($rehearsaldate)) {
 		
 		while($row =  mysql_fetch_array($result, MYSQL_ASSOC)) {
 			// We're going to put it all in a nice array called membersArray
-			$membersArray[]= $row['skillID'];
+			$membersArray[] = $row['skillID'];
 				}
 		
-		// Compare the event one way to notice what's new		
-		$addarray = array_diff($rehearsaldate, $membersArray); 
-			
-		while (list ($key, $valadd) = each ($addarray)) {
+		// Compare the event one way to notice what's new	
+		if(!empty($membersArray)) {
+			// Don't add empty things. Delete all members if there have been none sent back.
+	
+				$addarray = array_diff($rehearsaldate, $membersArray);
+				while (list ($key, $valadd) = each ($addarray)) {
 					addPeople($eventID, $valadd);
 				}
-		
-		// Compare the other way to notice what's disappeared	
-		$deletearray = array_diff($membersArray, $rehearsaldate);
+					// Compare the other way to notice what's disappeared	
+				$deletearray = array_diff($membersArray, $rehearsaldate);
+					
+				while (list ($key2, $valdelete) = each ($deletearray)) {
+						removeEventMember($eventID, $valdelete);
+				}
 			
-		while (list ($key2, $valdelete) = each ($deletearray)) {
-				removeEventMember($eventID, $valdelete);
+		} else { 
+			// Don't add empty things.
+			if(!empty($rehearsaldate)) {
+				$addarray = $rehearsaldate;
+				while (list ($key, $valadd) = each ($addarray)) {
+					addPeople($eventID, $valadd);
+				}
 			}
+		} 
+			
+		
+		
+		
 		
 	
+	} 
+	// Otherwise there was nothing in rehearsal date and we should just delete all people from the event
+	} else {
+		$delete_all_sql = "DELETE FROM cr_eventPeople WHERE eventID = '$eventID'";
+		mysql_query($delete_all_sql) or die(mysql_error());
 	}
-}
-	
-	 header ( "Location: index.php#section" . $eventID);
+	header ( "Location: index.php#section" . $eventID);
 }
 $formatting = "true";
 
@@ -132,49 +148,51 @@ include('includes/header.php');
 <div class="elementBackground">
 <h2>Create an Event</h2>
 
-	<form action="createEvent.php<? echo $formaction; ?>" method="post" id="createEvent">
+	<form action="createEvent.php<? if(isset($formaction)) echo $formaction; ?>" method="post" id="createEvent">
 		<fieldset>
 			<label for="date">Date:</label>
-			<input name="date" id="date" type="text" value="<? echo $date; ?>" placeholder="Enter event date" />
+			<input name="date" id="date" type="text" value="<? if(isset($date)) echo $date; ?>" placeholder="Enter event date" />
 			
 			<label for="norehearsal">Have this event without a rehearsal:</label>
-			<input name="norehearsal" id="norehearsal" type="checkbox" value="1"  <? if($norehearsal != 0) { echo 'checked="checked"'; }  else {   } ?>  />
+			<input name="norehearsal" id="norehearsal" type="checkbox" value="1"  <? if(isset($norehearsal) && $norehearsal != 0) { echo 'checked="checked"'; }  else {   } ?>  />
 			
 			<label for="rehearsaldateactual">Rehearsal Date:</label>
-			<input name="rehearsaldateactual" id="rehearsaldateactual" value="<? echo $rehearsalDate; ?>" type="text" placeholder="Enter rehearsal date" />
+			<input name="rehearsaldateactual" id="rehearsaldateactual" value="<? if(isset($rehearsalDate)) echo $rehearsalDate; ?>" type="text" placeholder="Enter rehearsal date" />
 			
 			<label for="location">Location:</label>
 			<select name="location" id="location">
-				<option value="<? echo $location; ?>"><? echo $locationname; ?></option>
-				<? $sql = "SELECT * FROM cr_locations";
+				<option value="<? if(isset($location)) echo $location; ?>"><? if(isset($locationname)) echo $locationname; ?></option>
+				<? 
+				$sql = "SELECT * FROM cr_locations";
 				$result = mysql_query($sql) or die(mysql_error());
 	
 				while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
-					if($row['id'] == $location) { }
+					if(isset($location) && $row['id'] == $location) { }
 					else { echo "<option value='" . $row['id'] . "'>" . $row['description'] . "</option>"; }
 				} ?>
 			</select>
 			
 			<label for="type">Type:</label>
 			<select name="type" id="type">
-				<option value="<? echo $type; ?>"><? echo $typename; ?></option>
-				<? $sql = "SELECT * FROM cr_eventTypes";
+				<option value="<? if(isset($type)) echo $type; ?>"><? if(isset($typename)) echo $typename; ?></option>
+				<? 
+				$sql = "SELECT * FROM cr_eventTypes";
 				$result = mysql_query($sql) or die(mysql_error());
 	
 				while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
-					if($row['id'] == $type) { }
+					if(isset($type) && $row['id'] == $type) { }
 					else { 	echo "<option value='" . $row['id'] . "'>" . $row['description'] . "</option>"; }
 				} ?>
 			</select>
 			
 			<label for="comment">Comments</label>
-			<textarea name="comment" class="mceNoEditor"><?php echo $comment; ?></textarea>
+			<textarea name="comment" class="mceNoEditor"><? if(isset($comment)) echo $comment; ?></textarea>
 			
 		</fieldset>
+		<input type="submit" value="Edit event" />
 		
-		<h2>Add people to the event:</h2>
 		<fieldset>
-					
+			<legend><h2>Add people to the event:</h2></legend>
 			<?
 				$sqlPeople = "SELECT *,
 				(SELECT CONCAT(`firstname`, ' ', `lastname`) FROM cr_users WHERE `cr_users`.id = `cr_skills`.`userID` ORDER BY `cr_users`.firstname) AS `name`, 
@@ -196,7 +214,7 @@ include('includes/header.php');
 						$usefulBits = "<br />";
 						}
 					
-					if($categoryheader == $viewPeople['category']) {
+					if(isset($categoryheader) && $categoryheader == $viewPeople['category']) {
 						// Do nothing, because we don't need a second category header
 						
 					} else {

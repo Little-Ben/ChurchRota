@@ -1,3 +1,66 @@
+Changelog of Church Rota
+========================
+
+   Please check sourceforge for updates
+   https://sourceforge.net/projects/churchrota/
+   
+   SVN (LATEST version!)
+   http://churchrota.svn.sourceforge.net/viewvc/churchrota?view=revision&revision=HEAD
+   
+   
+
 --------------------------------------------------------------------------------
-V1.0.0 - 2011-06-14
-- this is the initial version (churchrota.zip)
+V2.0.0 - SVN tag 2013-05-22_V2_0_0
+
+latest version by David Bunce (as a copy of a current installation)
+  - General view/functionality
+    + fixed: 'Back to Top' link
+    + new background image
+    + first item of a group (elementBackground) is no longer expanded 
+	  automatically	
+    + events and eventPeople are no longer deleted in database, 
+      instead they are marked as 'deleted'
+	+ new pop-up security question when deleting
+  - Main Menu 'Home' (index.php)
+    + added filter possibility for event types
+    + removed submenu: View all bands
+    + removed submenu: Add new band
+    + removed comboboxes 'Add individuals', 'Add bands'
+	+ only show events that are not marked deleted and event date > today
+  - Main Menu 'Discussion' (discussion.php)
+    + removed whole main menu
+  - Main Menu 'Users' (viewUsers.php)
+    + removed submenu: View Bands
+	+ added link: reset password (to 'churchrota')
+	+ added button: link "showOnlyMyEvents" for chosen user
+  - createEvent.php: 
+    + fixed: sorting problem of control boxes, now within correct group
+    + fixed: revoke 'make them an Admin', also revoked session admin rights 
+  - snapshot.php
+	+ only show events that are not marked deleted and event date > today
+	+ added filter possibility for event types
+	+ added Church Rota header (and menues, if user is logged in)
+
+modifications by Benjamin Schmitt (on top of David's work)
+  - Database update functionality
+    + includes/functions.database.php: database update functionality
+    + includes/functions.php: 
+        * include functions.database.php
+        * add variables owneremail and version
+    + login.php: calling database update functionality, 
+                 after having logged in as admin
+  - use owner variable again, instead of hardcoded church name/email
+    + footer.php: show version string, changed copyright string
+    + index.php: use owner / email variables 
+    + settings.php: 
+	    * insert editing of owner/organisation again
+		* use mysql_real_escape_string again
+    + install.php: 
+	    * remove hardcoded church name
+        * always give admin rights to first user		
+  - added CHANGELOG.txt - this file
+  - added INSTALL.txt - instruction steps for installation
+  
+--------------------------------------------------------------------------------
+V1.0.0 - SVN tag 2011-06-14_V1_0_0
+this is the initial version (churchrota.zip)

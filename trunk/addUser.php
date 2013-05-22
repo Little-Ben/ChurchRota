@@ -20,6 +20,14 @@ if($userremove == "true") {
 	removeUser($userID);
 }
 
+if($action == "reset") {
+	$new_password = md5('churchrota');
+	$sql = "UPDATE cr_users SET password = '$new_password' WHERE id = '$userID'";
+	$result = mysql_query($sql) or die(mysql_error); 
+
+	header('Location: viewUsers.php');
+}
+
 if($action == "edit") {
 	$sql = "SELECT * FROM cr_users WHERE id = '$userID'";
 	$result = mysql_query($sql) or die(mysql_error); 
@@ -34,6 +42,8 @@ if($action == "edit") {
 	}
 } 
 
+
+
 // If the form has been submitted, then we need to handle the data.
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	if(isAdmin()) {
@@ -46,8 +56,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	
 	$username = $firstnameLower.$lastnameLower;
 	
-	} 
-	
+	} else {
+		$firstnameLower = strtolower($firstname);
+		$lastnameLower = strtolower($lastname);
+		$username = $firstnameLower.$lastnameLower;
+	}
 	$email = $_POST['email'];
 	$email = strip_tags($email);
 	
@@ -163,7 +176,11 @@ VALUES ('$firstname', '$lastname', '$username', '$isAdmin', '$email', '$mobile',
 		
 		}
 	}
-	header ( "Location: viewUsers.php#section" . $userID);
+	if(isAdmin()):
+		header ( "Location: viewUsers.php#section" . $userID);
+    else :
+	header ( "Location: index.php ");
+	endif;
 } 
 include('includes/header.php');
 ?>
@@ -175,7 +192,7 @@ include('includes/header.php');
 	if($action == "edit") {
 		$formstring = "id=$userID&action=$action";
 	} else {
-		// $formstring = "id=$userID";
+		$formstring = "id=$userID";
 	}	
 
 ?>
@@ -246,18 +263,14 @@ include('includes/header.php');
 			$i = 1;
 			$position = 1;
 			while($row =  mysql_fetch_array($result, MYSQL_ASSOC)) {
-				$identifier = $row['id'];
+
 				$description = $row['description'];
 					
 					
 					if($row['inSkill'] != '') 
 					{ $checked =  'checked="checked"'; }  else { $checked = "";  }
 					
-					if($viewPeople['skill'] != "") {
-						$skill = " - <em>" . $viewPeople['skill'] . "</em>";
-					} else {
-						$skill = "";
-					}
+					
 					if($position == 2) {
 						echo "<div class='checkboxitem right'><label class='styled' for='rehearsaldate[" .  $row['groupID'] . "]'>" .
 						$row['description'] . "</em></label><input class='styled' " . $checked . "type='checkbox' id='rehearsaldate[" . 

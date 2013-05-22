@@ -81,8 +81,21 @@ include ('includes/header.php');
 					    if(isAdmin()) { 
 						echo "<p><strong>User actions:</strong><br />";
 							echo '<a href="addUser.php?action=edit&id=' . $id .'"><img src="graphics/tool.png" /></a> ' .
-							'<a href="addUser.php?userremove=true&&id=' . $id . '" class="delete"><img src="graphics/close.png" /></a>';
-							echo "</p>";
+							'<a href="index.php?showmyevents=' . $id . '"><img src="graphics/zoom.png" /></a> ';
+							?>
+							<a ref='#' data-reveal-id='deleteModal<?php echo $id; ?>' ><img src="graphics/close.png" /></a>
+							<br>
+							<a href="addUser.php?action=reset&id=<?php echo $id; ?>">Reset password</a>
+							</p>
+
+							
+							<div id="deleteModal<?php echo $id; ?>" class="reveal-modal">
+     							<h1>Really delete user?</h1>
+								<p>Are you sure you really want to delete <? echo $row['firstName'] . " " . $row['lastName']; ?> as a user? There is no way of undoing this action.</p>
+								<p><a class="button" href="addUser.php?userremove=true&id=<?php echo $id; ?>">Sure, delete the user</a></p>
+     							<a class="close-reveal-modal">&#215;</a>
+							</div>
+							<?
 						}
 			if($row['isAdmin'] == '1') { echo "<div class='isAdmin'><p>Administrator</p></div>"; } ?>
 		</div>		</div>
@@ -94,7 +107,7 @@ include ('includes/header.php');
 
 <div id="right">
 		<div class="item"><a href="addUser.php">Add a new user</a></div>
-		<div class="item"><a href="viewBands.php">View Bands</a></div>
+		
 	</div>
 	<? } ?>
 <? include('includes/footer.php'); ?>

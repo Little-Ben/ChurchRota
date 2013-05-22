@@ -82,13 +82,19 @@ function removeResource($id) {
 	mysql_query($query) or die(mysql_error());
 } 
 
+
+function removeEventMemberSkill($groupID, $userID) {
+	$query = "DELETE FROM cr_skills WHERE groupID = '$groupID' AND userID = '$userID'";
+	mysql_query($query) or die(mysql_error());
+} 
+
 function removeEventPeople($removeEventID, $removeSkillID) {
-	$query = "DELETE FROM cr_eventPeople WHERE eventID = '$removeEventID' AND skillID = '$removeSkillID'";
+	$query = "UPDATE cr_eventPeople SET deleted = 1 WHERE eventID = '$removeEventID' AND skillID = '$removeSkillID'";
 	mysql_query($query) or die(mysql_error());
 } 
 
 function removeEvent($removeWholeEvent) {
-	$query = "DELETE FROM cr_events WHERE id = '$removeWholeEvent'";
+	$query = "UPDATE cr_events SET deleted = 1 WHERE id = '$removeWholeEvent'";
 	mysql_query($query) or die(mysql_error());
 } 
 

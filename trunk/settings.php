@@ -28,8 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$yesrehearsal = $_POST['yesrehearsal'];
 	$yesrehearsal = mysql_real_escape_string($yesrehearsal);
 	$newusermessage = $_POST['newusermessage'];
-	$newusermessage = mysql_real_escape_string($newusermessage);
+	$newusermessage = mysql_real_escape_string($newusermessage);	
 	$owner = $_POST['owner'];
+
 	
 		// Update the database rather than insert new values
 		$sql = "UPDATE cr_settings SET siteurl = '$siteurl', notificationemail = '$notificationemail', adminemailaddress = '$siteadminemail', norehearsalemail = '$norehearsalemail', yesrehearsal = '$yesrehearsal', newusermessage = '$newusermessage', owner = '$owner'";
@@ -56,10 +57,9 @@ include('includes/header.php');
 		
 		while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 		?>
-		
 			<label class="owner" for="siteurl">Enter your organisation name:</label>
 			<input class="owner" name="owner" id="owner" type="text" value="<? echo $row['owner'];?>"  />
-			
+		
 			<label class="settings" for="siteurl">Enter URL of your website:</label>
 			<input class="settings" name="siteurl" id="siteurl" type="text" value="<? echo $row['siteurl'];?>"  />
 			

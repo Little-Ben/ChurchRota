@@ -19,8 +19,8 @@
 ?>
 <div id="footer">
 	<div id="footercontent">
-	<strong><? echo $owner; ?>:</strong> church management system powered by <a href="http://www.dodifferent.org.uk/churchrota">Church Rota</a>.<br />
-	Church Rota is released under the <a href="license.php">GPL License</a> and is copyright &copy; David Bunce 2011.<br /></div>
+	<strong><? echo $owner; ?>:</strong> church management system powered by <a href="https://sourceforge.net/projects/churchrota/">Church Rota</a> v.<?php echo $version; ?><br />
+	Church Rota is released under the <a href="license.php">GPL License</a> and is copyright &copy; David Bunce and Benjamin Schmitt in 2011-2013.<br /></div>
 	</div>
 </div>
 

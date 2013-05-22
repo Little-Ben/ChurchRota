@@ -69,7 +69,7 @@ function mailNewUser($firstname, $lastname, $email, $username, $password) {
 	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 		$message = $row['newusermessage'];
 		$siteurl = $row['siteurl'];
-		$siteadmin = $row['adminemailaddress'];
+		$sitadmin = $row['adminemailaddress'];
 	}
 		$name = $firstname . " " . $lastname;
 		$message = str_replace("[name]", $name, $message);
@@ -77,8 +77,8 @@ function mailNewUser($firstname, $lastname, $email, $username, $password) {
 		$message = str_replace("[password]", $password, $message);
 		$message = str_replace("[siteurl]", $siteurl, $message);
 		
-		$headers = 'From: ' . $siteadmin . "\r\n" .
-		'Reply-To: ' . $siteadmin . "\r\n";
+		$headers = 'From: ' .$row['siteadmin'] . "\r\n" .
+		'Reply-To: ' .$row['siteadmin'] . "\r\n";
 		
 		$subject = "Important information: New user account created";
 		
@@ -91,13 +91,23 @@ function mailNewUser($firstname, $lastname, $email, $username, $password) {
 }
 
 function emailTemplate($message, $name, $date, $location, $rehearsal, $rotaoutput, $username, $siteurl) {
+	$skillfinal = '';
 	$message = str_replace("[name]", $name, $message);
 	$message = str_replace("[date]", $date, $message);
 	$message = str_replace("[location]", $location, $message);
 	$message = str_replace("[rehearsal]", $rehearsal, $message);
-	$message = str_replace("[rotaoutput]", $rotaoutput, $message);
+	if(is_array($rotaoutput)):
+		foreach ($rotaoutput as $key => $skill):
+			$skillfinal = $skillfinal . $skill . '
+		';
+		endforeach;
+	else:
+		$skillfinal = $rotaoutput;
+	endif;
+	$message = str_replace("[rotaoutput]", $skillfinal, $message);
 	$message = str_replace("[siteurl]", $siteurl, $message);
 	$message = str_replace("[username]", $username, $message);
+	// echo '<p>' . $message . '</p>';
 	return $message;
 }
 
@@ -106,6 +116,7 @@ function notifyIndividual($userID, $eventID, $skillID) {
 	$query = "SELECT *,
 	(SELECT CONCAT(`firstname`, ' ', `lastname`) FROM cr_users WHERE `cr_users`.id = `cr_skills`.`userID` ORDER BY `cr_users`.firstname) AS `name`,
 	(SELECT email FROM cr_users WHERE `cr_users`.id = `cr_skills`.`userID`) AS `email`, 
+	(SELECT id FROM cr_users WHERE `cr_users`.id = `cr_skills`.`userID`) AS `userid`, 
 	(SELECT username FROM cr_users WHERE `cr_users`.id = `cr_skills`.`userID`) AS `username`,
 	(SELECT `notificationemail` FROM cr_settings ) AS `notificationmessage`, 
 	(SELECT `adminemailaddress` FROM cr_settings) AS `siteadmin`,
@@ -126,32 +137,33 @@ function notifyIndividual($userID, $eventID, $skillID) {
 	
 	while($row = mysql_fetch_array($userresult, MYSQL_ASSOC)) {
 	
-			$eventsql = "SELECT *, DATE_FORMAT(date,'%W, %M %e') AS sundayDate, DATE_FORMAT(rehearsalDate,'%W, %M %e @ %h:%i %p') AS rehearsalDateFormatted FROM cr_events WHERE id = $eventID ORDER BY date";
-			$eventresult = mysql_query($eventsql) or die(mysql_error());
+		$eventsql = "SELECT *, DATE_FORMAT(date,'%W, %M %e') AS sundayDate, DATE_FORMAT(rehearsalDate,'%W, %M %e @ %h:%i %p') AS rehearsalDateFormatted FROM cr_events WHERE id = $eventID ORDER BY date";
+		$eventresult = mysql_query($eventsql) or die(mysql_error());
 	
 		$location = $row['eventLocationFormatted'];
 		
-			while($eventrow = mysql_fetch_array($eventresult, MYSQL_ASSOC)) {
-				$date = $eventrow['sundayDate'];
-				
-				$rehearsaldate = $eventrow['rehearsalDateFormatted'];
-			}
+		while($eventrow = mysql_fetch_array($eventresult, MYSQL_ASSOC)) {
+			$date = $eventrow['sundayDate'];
 			
-			$identifier = $row['groupID'];
-			if($row['rehearsal'] == "1") {
-						if(($row['eventRehearsal'] == "0")  or ($row['eventRehearsalChange'] == "1")) { 
-							$rehearsal = $row['norehearsalemail'];
-						} else { 
-							$rehearsal = $row['yesrehearsal'] . " on " . $rehearsaldate . " at " . $location;
-						}
-					}
+			$rehearsaldate = $eventrow['rehearsalDateFormatted'];
+		}
 			
-			$skill = $row['category'];
-			if($row['joinedskill'] != "") {
-				$skill = $skill . " - " . $row['joinedskill'];
-			} else {
-				// If there is no skill, then we don't need to mention this fact.
+		$identifier = $row['groupID'];
+		if($row['rehearsal'] == "1") {
+			if(($row['eventRehearsal'] == "0")  or ($row['eventRehearsalChange'] == "1")) { 
+				$rehearsal = $row['norehearsalemail'];
+			} else { 
+				$rehearsal = $row['yesrehearsal'] . " on " . $rehearsaldate . " at " . $location;
 			}
+		}
+	
+		$skill = $row['category'];
+		if($row['joinedskill'] != "") {
+			$skill = $skill . " - " . $row['joinedskill'];
+		} else {
+			// If there is no skill, then we don't need to mention this fact.
+		}
+		$temp_user_id = $row['userid']; 
 			
 		$sql = "UPDATE cr_eventPeople SET notified = '1' WHERE skillID = '$skillID' AND eventID = '$eventID'"; 
 		mysql_query($sql) or die(mysql_error());
@@ -206,7 +218,7 @@ function notifyEveryone($eventID) {
 	$countarray = array();
 	
 	while($row = mysql_fetch_array($userresult, MYSQL_ASSOC)) {
-			
+			$skill = '';
 			$thisId = $row['updateid'];
 			if(in_array($thisId, $countarray)) {
 			
@@ -224,13 +236,31 @@ function notifyEveryone($eventID) {
 				$rehearsaldate = $eventrow['rehearsalDateFormatted'];
 				$type = $row['eventTypeFormatted'];
 			}
-			$skill = $row['category'];
-			if($row['joinedskill'] != "") {
-				$skill = $skill . " - " . $row['joinedskill'];
-			} else {
-				// If there is no skill, then we don't need to mention this fact.
+
+			$temp_user_id = $row['updateid']; 
+
+			$skillssql = "SELECT *
+			FROM cr_skills
+			LEFT JOIN cr_eventPeople
+			ON cr_skills.skillID = cr_eventPeople.skillID
+			LEFT JOIN cr_groups
+			ON cr_skills.groupID = cr_groups.groupID
+			WHERE cr_skills.userID = '$temp_user_id' AND cr_eventPeople.eventID = '$eventID'";
+
+			$skillsresult = mysql_query($skillssql) or die(mysql_error());
+
+
+			while($skillsrow = mysql_fetch_array($skillsresult, MYSQL_ASSOC)) {
+				if($skillsrow['skill'] == ''):
+					$skill[] = $skillsrow['description'];
+				else:
+					$skill[] = $skillsrow['description'] . ' - ' . $skillsrow['skill'];
+				endif;
+				
+
 			}
 			
+
 			$updateID = $row['updateid'];
 			
 					
@@ -261,12 +291,13 @@ function notifyEveryone($eventID) {
 		$countarray[] = $row['updateid'];
 		}
 	}
-	header( 'Location: index.php' ) ;
+	
 	$sql = "UPDATE cr_eventPeople SET notified = '1' WHERE eventID = '$eventID'"; 
 	mysql_query($sql) or die(mysql_error());
 			
-	$sql = "UPDATE cr_events SET notified = '1' WHERE eventID = '$eventID'"; 
+	$sql = "UPDATE cr_events SET notified = '1' WHERE id = '$eventID'"; 
 	mysql_query($sql) or die(mysql_error()); 
+	header( 'Location: index.php' ) ;
 }
 
 ?>

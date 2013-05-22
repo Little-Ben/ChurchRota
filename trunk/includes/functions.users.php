@@ -75,6 +75,12 @@ function removeTech($userid, $skillid) {
   	}
 }
 
+function addPeopleSkill($groupID, $userID) {
+	$query = "INSERT INTO cr_skills(groupID, userID) VALUES ('$groupID', '$userID')";
+	mysql_query($query) or die(mysql_error());
+} 
+
+
 function addOtherSkills($userid, $skillid) {
 	$sql = ("INSERT INTO cr_skills (userID, groupID) VALUES ('$userid', '$skillid')");
 	
