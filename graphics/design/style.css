@@ -1,0 +1,125 @@
+/* CSS Document */
+
+body { background: #bfeee2;
+font-family: Verdana, Arial, Helvetica, sans-serif; }
+
+#container { background: #7c6397;
+width: 960px;
+margin: 0 auto 0 auto;
+-webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;
+min-height: 600px;
+position: relative; }
+
+#header { background: #5f4863;
+-webkit-border-top-left-radius: 10px;
+-webkit-border-top-right-radius: 10px;
+-moz-border-radius-topleft: 10px;
+-moz-border-radius-topright: 10px;
+border-top-left-radius: 10px;
+border-top-right-radius: 10px;  
+height: 100px; }
+
+.elementBackground { width: 620px;
+background: #FFF;
+margin: 10px;
+padding: 10px;
+-webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px; }
+
+a#logo { position: absolute; 
+top: 40px;
+left: 10px; }
+
+#right { position: absolute; 
+top: 110px;
+right: 0px;
+width: 300px; }
+
+#right div.item { padding: 10px;
+background: #99c5d3;
+font-size: 14px;
+-webkit-border-top-left-radius: 10px;
+-webkit-border-bottom-left-radius: 10px;
+-moz-border-radius-topleft: 10px;
+-moz-border-radius-bottomleft: 10px;
+border-top-left-radius: 10px;
+border-bottom-left-radius: 10px;   
+line-height: 22px; 
+margin-bottom: 10px;}
+
+#right div.item a { text-decoration: none;
+color: #000; }
+
+#right div.item a:hover { text-decoration: underline;
+color: #000; }
+
+/* Text styling */
+h2 { font-size: 20px; 
+margin: 0px;
+padding: 0px;
+color: #5f4863;
+font-weight: normal;
+line-height: 22px; }
+
+p { font-size: 14px; 
+line-height: 22px; }
+
+/* Links */
+#header ul { margin: 0px;
+padding: 0px;
+position: absolute;
+top: 65px;
+font-size: 18px;
+right: 10px; }
+
+#header ul li { display: inline;
+margin-left: 20px; }
+
+#header ul li a { color: #FFF;
+text-decoration: none; }
+
+#header ul li a:hover { color: #bfeee2; }
+
+/* Form styling */
+.button {
+ 
+	/*basic styles*/
+	width: 250px;  height: 50px;  color: white; background-color: #99CF00;
+	text-align: center;  font-size: 30px;  line-height: 50px;
+ 
+ 
+	/*gradient styles*/
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#99CF00), to(#6DB700));
+	background: -moz-linear-gradient(19% 75% 90deg,#6DB700, #99CF00);
+ 
+	/*border styles*/
+	border-left: solid 1px #c3f83a;
+	border-top: solid 1px #c3f83a;
+	border-right: solid 1px #82a528;
+	border-bottom: solid 1px #58701b;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	-webkit-gradient(linear, 0% 0%, 0% 100%, from(#99CF00), to(#6DB700))
+ 
+}
+ 
+.button h3 {
+	font-size: 20px;
+	line-height: 35px;
+	font-family: helvetica, sans-serif;
+}
+ 
+.button p {
+	font-size: 12px;
+	line-height: 4px;
+	font-family: helvetica, sans-serif;
+}
+ 
+.button:hover {
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#6DB700), to(#99CF00));
+	background: -moz-linear-gradient(19% 75% 90deg,#99CF00, #6DB700);
+}
