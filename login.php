@@ -20,7 +20,12 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
       $_SESSION['userid'] = $row['id'];
       $_SESSION['name'] = $row['firstName'] . " " . $row['lastName'];
 	  
-   	// after login we move to the main page
+   	  //do database update if user is admin
+	  if ($_SESSION['isAdmin']==1) {
+		updateDatabase();
+	  }
+	  
+	  // after login we move to the main page
       header('Location: index.php'); // Move to the home page of the admin section
       exit;
       

@@ -37,10 +37,16 @@ $removeSkillID = $_GET['skillID'];
 $notifyIndividual = $_GET['notifyIndividual'];
 $notifyEveryone = $_GET['notifyEveryone'];
 $skillremove = $_GET['skillremove'];
+$eventremove = $_GET['eventremove'];
+$filter = $_GET['filter'];
 
 // Method to remove  someone from the band
-if($skillremove == "true") {
+if($eventremove == "true") {
 	removeEvent($removeWholeEvent);
+	header ( "Location: index.php#section" . $removeEventID);
+}
+
+if($skillremove == "true") {
 	removeEventPeople($removeEventID, $removeSkillID);
 	header ( "Location: index.php#section" . $removeEventID);
 }
@@ -99,33 +105,77 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 include('includes/header.php'); 
 
 if(isLoggedIn()) { 
-	if($showmyevents == "") {
-	$sql = "SELECT *, 
-	(SELECT `description` FROM cr_eventTypes WHERE cr_eventTypes.id = `cr_events`.`type`) AS eventType,
-	(SELECT `description` FROM cr_locations WHERE cr_locations.id = `cr_events`.`location`) AS eventLocation,
-	DATE_FORMAT(date,'%W, %M %e @ %h:%i %p') AS sundayDate, DATE_FORMAT(rehearsalDate,'%W, %M %e @ %h:%i %p') AS rehearsalDateFormatted 
-	FROM cr_events ORDER BY date";
+	?>
+
+	<div class="filterby">
+		<h2>Filter events by:</h2>
+		<p>
+		<?php
+		$filter_sql = "SELECT * FROM cr_eventTypes ORDER BY id";
+		$result = mysql_query($filter_sql) or die(mysql_error());
 	
+		while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+			?>
+			<a class="eventTypeButton
+				<?php
+					if($filter == $row['id']) {
+						echo "activefilter"; 
+					}
+				?>" href="index.php?filter=<?php echo $row['id']; ?>"><?php echo $row['description']; ?></a>
+			<?php
+		} 
+		?>
+	</p>
+	</div>
+	<?
+
+	if($showmyevents == "" && $filter == "") {
+		
+		$sql = "SELECT *, 
+			(SELECT `description` FROM cr_eventTypes WHERE cr_eventTypes.id = `cr_events`.`type`) AS eventType,
+			(SELECT `description` FROM cr_locations WHERE cr_locations.id = `cr_events`.`location`) AS eventLocation,
+			DATE_FORMAT(date,'%W, %M %e @ %h:%i %p') AS sundayDate, DATE_FORMAT(rehearsalDate,'%W, %M %e @ %h:%i %p') AS rehearsalDateFormatted 
+			FROM cr_events 
+			WHERE date >= DATE(NOW())
+			AND cr_events.deleted = 0
+			ORDER BY date";
+	} else if($filter != "") {
+
+		$sql = "SELECT *, 
+			(SELECT `description` FROM cr_eventTypes WHERE cr_eventTypes.id = `cr_events`.`type`) AS eventType,
+			(SELECT `description` FROM cr_locations WHERE cr_locations.id = `cr_events`.`location`) AS eventLocation,
+			DATE_FORMAT(date,'%W, %M %e @ %h:%i %p') AS sundayDate, DATE_FORMAT(rehearsalDate,'%W, %M %e @ %h:%i %p') AS rehearsalDateFormatted 
+			FROM cr_events 
+			WHERE `cr_events`.`type` = '$filter'
+			AND date >= DATE(NOW())
+			AND cr_events.deleted = 0
+			ORDER BY date";
 	} else {
-	$sql = "SELECT *,
-	(SELECT userID FROM cr_skills WHERE skillID = cr_eventPeople.skillID AND cr_skills.userID = '$showmyevents') AS skilluserID,
-	(SELECT groupID FROM cr_skills WHERE skillID = cr_eventPeople.skillID AND cr_skills.userID = '$showmyevents' AND cr_skills.userID) AS skillgroupID, 
-	(SELECT `description` FROM cr_groups WHERE skillgroupID = `cr_groups`.`groupID`) AS `description`,
-	(SELECT skill FROM cr_skills WHERE skillID = cr_eventPeople.skillID AND cr_skills.userID = '$showmyevents' AND cr_skills.userID) AS skill, 
-	(SELECT date FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID) AS date, 
-	(SELECT DATE_FORMAT(date,'%W, %M %e @ %h:%i %p') FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID ORDER BY date DESC) AS sundayDate, 
-	(SELECT DATE_FORMAT(rehearsalDate,'%W, %M %e @ %h:%i %p') FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID ) as rehearsalDateFormatted, 
-	(SELECT location FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID) as cr_eventsLocation, 
-	(SELECT comment FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID) as comment, 
-	(SELECT type FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID) as cr_eventsType,
-	(SELECT `description` FROM cr_eventTypes WHERE cr_eventTypes.id = cr_eventsType) AS eventType,
-	(SELECT `description` FROM cr_locations WHERE cr_locations.id = cr_eventsLocation) AS eventLocation,
-	(SELECT rehearsal FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID) as cr_eventsRehearsal
- 	FROM cr_eventPeople 
-	WHERE EXISTS (SELECT userID FROM cr_skills WHERE skillID = cr_eventPeople.skillID AND cr_skills.userID = '$showmyevents' AND cr_skills.userID)
-	AND EXISTS (SELECT DATE_FORMAT(date,'%W, %M %e @ %h:%i %p') FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID)
-	GROUP BY eventID
-	ORDER BY date";
+
+		$sql = "SELECT *,
+			(SELECT userID FROM cr_skills WHERE skillID = cr_eventPeople.skillID AND cr_skills.userID = '$showmyevents') AS skilluserID,
+			(SELECT groupID FROM cr_skills WHERE skillID = cr_eventPeople.skillID AND cr_skills.userID = '$showmyevents' AND cr_skills.userID) AS skillgroupID, 
+			(SELECT `description` FROM cr_groups WHERE skillgroupID = `cr_groups`.`groupID`) AS `description`,
+			(SELECT skill FROM cr_skills WHERE skillID = cr_eventPeople.skillID AND cr_skills.userID = '$showmyevents' AND cr_skills.userID) AS skill, 
+			(SELECT date FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID) AS date, 
+			(SELECT DATE_FORMAT(date,'%W, %M %e @ %h:%i %p') FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID ORDER BY date DESC) AS sundayDate, 
+			(SELECT DATE_FORMAT(rehearsalDate,'%W, %M %e @ %h:%i %p') FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID ) as rehearsalDateFormatted, 
+			(SELECT location FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID) as cr_eventsLocation, 
+			(SELECT comment FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID) as comment, 
+			(SELECT type FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID) as cr_eventsType,
+			(SELECT `description` FROM cr_eventTypes WHERE cr_eventTypes.id = cr_eventsType) AS eventType,
+			(SELECT `description` FROM cr_locations WHERE cr_locations.id = cr_eventsLocation) AS eventLocation,
+			(SELECT rehearsal FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID) as cr_eventsRehearsal
+
+		 	FROM cr_eventPeople 
+		 	INNER JOIN cr_events
+			ON cr_eventPeople.eventID = cr_events.id 
+			WHERE EXISTS (SELECT userID FROM cr_skills WHERE skillID = cr_eventPeople.skillID AND cr_skills.userID = '$showmyevents' AND cr_skills.userID)
+			AND EXISTS (SELECT DATE_FORMAT(date,'%W, %M %e @ %h:%i %p') FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID)
+			AND cr_events.date >= DATE(NOW())
+			AND cr_events.deleted = 0
+			GROUP BY eventID
+			ORDER BY date";
 	}
 	$result = mysql_query($sql) or die(mysql_error());
 	
@@ -152,7 +202,7 @@ if(isLoggedIn()) {
 					echo "<a href='index.php?notifyEveryone=true&eventID=$eventID'><img src='graphics/email.png' /></a> ";
 				}
 				
-				echo "<a class='delete' href='index.php?skillremove=true&wholeEventID=$eventID'><img src='graphics/close.png' /></a>"; 
+				echo "<a href='#' data-reveal-id='deleteModal".$eventID."'><img src='graphics/close.png' /></a>"; 
 			}?></h2>
 			<div class="elementHead arrowwaiting"><p><? if($rehearsal != "1") { ?><strong>Rehearsal:</strong> <? echo $row['rehearsalDateFormatted']; ?><br /><? } ?>
 			<strong>Location:</strong> <? echo $row['eventLocation']; ?><br />
@@ -164,7 +214,12 @@ if(isLoggedIn()) {
 				echo "</p></div>";
 				
 			} ?>
-			
+			<div id="deleteModal<?php echo $eventID; ?>" class="reveal-modal">
+     			<h1>Really delete event?</h1>
+				<p>Are you sure you really want to delete the event taking place on <?php echo $row['sundayDate']; ?>? There is no way of undoing this action.</p>
+				<p><a class="button" href="index.php?eventremove=true&wholeEventID=<?php echo $eventID; ?>">Sure, delete the event</a></p>
+     			<a class="close-reveal-modal">&#215;</a>
+			</div>
 			</div>
 			<div class="elementContent">
 			<table>
@@ -176,7 +231,8 @@ if(isLoggedIn()) {
 				(SELECT notified FROM cr_eventPeople WHERE cr_skills.skillID = cr_eventPeople.skillID AND eventID = '$eventID') AS `notified`, 
 				(SELECT `formatgroup` FROM cr_groups WHERE `cr_skills`.`groupID` = `cr_groups`.`groupID`) AS `formatgroup`, 
 				GROUP_CONCAT(skill) AS joinedskill
-				FROM cr_skills WHERE skillID IN (SELECT skillID FROM cr_eventPeople WHERE eventID = '$eventID') 
+				FROM cr_skills 
+				WHERE skillID IN (SELECT skillID FROM cr_eventPeople WHERE eventID = '$eventID' AND deleted = 0) 
 				GROUP BY userID, groupID ORDER BY groupID, name";
 				
 				$resultPeople = mysql_query($sqlPeople) or die(mysql_error());
@@ -185,7 +241,7 @@ if(isLoggedIn()) {
 				$categoryheader = "";
 				$formatgroup = 1;
 				$identifier = "1";
-				$firsttimme = 1;
+				$firsttime = 1;
 			?>
 			<tr>
 			<?php while($viewPeople = mysql_fetch_array($resultPeople, MYSQL_ASSOC)) {
@@ -219,7 +275,7 @@ if(isLoggedIn()) {
 						
 					} else {
 						$categoryheader = $viewPeople['category'];
-						if($firsttime == 1) {
+						if(isset($firsttime) && $firsttime == 1) {
 							echo "<td><p><strong>" . $categoryheader . "</strong><br />";
 							$i = 2;
 							$firsttime = 2;
@@ -265,66 +321,14 @@ if(isLoggedIn()) {
 				echo "<td></td>";
 			}
 			echo "</tr>	</table>";
-			if(isAdmin() && $showmyevents == "") {
-			$sqladdMembers = "SELECT *,
-				(SELECT CONCAT(`firstname`, ' ', `lastname`) FROM cr_users WHERE `cr_users`.id = `cr_skills`.`userID` ORDER BY `cr_users`.firstname) AS `name`
-				FROM cr_skills ORDER BY groupID";
-				$resultaddMembers = mysql_query($sqladdMembers) or die(mysql_error());
-				
 			?>
-			
-			<form id="viewEvents<?php echo $row['id']; ?>" action="index.php?event=<? echo  $row['id']; ?>" method="post">
-				<fieldset>
-					<label for="name">Add individuals:</label>
-					<select name="name" id="name">
-						<option></option>
-						<?
-			$sqladdMembers = "SELECT *,
-(SELECT CONCAT(`firstname`, ' ', `lastname`) FROM cr_users WHERE `cr_users`.id = `cr_skills`.`userID` ORDER BY `cr_users`.firstname) AS `name`, (SELECT `description` FROM cr_groups WHERE `cr_skills`.`groupID` = `cr_groups`.`groupID`) AS `category`
-FROM cr_skills  ORDER BY groupID, name";
-				$resultaddMembers = mysql_query($sqladdMembers) or die(mysql_error());
-			?>
-						<?php while($addMember = mysql_fetch_array($resultaddMembers, MYSQL_ASSOC)) {
-							$id = $addMember['groupID'];
-							$name = $addMember['name'];
-							
-							if($addMember['skill'] != "") {
-								$name = $name . " - " . $addMember['skill'];
-							} else {
-								// If there is no skill, then we don't need to mention this fact.
-							}
-							echo "<option value='" . $addMember['skillID'] . "'>" . $addMember['category'] . ": " .  $name . "</option>";
-						} ?>
-					</select>
-					
-					<label for="band">Add band:</label>
-					<select name="band" id="band">
-						<option></option>
-					<?
-					$sqlAddBands = "SELECT * FROM cr_bands";
-					$resultaddBands = mysql_query($sqlAddBands) or die(mysql_error());
-			
-					 while($addBand = mysql_fetch_array($resultaddBands, MYSQL_ASSOC)) {
-							echo "<option value='" . $addBand['bandID'] . "'>" . $addBand['bandLeader'] . "</option>";
-							
-						}
-					
-					?>
-					</select>
-					<br />
-					<input type="submit" value="Add member" />
-				</fieldset>		
-			</form>
-			<? 
-			}
-			 ?>
 				</div></div>
 	<?
 	}
 } else {
 ?>
 <div class="elementBackground">
-<h2>Welcome to <? echo $owner; ?> Rota</h2>
+<h2>Welcome to the <? echo $owner; ?> Rota</h2>
 <p>For privacy reasons, the rota is not available publically. If you attend the <? echo $owner; ?>, please login using your user details. 
 
 If you are unsure of your user details, please email <a href="mailto:<? echo $owneremail; ?>">the office</a> to request a reminder.</p>
@@ -337,8 +341,6 @@ If you are unsure of your user details, please email <a href="mailto:<? echo $ow
 <? if(isAdmin()) {?>
 		<div class="item"><a href="createEvent.php">Create a new event</a></div>
 		<div class="item"><a href="snapshot.php" target="_blank">Snapshot view</a></div>
-		<div class="item"><a href="viewBands.php">View all bands</a></div>
-		<div class="item"><a href="viewBands.php?action=newBand">Add a new band</a></div>
 		<? } ?>
 		<? if(isLoggedIn()) {
 			if($showmyevents == "") { ?>

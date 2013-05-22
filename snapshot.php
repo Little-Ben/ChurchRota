@@ -22,6 +22,8 @@
 include('includes/dbConfig.php');
 include('includes/functions.php');
 
+$filter = $_GET['filter'];
+
 // Start the session. This checks whether someone is logged in and if not redirects them
 session_start();
  
@@ -36,6 +38,48 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 	<title>Snapshot view</title>
 	<link rel="stylesheet" href="includes/style.css" type="text/css" />
 </head>
+<div id="header">
+		<a href="index.php" id="logo"><img src="graphics/logo.jpg" alt="Church Rota Logo" width="263" height="48" /></a>
+		<ul>
+			<? if(isLoggedIn()) { ?>
+			<li <?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='index.php'? 'class="active"' : '');?>><a  href="index.php">Home</a></li>
+			
+			<li <?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='resources.php'? 'class="active"' : '');?> ><a href="resources.php">Resources</a></li>
+			<li <?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='discussion.php'? 'class="active"' : '');?>
+			<? if(!isAdmin()) { ?><li <?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='addUser.php'? 'class="active"' : '');?>><a href="addUser.php?action=edit&id=<? echo $_SESSION['userid']; ?>">My account</a></li><? } ?>
+			<? }
+			if(isAdmin()) { ?>
+			<li <?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='viewUsers.php'? 'class="active"' : '');
+			echo (basename($_SERVER['SCRIPT_FILENAME'])=='addUser.php'? 'class="active"' : ''); ?> ><a href="viewUsers.php">Users</a></li>
+			<li <?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='settings.php'? 'class="active"' : '');
+			echo (basename($_SERVER['SCRIPT_FILENAME'])=='editeventtype.php'? 'class="active"' : '');
+			echo (basename($_SERVER['SCRIPT_FILENAME'])=='editSkills.php'? 'class="active"' : '');
+			echo (basename($_SERVER['SCRIPT_FILENAME'])=='locations.php'? 'class="active"' : '');?>><a  href="settings.php">Settings</a></li>
+			<? }  ?>
+		</ul>
+	</div>
+<div class="filtersnapshot">
+	<h1>Snapshot view</h1>
+		<h2>Filter events by:</h2>
+		<p>
+			<a class="eventTypeButton" href="snapshot.php">All</a>
+		<?php
+		$filter_sql = "SELECT * FROM cr_eventTypes ORDER BY id";
+		$result = mysql_query($filter_sql) or die(mysql_error());
+	
+		while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+			?>
+			<a class="eventTypeButton
+				<?php
+					if($filter == $row['id']) {
+						echo "activefilter"; 
+					}
+				?>" href="snapshot.php?filter=<?php echo $row['id']; ?>"><?php echo $row['description']; ?></a>
+			<?php
+		} 
+		?>
+	</p>
+	</div>
 <table class="snapshot">
 <tr>
 	<td ><strong>Date</strong></td>
@@ -51,11 +95,28 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 	}
 	
 
-	$sql = "SELECT *, 
-	(SELECT `description` FROM cr_eventTypes WHERE cr_eventTypes.id = `cr_events`.`type`) AS eventType,
-	(SELECT `description` FROM cr_locations WHERE cr_locations.id = `cr_events`.`location`) AS eventLocation,
-	DATE_FORMAT(date,'%M %e') AS sundayDate, DATE_FORMAT(rehearsalDate,'%W, %M %e @ %h:%i %p') AS rehearsalDateFormatted 
-	FROM cr_events ORDER BY date";
+	if( $filter == "") {
+		
+		$sql = "SELECT *, 
+			(SELECT `description` FROM cr_eventTypes WHERE cr_eventTypes.id = `cr_events`.`type`) AS eventType,
+			(SELECT `description` FROM cr_locations WHERE cr_locations.id = `cr_events`.`location`) AS eventLocation,
+			DATE_FORMAT(date,'%W, %M %e @ %h:%i %p') AS sundayDate, DATE_FORMAT(rehearsalDate,'%W, %M %e @ %h:%i %p') AS rehearsalDateFormatted 
+			FROM cr_events 
+			WHERE cr_events.date >= DATE(NOW())
+			AND cr_events.deleted = 0
+			ORDER BY date";
+	} else if($filter != "") {
+
+		$sql = "SELECT *, 
+			(SELECT `description` FROM cr_eventTypes WHERE cr_eventTypes.id = `cr_events`.`type`) AS eventType,
+			(SELECT `description` FROM cr_locations WHERE cr_locations.id = `cr_events`.`location`) AS eventLocation,
+			DATE_FORMAT(date,'%W, %M %e @ %h:%i %p') AS sundayDate, DATE_FORMAT(rehearsalDate,'%W, %M %e @ %h:%i %p') AS rehearsalDateFormatted 
+			FROM cr_events 
+			WHERE `cr_events`.`type` = '$filter'
+			AND cr_events.date >= DATE(NOW())
+			AND cr_events.deleted = 0
+			ORDER BY date";
+	} 
 	$result = mysql_query($sql) or die(mysql_error());
 	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 		$eventID = $row['id'];

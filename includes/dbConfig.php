@@ -12,7 +12,6 @@ $password = '';
 // Unless your host tells you differently, this should remain as 'localhost'
 $host = 'localhost';
 
-
 // CONFIGURATION COMPLETE. Please upload files and navigate to install.php
 
 // Connect to the database server

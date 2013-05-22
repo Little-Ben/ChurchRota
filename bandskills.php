@@ -26,10 +26,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	if($method == 'newtype') {
 	
-	$neweventtype = $_POST['neweventtype'];
-	$neweventtype = strip_tags($neweventtype);
+		$neweventtype = $_POST['description'];
+		$neweventtype = strip_tags($neweventtype);
 	
-	$sql = ("INSERT INTO cr_instruments (name) VALUES ('$neweventtype')");
+		$sql = ("INSERT INTO cr_instruments (name) VALUES ('$neweventtype')");
+	
 	if (!mysql_query($sql))
  	 	{
   		die('Error: ' . mysql_error());
@@ -72,8 +73,18 @@ include('includes/header.php');
 		echo "<a href='bandskills.php?eventtyperemove=true&eventtypeID=" . $row['id'] . "'><img src='graphics/close.png' /></a><br />"; 
 	 } ?>
      </fieldset>
-     <input type="submit" value="Save Band Skills" />
-	 </form></p>
+     
+	 </form>
+	 <h2>Add a new band instrument:</h2>
+	 <form action="bandskills.php?method=newtype" method="post">
+	 	<fieldset>
+	 		<p><label>New instrument:</label>
+	 		<input type="text" name="description" id="banddescription"/></p>
+	 	</fieldset>
+	 	<input type="submit" value="Add new skill" />
+	 </form>
+
+	</p>
 		
 	
 </div>
@@ -81,7 +92,6 @@ include('includes/header.php');
 if(isAdmin()) { ?>
 <div id="right">
 		<div class="item"><a href="settings.php">Back to settings</a></div>
-		<div class="item"><a href="createEvent.php">Create a new event</a></div>
 </div>
 <? } ?>
 <? include('includes/footer.php'); ?>
