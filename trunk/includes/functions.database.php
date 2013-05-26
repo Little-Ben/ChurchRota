@@ -51,7 +51,14 @@ function updateDatabase() {
 			executeDbSql("alter table cr_settings add(version varchar(20))");
 			
 			executeDbSql("update cr_settings set version = '2.0.0'");
-			break;
+			//break;
+			
+		case "2.0.0":
+			executeDbSql("update cr_settings set version = '2.0.1'");
+			break;			
+			
+			
+			
 	}
 	
 }
