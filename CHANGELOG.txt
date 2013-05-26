@@ -10,6 +10,10 @@ Changelog of Church Rota
    
 
 --------------------------------------------------------------------------------
+V2.0.1 - SVN tag 2013-05-26_V2_0_1 - Benjamin Schmitt
+- bugfix: sending email for new users was broken (includes/functions.mail.php)
+- update: version string (includes/functions.database.php)
+--------------------------------------------------------------------------------
 V2.0.0 - SVN tag 2013-05-22_V2_0_0
 
 latest version by David Bunce (as a copy of a current installation)

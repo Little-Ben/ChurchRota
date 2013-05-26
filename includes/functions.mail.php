@@ -69,7 +69,7 @@ function mailNewUser($firstname, $lastname, $email, $username, $password) {
 	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 		$message = $row['newusermessage'];
 		$siteurl = $row['siteurl'];
-		$sitadmin = $row['adminemailaddress'];
+		$siteadmin = $row['adminemailaddress'];
 	}
 		$name = $firstname . " " . $lastname;
 		$message = str_replace("[name]", $name, $message);
@@ -77,8 +77,8 @@ function mailNewUser($firstname, $lastname, $email, $username, $password) {
 		$message = str_replace("[password]", $password, $message);
 		$message = str_replace("[siteurl]", $siteurl, $message);
 		
-		$headers = 'From: ' .$row['siteadmin'] . "\r\n" .
-		'Reply-To: ' .$row['siteadmin'] . "\r\n";
+		$headers = 'From: ' .$siteadmin . "\r\n" .
+		'Reply-To: ' .$siteadmin . "\r\n";
 		
 		$subject = "Important information: New user account created";
 		
