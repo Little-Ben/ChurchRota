@@ -8,15 +8,22 @@ include('includes/functions.users.php');
 include('includes/functions.database.php');
 
 if($holdQuery != true) {
-$sql = "SELECT * FROM cr_settings";
-$result = mysql_query($sql) or die(mysql_error());
+	$sql = "SELECT * FROM cr_settings";
+	$result = mysql_query($sql) or die(mysql_error());
+
+
+	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+		$owner = $row['owner'];
+		$owneremail = $row['adminemailaddress'];
+		$version = $row['version'];	
+	}
+}else{
+		$owner = 'A Church';
+		$owneremail = '-';
+		$version = '0.0.0';	
 }
 
-while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
-	$owner = $row['owner'];
-	$owneremail = $row['adminemailaddress'];
-	$version = $row['version'];	
-}
+
 
 function isAdmin() {
 	if($_SESSION['isAdmin'] == "1") {
