@@ -12,7 +12,7 @@ Changelog of Church Rota
 --------------------------------------------------------------------------------
 V2.0.2 - SVN tag 2013-05-28_V2_0_2 - Benjamin Schmitt
 - bugfix install script (includes/functions.php)
-
+- update INSTALL.txt and rename to README.txt
 --------------------------------------------------------------------------------
 V2.0.1 - SVN tag 2013-05-26_V2_0_1 - Benjamin Schmitt
 - bugfix: sending email for new users was broken (includes/functions.mail.php)
