@@ -56,8 +56,8 @@ if($action == "update") {
 			executeDbSql("update cr_settings set time_format_normal = '%d.%m.%Y %H:%M '"); // de_DE: %d.%m.%Y %H:%M 
 			executeDbSql("update cr_settings set time_format_short = '%a, <strong>%e. %b</strong>, %R'");              // de_DE: %a, <strong>%e. %b</strong>, KW%V
 			executeDbSql("update cr_settings set time_zone = 'Europe/Berlin'"); //de_DE: Europe/Berlin
-			executeDbSql("update cr_settings set google_group_calendar = '5vokrij4fv8k011dcmt38rt7ik@group.calendar.google.com'"); 
-			executeDbSql("update cr_settings set overviewemail = '{{Gottesdienst-Planung [MONTH] [YEAR]}}\r\nHallo zusammen,\r\n\r\nanbei die Gottesdienst-Planung fuer [MONTH] [YEAR]\r\n\r\n[OVERVIEW]\r\n\r\nBitte fruehzeitig Bescheid geben, wenn etwas NICHT passt, ansonsten gehe ich davon aus, dass ihr wie geplant koennt.\r\n\r\nAlles Gute und Gottes Segen für Euch und Euren Dienst.\r\nLG Ben'"); 
+			executeDbSql("update cr_settings set google_group_calendar = ''"); 
+			executeDbSql("update cr_settings set overviewemail = '{{Gottesdienst-Planung [MONTH] [YEAR]}}\r\nHallo zusammen,\r\n\r\nanbei die Gottesdienst-Planung fuer [MONTH] [YEAR]\r\n\r\n[OVERVIEW]\r\n\r\nBitte fruehzeitig Bescheid geben, wenn etwas NICHT passt, ansonsten gehe ich davon aus, dass ihr wie geplant koennt.\r\n\r\nAlles Gute und Gottes Segen für Euch und Euren Dienst.\r\nEuer Gottesdienst Orga-Team'"); 
 		}
 		//else 
 		if ($rowSettings['lang_locale']=="de_DE")
@@ -68,7 +68,7 @@ if($action == "update") {
 			executeDbSql("update cr_settings set time_format_normal = '%m/%d/%y %I:%M %p'"); // de_DE: %d.%m.%Y %H:%M 
 			executeDbSql("update cr_settings set time_format_short = '%a, <strong>%b %e</strong>, %I:%M %p'");              // de_DE: %a, <strong>%e. %b</strong>, KW%V
 			executeDbSql("update cr_settings set time_zone = 'Europe/London'"); //de_DE: Europe/Berlin
-			executeDbSql("update cr_settings set google_group_calendar = '5vokrij4fv8k011dcmt38rt7ik@group.calendar.google.com'"); 
+			executeDbSql("update cr_settings set google_group_calendar = ''"); 
 			executeDbSql("update cr_settings set overviewemail = 'Hello,\r\n\r\nIn this email you find the Rota for [MONTH] [YEAR].\r\n\r\n[OVERVIEW]\r\n\r\nPlease inform us as soon as possible, if you are not able to serve as scheduled.\r\n\r\nBe blessed.\r\nChurch Support Stuff'"); 
 		}
 

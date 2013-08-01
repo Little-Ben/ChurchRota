@@ -88,7 +88,7 @@ function updateDatabase() {
 			executeDbSql("update cr_settings set version = '2.1.0'");			
 			executeDbSql("update cr_settings set users_start_with_myevents = 0");
 			executeDbSql("update cr_settings set time_zone = 'Europe/London'"); //de_DE: Europe/Berlin
-			executeDbSql("update cr_settings set google_group_calendar = '5vpkrij4fv8k011dcmt38rt7ik@group.calendar.google.com'"); 
+			executeDbSql("update cr_settings set google_group_calendar = ''"); 
 			executeDbSql("update cr_settings set overviewemail = 'Hello,\r\n\r\nIn this email you find the Rota for [MONTH] [YEAR].\r\n\r\n[OVERVIEW]\r\n\r\nPlease inform us as soon as possible, if you are not able to serve as scheduled.\r\n\r\nBe blessed.\r\nChurch Support Stuff'"); 
 			
 			notifyInfo(__FILE__,"db-update=" . $version . "->2.1.0",$_SESSION['userid']);
