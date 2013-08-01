@@ -15,6 +15,7 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 $action = $_GET['action'];
 $userID = $_GET['id'];
 $userremove = $_GET['userremove'];
+$sessionUserID = $_SESSION['userid'];
 
 if($userremove == "true") {
 	removeUser($userID);
@@ -39,6 +40,7 @@ if($action == "edit") {
 		$email = $row['email'];
 		$mobile = $row['mobile'];
 		$userisAdmin = $row['isAdmin'];
+		$userisOverviewRecipient = $row['isOverviewRecipient'];
 	}
 } 
 
@@ -72,23 +74,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	if(isset($_POST['isAdmin'])) 
 			{
-				$isAdmin = '1';
+				$isAdminLocal = '1';
 			}
 		else
 			{
-	    		$isAdmin = '0';
+	    		$isAdminLocal = '0';
 			}	
+			
+	if(isset($_POST['isOverviewRecipient'])) 
+			{
+				$userisOverviewRecipient = '1';
+			}
+		else
+			{
+	    		$userisOverviewRecipient = '0';
+			}	
+			
 	if($action == "edit") {
 		// Update the database rather than insert new values
-		$sql = "UPDATE cr_users SET firstName = '$firstname', lastName = '$lastname', username = '$username', isAdmin = '$isAdmin',
-		email = '$email', mobile = '$mobile' WHERE id = '$userID'";
+		$sql = "UPDATE cr_users SET firstName = '$firstname', lastName = '$lastname', username = '$username', isAdmin = '$isAdminLocal',
+		email = '$email', mobile = '$mobile', isOverviewRecipient = '$userisOverviewRecipient' WHERE id = '$userID'";
 	} else {
 		// Create a new record
 		$password = RandomPassword(8, true, true, true);
 		mailNewUser($firstname, $lastname, $email, $username, $password);
 		$passwordEncrypted = md5($password);
-	    $sql = ("INSERT INTO cr_users (firstName, lastName, username, isAdmin, email, mobile, password)
-VALUES ('$firstname', '$lastname', '$username', '$isAdmin', '$email', '$mobile', '$passwordEncrypted')");
+	    $sql = ("INSERT INTO cr_users (firstName, lastName, username, isAdmin, email, mobile, password,isOverviewRecipient)
+VALUES ('$firstname', '$lastname', '$username', '$isAdminLocal', '$email', '$mobile', '$passwordEncrypted', '$userisOverviewRecipient')");
 	}
 	
 	if (!mysql_query($sql))
@@ -176,11 +188,11 @@ VALUES ('$firstname', '$lastname', '$username', '$isAdmin', '$email', '$mobile',
 		
 		}
 	}
-	if(isAdmin()):
+	if(isAdmin()) {
 		header ( "Location: viewUsers.php#section" . $userID);
-    else :
-	header ( "Location: index.php ");
-	endif;
+	//}else{
+		//header ( "Location: addUser.php?action=edit&id=" . $userID);
+	}
 } 
 include('includes/header.php');
 ?>
@@ -198,7 +210,11 @@ include('includes/header.php');
 ?>
 <form action="addUser.php?<? echo $formstring; ?>" method="post" id="addUser">
 		<fieldset>
-			<? if(isAdmin()) { ?>
+			
+			<? 
+			if(isAdmin()) { 
+				$isCompromised=false;
+			?>
 			<label for="firstname">First name:</label>
 			<input name="firstname" id="firstname" type="text" value="<? echo $firstname; ?>" placeholder="Enter first name" />
 			
@@ -209,16 +225,30 @@ include('includes/header.php');
 			<input name="isAdmin" id="isAdmin" type="checkbox" value="1" <? if($userisAdmin == '1') { echo 'checked="checked"'; } 
 			else if($userisAdmin == '0') { }?> />
 			
+			<label for="isOverviewRecipient">Make them an Overview Recipient?:</label>
+			<input name="isOverviewRecipient" id="isOverviewRecipient" type="checkbox" value="1" <? if($userisOverviewRecipient == '1') { echo 'checked="checked"'; } 
+			else if($userisOverviewRecipient == '0') { }?> />
+			
 			<? } else {
-				echo $firstname . " " . $lastname;
-			} ?>
 			
+				if ($userID == $sessionUserID) {
+					echo $firstname . " " . $lastname;
+					$isCompromised=false;
+				}else{
+					notifyAttack(__FILE__,"Impersonating Attack",$sessionUserID);
+					$isCompromised=true;
+				}
+					
+			} 
 			
+			if (!$isCompromised) {
+			?>
 			<label for="email">Email:</label>
 			<input id="email" name="email" type="text" value="<? echo $email; ?>" placeholder="Enter their email address" />
 			
 			<label for="mobile">Mobile number:</label>
 			<input id="mobile" name="mobile" type="text" value="<? echo $mobile; ?>" placeholder="Enter their mobile number" />
+			<? } ?>
 		</fieldset>
 		<? if(isAdmin()) { ?>
         <fieldset>
@@ -254,6 +284,7 @@ include('includes/header.php');
            } ?>
         </fieldset>
 		
+		<fieldset>
         <h3>Other roles</h3>
         	<?			
 		$sql = "SELECT *, 
@@ -318,10 +349,12 @@ include('includes/header.php');
 			} ?>
         
         </fieldset>
-		<? if($action == "edit") {
-		echo '<input type="submit" value="Save changes" />';
-			} else { 
-				echo '<input type="submit" value="Add user" />';
+		<? if (!$isCompromised) {
+				if($action == "edit") {
+					echo '<input type="submit" value="Save changes" />';
+				} else { 
+					echo '<input type="submit" value="Add user" />';
+				}
 		} ?>
 	</form>
 </div>
@@ -330,8 +363,10 @@ include('includes/header.php');
 
 		<div class="item"><a href="viewUsers.php">View all users</a></div>
 		<? }
-		if($action == "edit") {		?>
-		<div class="item"><a href="editPassword.php?id=<? echo $id; ?>">Change password</a></div>
-<? } ?>
+		if (!$isCompromised) {
+			if($action == "edit") {		?>
+				<div class="item"><a href="editPassword.php?id=<? echo $id; ?>">Change password</a></div>
+			<? }
+		}?>
 </div>
 <? include('includes/footer.php'); ?>

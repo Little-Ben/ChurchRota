@@ -80,7 +80,7 @@ function mailNewUser($firstname, $lastname, $email, $username, $password) {
 		$headers = 'From: ' .$siteadmin . "\r\n" .
 		'Reply-To: ' .$siteadmin . "\r\n";
 		
-		$subject = "Important information: New user account created";
+		$subject = "Important information: New user account created for " . $name;
 		
 		mail($email, $subject, $message, $headers);
 		
@@ -298,6 +298,209 @@ function notifyEveryone($eventID) {
 	$sql = "UPDATE cr_events SET notified = '1' WHERE id = '$eventID'"; 
 	mysql_query($sql) or die(mysql_error()); 
 	header( 'Location: index.php' ) ;
+}
+
+
+function notifyOverview($subject,$message) {
+
+		//line seperator for mails
+		//rfc sais \r\n, but this makes trouble in outlook. several spaces plus \n works fine in outlook and thunderbird.
+		//spaces to suppress automatic removal of "unnecessary linefeeds" in outlook 2003
+		$crlf="      \n"; 
+
+		$sqlSettings = "SELECT * FROM cr_settings";
+		$resultSettings = mysql_query($sqlSettings) or die(mysql_error());
+		$rowSettings = mysql_fetch_array($resultSettings, MYSQL_ASSOC);
+		$lang_locale = $rowSettings[lang_locale];
+		$time_format_normal = $rowSettings[time_format_normal];
+		//$userTZ="Europe/Berlin";
+		$userTZ=$rowSettings[time_zone];
+		$google_group_calendar=$rowSettings[google_group_calendar];
+		$overviewemail = $rowSettings[overviewemail];
+		$siteadmin = $rowSettings[adminemailaddress];
+		
+		if ($subject=="")
+		{
+			if ($message=="")
+			{
+
+				//$message = 'Testmail aus notifyUserList';
+				//$siteurl = $row['siteurl'];
+				//$username = $row['username'];
+				//$name = $row['name'];
+				//$location = $row['eventLocationFormatted'];
+				//$rotaoutput = $skill;
+				//$to = 'rota_test@schmittendrin.de';
+				//$subject = "Rota Test: " ;
+				
+				$query="select id,DATE_FORMAT(date,'%m/%d/%Y %H:%i:%S') AS sundayDate,location,type,comment,group_concat(rota separator ' / ') as joinedskills
+				from (
+				select e.id,e.date, l.description location ,t.description type,e.comment,g.groupID,g.description, concat(u.firstname,' ',u.lastname) as name,CONCAT(substr(g.description,1,1), ': ', u.firstname,' ',u.lastname) as rota
+				from cr_eventPeople ep, cr_events e, cr_skills s, cr_groups g, cr_users u, cr_locations l, cr_eventTypes t
+				where ep.eventID=e.id
+				and ep.skillID = s.skillID
+				and s.groupID=g.groupID
+				and s.userID=u.id
+				and l.id=e.location
+				and t.id=e.type
+				and ((g.groupid in (10,11)) or (g.groupid=2 and u.firstname='Team'))
+				AND Year(e.date) = Year(Now())
+				AND (((Month(e.date) = Month(Now())) AND (Day(Now())<=20)) OR ((Month(e.date) = Month(Now())+1) AND (Day(Now())>20)))
+				order by date asc, groupID desc
+				) sub
+				group by date,id,location,type,comment";
+				$userresult = mysql_query($query) or die(mysql_error());
+				
+				//AND ((Month(e.date) = Month(Now())) OR (Month(e.date) = Month(Now())+1))
+				
+				setlocale(LC_TIME, $lang_locale); //de_DE
+				
+				$overview = "";
+				$sundayDate;
+				while($row = mysql_fetch_array($userresult, MYSQL_ASSOC)) {
+					$sundayDate = $row['sundayDate'];
+					$overview = $overview . strftime($time_format_normal,strtotime($row['sundayDate']));
+					$overview = $overview . " - ";
+					$overview = $overview . $row['joinedskills'];
+					$overview = $overview . " - ";
+					$overview = $overview . $row['type'];
+					////$overview = $overview . $crlf;
+					$overview = $overview . "\r\n";
+				
+				}
+				$message = $overviewemail;
+				////$message = str_replace("\r\n",$crlf,$message);		
+				$message = str_replace("[OVERVIEW]",$overview,$message);
+				
+				
+				$overviewMonth = strtoupper(strftime("%B",strtotime($sundayDate)));
+				$overviewYear = strftime("%Y",strtotime($sundayDate));
+				
+				$message = str_replace("[MONTH]",$overviewMonth,$message);
+				$message = str_replace("[YEAR]",$overviewYear,$message);
+				
+				
+				$msgArray = splitSubjectMessage("Rota Overview ".$overviewMonth." ".$overviewYear,$message);
+				$subject=$msgArray[0];
+				$message=$msgArray[1];
+				
+				return $msgArray;
+				//$message = emailTemplate($message, $name, $date, $location, $rehearsal, $rotaoutput, $username, $siteurl);
+			}
+		}
+		
+		$message = str_replace("\r\n",$crlf,$message); 	
+		$bcc = "";
+		$queryRcpt="select email from cr_users where isOverviewRecipient=1";
+		$resultRcpt = mysql_query($queryRcpt) or die(mysql_error());
+		$i=0;
+		while($rowRcpt = mysql_fetch_array($resultRcpt, MYSQL_ASSOC)) {
+			$bcc = $bcc . 'Bcc: ' .$rowRcpt[email] . $crlf;
+			$i=$i+1;
+		}
+		
+		//$to = '...';
+		$headers = 'From: ' .$siteadmin . $crlf .
+		'Reply-To: ' .$siteadmin . $crlf .
+		'Mime-Version: 1.0' . $crlf .
+		'Content-Type: text/plain; charset=ISO-8859-1' . $crlf .
+		'Content-Transfer-Encoding: quoted-printable' . $crlf;
+		
+		mail($siteadmin, $subject, $message, $headers.$bcc);
+		mail($siteadmin, "ADMIN COPY: " . $subject, $message.$crlf.$bcc,$headers);
+		
+		if ($i==1) 
+			return $i." mail have been sent.";
+		else
+			return $i." mails has been sent.";
+
+}
+
+function notifyAttack($fileName,$attackType,$attackerID) {
+
+	$query = "SELECT `siteurl`,
+	`adminemailaddress` AS `siteadmin`,
+	(SELECT CONCAT(`firstname`, ' ', `lastname`) FROM cr_users WHERE `cr_users`.id = $attackerID) AS `name`,
+	Now() AS `attackTime`
+	FROM cr_settings";
+	
+	$userresult = mysql_query($query) or die(mysql_error());
+	
+	while($row = mysql_fetch_array($userresult, MYSQL_ASSOC)) {
+
+		$subject = "SECURITY-ALERT - Attack blocked successfully";
+		$message =  "Type:\t\t " . $attackType . "<br>\r\n" . 
+					"Attacker:\t " . $row[name] . "<br>\r\n" .
+					"Date:\t\t " . date("Y-m-d H:i:s") . "<br>\r\n" .
+					"Script:\t\t " . $fileName . "\r\n " . "<br>\r\n" ;
+		
+		$headers = 'From: ' . $row['siteadmin'] . "\r\n" .
+		'Reply-To: ' . $row['siteadmin'] . "\r\n";
+		
+		$to = $row['siteadmin'];
+		
+		mail($to, $subject, strip_tags($message), $headers);
+		
+		echo $subject . "<br><br>";
+		echo $message . "<br>";
+		echo "An email about this incident was sent to administrator!";
+	}
+	header( 'Location: index.php' );	
+		
+}
+
+function notifyInfo($fileName,$infoMsg,$userID) {
+
+	$query = "SELECT `siteurl`,
+	`adminemailaddress` AS `siteadmin`,
+	(SELECT CONCAT(`firstname`, ' ', `lastname`) FROM cr_users WHERE `cr_users`.id = $userID) AS `name`
+	FROM cr_settings";
+	
+	$userresult = mysql_query($query) or die(mysql_error());
+	
+	while($row = mysql_fetch_array($userresult, MYSQL_ASSOC)) {
+
+		$subject = "[ChurchRota] Info - " . $infoMsg . " - " . $row[name] ;
+		$message =  "Type:\t\t " . $infoMsg . "<br>\r\n" . 
+					"User:\t\t " . $row[name] . "<br>\r\n" .
+					"Date:\t\t " . date("Y-m-d H:i:s") . "<br>\r\n" .
+					"Script:\t\t " . $fileName . "\r\n " . "<br>\r\n" ;
+		
+		$headers = 'From: ' . $row['siteadmin'] . "\r\n" .
+		'Reply-To: ' . $row['siteadmin'] . "\r\n";
+		
+		$to = $row['siteadmin'];
+		
+		mail($to, $subject, strip_tags($message), $headers);
+		
+	}
+	//header( 'Location: index.php' );	
+		
+}
+
+function splitSubjectMessage($defaultSubject,$message) {
+	if (preg_match("/(\{\{)((.)+){1}(\}\})/", $message, $matches)==1) 
+		{
+			$defaultSubject = $matches[2];
+			//$subject = str_replace(array("{{","}}"),"",$matches[0]);
+			$message = str_replace($matches[1].$matches[2].$matches[4],"",$message);
+			//$message = $matches[4];
+			
+		//$message = $message . "\r\n\r\n";
+		//$message = $message . "m0 ". $matches[0] . "\r\n";
+		//$message = $message . "m1 ". $matches[1] . "\r\n";
+		//$message = $message . "m2 ". $matches[2] . "\r\n";
+		//$message = $message . "m3 ". $matches[3] . "\r\n";
+		//$message = $message . "m4 ". $matches[4] . "\r\n";
+		//$message = $message . "m5 ". $matches[5] . "\r\n";
+		//$message = $message . "m6 ". $matches[6] . "\r\n";
+		//$message = $message . "m7 ". $matches[7] . "\r\n";
+		//$message = $message . "m8 ". $matches[8] . "\r\n";
+		//$message = $message . "m9 ". $matches[9] . "\r\n";
+		//$message = $message . "m10 ". $matches[10] . "\r\n";			
+			
+		}
+		return array($defaultSubject,$message);
 }
 
 ?>

@@ -92,6 +92,7 @@ include('includes/header.php');
 if(isAdmin()) { ?>
 <div id="right">
 		<div class="item"><a href="settings.php">Back to settings</a></div>
+		<div class="item"><a href="createEvent.php">Create a new event</a></div>
 </div>
 <? } ?>
 <? include('includes/footer.php'); ?>

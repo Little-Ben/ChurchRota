@@ -2,13 +2,74 @@ Changelog of Church Rota
 ========================
 
    Please check sourceforge for updates
-   https://sourceforge.net/projects/churchrota/
+   http://sourceforge.net/projects/churchrota/
    
-   SVN (LATEST version!)
-   http://churchrota.svn.sourceforge.net/viewvc/churchrota?view=revision&revision=HEAD
+   Code SVN Repository (LATEST = TRUNK)
+   http://sourceforge.net/p/churchrota/code/
    
-   
+   twitter: @ChurchRota  and  @ChurchRota_Dev
 
+--------------------------------------------------------------------------------   
+V2.1.0 - SVN tag 2013-08_01_V2_1_0 - Benjamin Schmitt 
+
+security fixes:
+- prevent user impersonating in "My Account" and in "Change password"
+- send mail to system admin when attack has happend
+- notify system admin via mail when updating database
+
+new functionalities (and corresponding options in settings):
+- optional sorting events in descending order (only index.php)
+- optional also show snapshot button for users
+- configurable language locales and formats for date/time 
+- Rota Overview mail (for a whole month)
+  + new flag for users "is Overview Recipient" (in user management)
+  + send mail for actual month (or next month if actual day > 20)
+  + preview page (with editing posibility)
+- Google calender export per event in snapshot (via URL)
+  + if logged in as normal user: only date, time, event type, location
+  + if logged in as admin user: same as user plus leader/preacher/band infos
+  + utf8-wrapper (for URL-encoding)
+  + field for Google Group Calendar ID (settings)
+  + Time Zone
+- optional reduce events to "show my events" direct after users login
+- optional reduce snapshot to max defined skill group of logged in user 
+  (not logged in => group 1), 
+  so the more sensitive a skill group should be, the higher set its skill group,
+  example: 
+    + band and host infos for not logged in users - group 1)
+    + leading info should require group 2 (including infos of group 1)
+    + preacher info only for users with group 3 rights (including groups 1+2)
+    + always all infos for admin users
+    -> a user with a skill defined for skill group 2 
+         * can see band, host and leading 
+         * but can not see preaching
+- optional only show actual month in snapshot,
+  also shows events of following month if actual day > 20 ("TwoMonthView") 
+- "array_combine" backport
+
+changes "behind the scenes":
+- send mail for rota overview
+- configurable mail subject, now introduced in overview mail: 
+  subject pattern needs to be in the first line of mail template,
+  surrounded by {{ }} - example: 
+     {{configurable subject}}
+     rest of 
+     mail message 
+  future development: include this feature to all mail templates
+- handling of password changing was broken (url post parameters)
+- repaired link for deleting a skill (editSkills.php)
+- removed file \graphics\design\maindesign.psd,
+  it was propably a design study and is not needed in running system,
+  deleted because of size (can be found in rev 7-15 of svn trunk)
+- removing admin flag of an user, does not remove own admin rights
+- subject of "New user mail" now includes new user's name
+
+ui changes:
+- introduced setting groups for different parts of settings
+- preview page (and editing possibility) for actual Rota Overview
+- add band instrument (already introduced with V.2.0.0)
+- only show initial letter of first name in snapshot 
+- first column of snapshot renamed "Date" ->  "Event"
 --------------------------------------------------------------------------------
 V2.0.2 - SVN tag 2013-05-28_V2_0_2 - Benjamin Schmitt
 - bugfix install script (includes/functions.php)

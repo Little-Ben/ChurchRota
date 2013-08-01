@@ -316,7 +316,7 @@ include('includes/header.php');
 <div class="elementBackground">
 <h2>Welcome to the Church Rota</h2>
 <p>Thank you for choosing to install Church Rota. We have searched the database configuration files and have been able to connect,
-so this is the last stage in the installation. Simply enter an administator details and you will be ready to go...</p>
+so this is the last stage in the installation. Simply enter an administator username and password and you will be ready to go...</p>
 
 <form action="install.php" method="post" id="addUser">
 		<fieldset>
