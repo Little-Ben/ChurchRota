@@ -14,8 +14,8 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 
 $action = $_GET['action'];
 $userID = $_SESSION['userid'];
-$id = $_GET['edit'];
-
+//$id = $_GET['edit'];
+$id = $_GET['id'];
 
 
 
@@ -28,11 +28,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$oldPassword = md5($oldPassword);
 		$checkPassword = md5($checkPassword);
 		// Check the password matches the old one
-		$sql = "SELECT * FROM cr_users WHERE id = '$userID' OR id = '$id'";
+		//$sql = "SELECT * FROM cr_users WHERE id = '$userID' OR id = '$id'";
+		$sql = "SELECT * FROM cr_users WHERE id = '$id'";
 		$result = mysql_query($sql) or die(mysql_error());
 		
 		while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
-			if($oldPassword == $row['password']) {
+			if(($oldPassword == $row['password'])||(isAdmin())) {
 				if($newPassword == $checkPassword) { 
 					$message = "Your password has been changed";
 					$status = "success";
@@ -48,13 +49,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		
 		
 		if($status == "success") {
-		// Update the database rather than insert new values
-		$sql = "UPDATE cr_users SET password = '$newPassword' WHERE id = '$userID'";
-	
-	if (!mysql_query($sql))
- 	 	{
-  		die('Error: ' . mysql_error());
-  		}
+			// Update the database rather than insert new values
+			//$sql = "UPDATE cr_users SET password = '$newPassword' WHERE id = '$userID'";
+			$sql = "UPDATE cr_users SET password = '$newPassword' WHERE id = '$id'";
+		
+			if (!mysql_query($sql))
+			{
+			die('Error: ' . mysql_error());
+			}
 		}
 } 
 include('includes/header.php');
@@ -63,11 +65,16 @@ include('includes/header.php');
 
 <div class="elementBackground">
 <h2>Edit password</h2>
+<?php
+	if (($userID == $id)||(isAdmin())) {
+?>
+
 <p><?php echo $message; ?></p>
 <form action="#" method="post" id="addUser">
 		<fieldset>
-			<label for="oldpassword">Old password:</label>
-			<input name="oldpassword" id="oldpassword" type="password"  />
+		<?php echo $firstname . " " . $lastname . "<br>"; ?>
+			<label for="oldpassword" ><?php if (!isAdmin()) { echo "Old password:"; }?></label>
+			<input name="oldpassword" id="oldpassword" <?php if (isAdmin()) { echo "type=\"hidden\""; }else{ echo "type=\"password\""; } ?> />
 			
 			<label for="newpassword">New password:</label>
 			<input name="newpassword" id="newpassword" type="password"  />
@@ -80,6 +87,12 @@ include('includes/header.php');
 			<input type="submit" value="Edit Password" />
 		</fieldset>
 	</form>
+<?php
+}else{
+	notifyAttack(__FILE__,"Password Change Attack",$userID);
+}
+?>	
+	
 </div>
 
 <div id="right">

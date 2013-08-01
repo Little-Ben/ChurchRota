@@ -24,14 +24,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$description = strip_tags($description);
 	
 	$sql = ("INSERT INTO cr_skills (userID, groupID, skill) VALUES ('$userID', '$groupID', '$description')");
-	echo $sql;
+	//V2.1.0//echo $sql;
 	if (!mysql_query($sql))
  	 	{
   		die('Error: ' . mysql_error());
   		}
 		
 	// After we have inserted the data, we want to head back to the main users page
-	 header('Location: bandskills.php'); // Move to the home page of the admin section
+	//V2.1.0// header('Location: bandskills.php'); // Move to the home page of the admin section
+	header('Location: viewUsers.php#section' . $userID); // Move to the home page of the admin section
       exit;
 }
 include('includes/header.php');

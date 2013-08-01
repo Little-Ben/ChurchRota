@@ -107,4 +107,14 @@ function updateInstruments($key, $description) {
   		die('Error: ' . mysql_error());
   	}
 }
+
+
+function utf8_wrapper($txt) {
+	if (!ini_get('default_charset')=='utf-8') {
+		return utf8_encode($txt);
+	}else{
+		return $txt;
+	}
+}
+
 ?>

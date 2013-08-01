@@ -58,7 +58,41 @@ function updateDatabase() {
 			
 		case "2.0.1":
 			executeDbSql("update cr_settings set version = '2.0.2'");
+		case "2.0.2":	
+			executeDbSql("create table cr_settings_bkp2_0_2 as select * from cr_settings");
 			
+			executeDbSql("alter table cr_settings add(lang_locale varchar(20))");
+			executeDbSql("alter table cr_settings add(event_sorting_latest int(1))");
+			executeDbSql("alter table cr_settings add(snapshot_show_two_month int(1))");
+			executeDbSql("alter table cr_settings add(snapshot_reduce_skills_by_group int(1))");
+			executeDbSql("alter table cr_settings add(logged_in_show_snapshot_button int(1))");
+			executeDbSql("alter table cr_settings add(time_format_long varchar(50))");
+			executeDbSql("alter table cr_settings add(time_format_normal varchar(50))");
+			executeDbSql("alter table cr_settings add(time_format_short varchar(50))");
+			executeDbSql("alter table cr_settings add(users_start_with_myevents int(1))");
+			executeDbSql("alter table cr_settings add(time_zone varchar(50))");
+			executeDbSql("alter table cr_settings add(google_group_calendar varchar(100))");
+			executeDbSql("alter table cr_users modify email varchar(255)");
+			executeDbSql("alter table cr_settings add(overviewemail text NOT NULL)");
+			executeDbSql("alter table cr_users add(isOverviewRecipient char(2) NOT NULL DEFAULT '0')");
+			executeDbSql("alter table cr_groups add(short_name char(2))");
+				
+			executeDbSql("update cr_settings set lang_locale = 'en_GB'");					 // de_DE
+			executeDbSql("update cr_settings set event_sorting_latest = 0");
+			executeDbSql("update cr_settings set snapshot_show_two_month = 0");
+			executeDbSql("update cr_settings set snapshot_reduce_skills_by_group = 0");
+			executeDbSql("update cr_settings set logged_in_show_snapshot_button = 0");
+			executeDbSql("update cr_settings set time_format_long = '%A, %B %e @ %I:%M %p'"); // de_DE: %A, %e. %B %Y, %R Uhr, KW%V
+			executeDbSql("update cr_settings set time_format_normal = '%m/%d/%y %I:%M %p'"); // de_DE: %d.%m.%Y %H:%M 
+			executeDbSql("update cr_settings set time_format_short = '%a, <strong>%b %e</strong>, %I:%M %p'");              // de_DE: %a, <strong>%e. %b</strong>, KW%V
+			executeDbSql("update cr_settings set version = '2.1.0'");			
+			executeDbSql("update cr_settings set users_start_with_myevents = 0");
+			executeDbSql("update cr_settings set time_zone = 'Europe/London'"); //de_DE: Europe/Berlin
+			executeDbSql("update cr_settings set google_group_calendar = '5vpkrij4fv8k011dcmt38rt7ik@group.calendar.google.com'"); 
+			executeDbSql("update cr_settings set overviewemail = 'Hello,\r\n\r\nIn this email you find the Rota for [MONTH] [YEAR].\r\n\r\n[OVERVIEW]\r\n\r\nPlease inform us as soon as possible, if you are not able to serve as scheduled.\r\n\r\nBe blessed.\r\nChurch Support Stuff'"); 
+			
+			notifyInfo(__FILE__,"db-update=" . $version . "->2.1.0",$_SESSION['userid']);
+				
 			break;			
 			
 			

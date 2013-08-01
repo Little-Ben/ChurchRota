@@ -105,14 +105,14 @@ include('includes/header.php');
 		echo '<input type="hidden" name="formindex[]" value="' . $row['groupID'] . '" />';
 		echo "<input name='description[]' value='" . $row['description'] . "' />";
 		
-		echo "<a href='editSkills.php?skillremove=true&skillID=" . $skillID . "'>";
+		//echo "<a href='editSkills.php?skillremove=true&skillID=" . $skillID . "'>";
 		echo " <a class='smalllink' href='editSkills.php?skillmove=true&value=" . $down . "&skillID=" . $skillID . "'>Down</a> ";
 		echo "<a class='smalllink' href='editSkills.php?skillmove=true&value=" . $up . "&skillID=" . $skillID . "'>Up</a> ";
 		?>
 		<a href="editsingleskill.php?id=<?php echo $skillID; ?>">
 		<img src='graphics/tool.png' /></a> 
 		<?php
-		echo "<img src='graphics/close.png' /></a><br />"; 
+		echo "<a href='editSkills.php?skillremove=true&skillID=" . $skillID . "'><img src='graphics/close.png' /></a><br />"; 
 	 } ?>
      </fieldset>
      <input type="submit" value="Update groups" /></p>

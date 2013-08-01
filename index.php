@@ -38,6 +38,7 @@ $notifyIndividual = $_GET['notifyIndividual'];
 $notifyEveryone = $_GET['notifyEveryone'];
 $skillremove = $_GET['skillremove'];
 $eventremove = $_GET['eventremove'];
+$notifyOverview = $_GET['notifyOverview'];
 $filter = $_GET['filter'];
 
 // Method to remove  someone from the band
@@ -49,6 +50,12 @@ if($eventremove == "true") {
 if($skillremove == "true") {
 	removeEventPeople($removeEventID, $removeSkillID);
 	header ( "Location: index.php#section" . $removeEventID);
+}
+
+if($notifyOverview == "true") {
+	//$msg = notifyOverview();
+	//header ( "Location: index.php");
+	header ( "Location: overview.php");
 }
 
 if($notifyEveryone == "true") {
@@ -105,6 +112,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 include('includes/header.php'); 
 
 if(isLoggedIn()) { 
+
+	$sqlSettings = "SELECT * FROM cr_settings";
+	$resultSettings = mysql_query($sqlSettings) or die(mysql_error());
+	$rowSettings = mysql_fetch_array($resultSettings, MYSQL_ASSOC);
+	
+	if ($rowSettings[event_sorting_latest]==1) {
+		$dateOrderBy = "date desc";
+	}else{
+		$dateOrderBy = "date asc";
+	}
+	
+	if ($rowSettings[logged_in_show_snapshot_button]==1) {
+		$logged_in_show_snapshot_button = "1";
+	}else{
+		$logged_in_show_snapshot_button = "0";
+	}
 	?>
 
 	<div class="filterby">
@@ -134,22 +157,22 @@ if(isLoggedIn()) {
 		$sql = "SELECT *, 
 			(SELECT `description` FROM cr_eventTypes WHERE cr_eventTypes.id = `cr_events`.`type`) AS eventType,
 			(SELECT `description` FROM cr_locations WHERE cr_locations.id = `cr_events`.`location`) AS eventLocation,
-			DATE_FORMAT(date,'%W, %M %e @ %h:%i %p') AS sundayDate, DATE_FORMAT(rehearsalDate,'%W, %M %e @ %h:%i %p') AS rehearsalDateFormatted 
+			DATE_FORMAT(date,'%m/%d/%Y %H:%i:%S') AS sundayDate, DATE_FORMAT(rehearsalDate,'%m/%d/%Y %H:%i:%S') AS rehearsalDateFormatted 
 			FROM cr_events 
 			WHERE date >= DATE(NOW())
 			AND cr_events.deleted = 0
-			ORDER BY date";
+			ORDER BY " . $dateOrderBy;
 	} else if($filter != "") {
 
 		$sql = "SELECT *, 
 			(SELECT `description` FROM cr_eventTypes WHERE cr_eventTypes.id = `cr_events`.`type`) AS eventType,
 			(SELECT `description` FROM cr_locations WHERE cr_locations.id = `cr_events`.`location`) AS eventLocation,
-			DATE_FORMAT(date,'%W, %M %e @ %h:%i %p') AS sundayDate, DATE_FORMAT(rehearsalDate,'%W, %M %e @ %h:%i %p') AS rehearsalDateFormatted 
+			DATE_FORMAT(date,'%m/%d/%Y %H:%i:%S') AS sundayDate, DATE_FORMAT(rehearsalDate,'%m/%d/%Y %H:%i:%S') AS rehearsalDateFormatted 
 			FROM cr_events 
 			WHERE `cr_events`.`type` = '$filter'
 			AND date >= DATE(NOW())
 			AND cr_events.deleted = 0
-			ORDER BY date";
+			ORDER BY " . $dateOrderBy;
 	} else {
 
 		$sql = "SELECT *,
@@ -158,8 +181,8 @@ if(isLoggedIn()) {
 			(SELECT `description` FROM cr_groups WHERE skillgroupID = `cr_groups`.`groupID`) AS `description`,
 			(SELECT skill FROM cr_skills WHERE skillID = cr_eventPeople.skillID AND cr_skills.userID = '$showmyevents' AND cr_skills.userID) AS skill, 
 			(SELECT date FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID) AS date, 
-			(SELECT DATE_FORMAT(date,'%W, %M %e @ %h:%i %p') FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID ORDER BY date DESC) AS sundayDate, 
-			(SELECT DATE_FORMAT(rehearsalDate,'%W, %M %e @ %h:%i %p') FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID ) as rehearsalDateFormatted, 
+			(SELECT DATE_FORMAT(date,'%m/%d/%Y %H:%i:%S') FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID ORDER BY date DESC) AS sundayDate, 
+			(SELECT DATE_FORMAT(rehearsalDate,'%m/%d/%Y %H:%i:%S') FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID ) as rehearsalDateFormatted, 
 			(SELECT location FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID) as cr_eventsLocation, 
 			(SELECT comment FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID) as comment, 
 			(SELECT type FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID) as cr_eventsType,
@@ -175,7 +198,7 @@ if(isLoggedIn()) {
 			AND cr_events.date >= DATE(NOW())
 			AND cr_events.deleted = 0
 			GROUP BY eventID
-			ORDER BY date";
+			ORDER BY " . $dateOrderBy;
 	}
 	$result = mysql_query($sql) or die(mysql_error());
 	
@@ -191,7 +214,9 @@ if(isLoggedIn()) {
 		?>
 		<div class="elementBackground" id="event<? echo $eventID; ?>">
 			<h2><? echo '<a name="section' . $eventID . '">';
-			echo $row['sundayDate'];
+			setlocale(LC_TIME, $rowSettings[lang_locale]);
+			echo strftime($rowSettings[time_format_long],strtotime($row['sundayDate']));
+			//echo $row['sundayDate'];
 			echo "</a>";
 			if(isAdmin()) { 
 				echo " <a href='createEvent.php?action=edit&id=$eventID'><img src='graphics/tool.png' /></a> ";
@@ -204,7 +229,9 @@ if(isLoggedIn()) {
 				
 				echo "<a href='#' data-reveal-id='deleteModal".$eventID."'><img src='graphics/close.png' /></a>"; 
 			}?></h2>
-			<div class="elementHead arrowwaiting"><p><? if($rehearsal != "1") { ?><strong>Rehearsal:</strong> <? echo $row['rehearsalDateFormatted']; ?><br /><? } ?>
+			<div class="elementHead arrowwaiting"><p><? if($rehearsal != "1") { ?><strong>Rehearsal:</strong> <? echo 
+			strftime($rowSettings[time_format_normal],strtotime($row['rehearsalDateFormatted']));
+			?><br /><? } ?>
 			<strong>Location:</strong> <? echo $row['eventLocation']; ?><br />
 			<strong>Type:</strong> <? echo $row['eventType']; ?></p>
 			<? if($row['comment'] != "") {
@@ -328,8 +355,8 @@ if(isLoggedIn()) {
 } else {
 ?>
 <div class="elementBackground">
-<h2>Welcome to the <? echo $owner; ?> Rota</h2>
-<p>For privacy reasons, the rota is not available publically. If you attend the <? echo $owner; ?>, please login using your user details. 
+<h2>Welcome to <? echo $owner; ?> Rota</h2>
+<p>For privacy reasons, the rota is not available publically. If you attend <? echo $owner; ?>, please login using your user details. 
 
 If you are unsure of your user details, please email <a href="mailto:<? echo $owneremail; ?>">the office</a> to request a reminder.</p>
 
@@ -340,7 +367,12 @@ If you are unsure of your user details, please email <a href="mailto:<? echo $ow
 <div id="right">
 <? if(isAdmin()) {?>
 		<div class="item"><a href="createEvent.php">Create a new event</a></div>
+<? }
+   if((isAdmin()) || ($logged_in_show_snapshot_button=='1')) {?>		
 		<div class="item"><a href="snapshot.php" target="_blank">Snapshot view</a></div>
+<? } 
+   if(isAdmin()) {?>
+		<div class="item"><a href="index.php?notifyOverview=true">Send Mail Overview</a></div>
 		<? } ?>
 		<? if(isLoggedIn()) {
 			if($showmyevents == "") { ?>

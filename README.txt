@@ -2,10 +2,10 @@ Installing Church Rota
 ======================
 
 0) Check sourceforge for updates
-   https://sourceforge.net/projects/churchrota/
+   http://sourceforge.net/projects/churchrota/
    
-   SVN (LATEST version!)
-   http://churchrota.svn.sourceforge.net/viewvc/churchrota?view=revision&revision=HEAD
+   Code SVN Repository (LATEST = TRUNK)
+   http://sourceforge.net/p/churchrota/code/
    
 1) Setup a mysql database
 
@@ -15,6 +15,7 @@ Installing Church Rota
    - $dbname
    - $username
    - $password
+   - $host (only if host provider tells you)
    Set the values according your mysql configuration
    
 4) Open a web browser and call 'install.php'
@@ -51,5 +52,5 @@ Issue tracking
 Please use sourceforge's tracking system, if you encounter any issues 
 (bugs, feature requests, etc.) related to Church Rota.
 
-see https://sourceforge.net/tracker/?group_id=556037&source=navbar
+see https://sourceforge.net/p/churchrota/tickets
 

@@ -10,6 +10,16 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 	$username = mysql_real_escape_string($username);
 	$password = mysql_real_escape_string($password);
 	$password = md5($password);
+
+	$sqlSettings = "SELECT * FROM cr_settings";
+	$resultSettings = mysql_query($sqlSettings) or die(mysql_error());
+	$rowSettings = mysql_fetch_array($resultSettings, MYSQL_ASSOC);
+	
+	if ($rowSettings[users_start_with_myevents]==1) {
+		$users_start_with_myevents = "1";
+	}else{
+		$users_start_with_myevents = "0";
+	}
 	
 	$sql = "SELECT * FROM cr_users WHERE username = '$username' AND password = '$password'";
 	$result = mysql_query($sql, $dbh);
@@ -19,17 +29,26 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
       $_SESSION['isAdmin'] = $row['isAdmin']; // Set the admin status to be carried across this session
       $_SESSION['userid'] = $row['id'];
       $_SESSION['name'] = $row['firstName'] . " " . $row['lastName'];
-	  
-   	  //do database update if user is admin
-	  if ($_SESSION['isAdmin']==1) {
-		updateDatabase();
+	
+		
+
+
+	
+   	// after login we move to the main page
+      if ($_SESSION['isAdmin']==1) {
+		updateDatabase();	  
+		header('Location: index.php'); // Move to the home page of the admin section
+	  }else{
+		//only_for_testing//notifyInfo(__FILE__,"login",$row['id']);
+	    if ($users_start_with_myevents=='1') {
+			header('Location: index.php?showmyevents=' . $_SESSION['userid']); // Move to the home page of the admin section
+		}else{
+			header('Location: index.php');
+		}
 	  }
-	  
-	  // after login we move to the main page
-      header('Location: index.php'); // Move to the home page of the admin section
       exit;
       
-   } 
+   }
 }
 include('includes/header.php'); ?>
 <div class="elementBackground">
