@@ -68,6 +68,12 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 		$maxGroup=999;  //show all groups, backward compatibility
 	} 
 
+	if ($rowSettings[group_sorting_name]=='1') {
+		$group_sorting_name = "formatgroup,description";
+	}else{
+		$group_sorting_name = "groupID";
+	}	
+
 	$sql = "SELECT count(*) as Anzahl FROM cr_groups where formatgroup<=" . $maxGroup;
 	$result = mysql_query($sql) or die(mysql_error());
 	$row = mysql_fetch_array($result, MYSQL_ASSOC);
@@ -128,7 +134,7 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 <tr>
 	<td ><strong>Event</strong></td>
 	<?
-	$sql = "SELECT * FROM cr_groups where formatgroup<=" . $maxGroup . " ORDER BY groupID";
+	$sql = "SELECT * FROM cr_groups where formatgroup<=" . $maxGroup . " ORDER BY " . $group_sorting_name;
 	$result = mysql_query($sql) or die(mysql_error());
 	
 	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
