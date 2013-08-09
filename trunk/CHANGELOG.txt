@@ -10,6 +10,10 @@ Changelog of Church Rota
    twitter: @ChurchRota  and  @ChurchRota_Dev
 
 --------------------------------------------------------------------------------   
+V2.1.1 - Benjamin Schmitt 
+- Snapshot - sort columns by skill group and skill name (new settings option)
+   
+--------------------------------------------------------------------------------   
 V2.1.0 - SVN tag 2013-08_01_V2_1_0 - Benjamin Schmitt 
 
 security fixes:

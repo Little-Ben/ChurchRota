@@ -92,10 +92,13 @@ function updateDatabase() {
 			executeDbSql("update cr_settings set overviewemail = 'Hello,\r\n\r\nIn this email you find the Rota for [MONTH] [YEAR].\r\n\r\n[OVERVIEW]\r\n\r\nPlease inform us as soon as possible, if you are not able to serve as scheduled.\r\n\r\nBe blessed.\r\nChurch Support Stuff'"); 
 			
 			notifyInfo(__FILE__,"db-update=" . $version . "->2.1.0",$_SESSION['userid']);
+		case "2.1.0":	
+			executeDbSql("create table cr_settings_bkp2_1_0 as select * from cr_settings");
+			executeDbSql("alter table cr_settings add(group_sorting_name int(1))");	
+			executeDbSql("update cr_settings set version = '2.1.1'");						
+			notifyInfo(__FILE__,"db-update=" . $version . "->2.1.1",$_SESSION['userid']);				
 				
 			break;			
-			
-			
 			
 	}
 	
