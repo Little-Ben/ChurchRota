@@ -9,8 +9,13 @@ Changelog of Church Rota
    
    twitter: @ChurchRota  and  @ChurchRota_Dev
 
+
 --------------------------------------------------------------------------------   
-V2.1.1 - Benjamin Schmitt 
+V2.1.2 - Revision 20 - Benjamin Schmitt 
+- Removed Google-Analytics due to privacy reasons
+
+--------------------------------------------------------------------------------   
+V2.1.1 - Revision 19 - Benjamin Schmitt 
 - Snapshot - sort columns by skill group and skill name (new settings option)
    
 --------------------------------------------------------------------------------   
