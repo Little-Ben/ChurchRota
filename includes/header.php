@@ -28,7 +28,7 @@
 	<script src="includes/jquery.js" language="javascript" type="text/javascript"></script>
 	<script src="includes/jquery.reveal.js" type="text/javascript"></script>
 	<script type="text/javascript">
-
+/*
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-23120342-1']);
   _gaq.push(['_trackPageview']);
@@ -38,7 +38,7 @@
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
-
+*/
 </script>
 	<? if(isset($formatting) && $formatting == "true") { ?>
 	<script src="includes/churchrota.js" language="javascript" type="text/javascript"></script>

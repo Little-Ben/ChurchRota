@@ -97,7 +97,10 @@ function updateDatabase() {
 			executeDbSql("alter table cr_settings add(group_sorting_name int(1))");	
 			executeDbSql("update cr_settings set version = '2.1.1'");						
 			notifyInfo(__FILE__,"db-update=" . $version . "->2.1.1",$_SESSION['userid']);				
-				
+		case "2.1.1":		
+			executeDbSql("update cr_settings set version = '2.1.2'");						
+			notifyInfo(__FILE__,"db-update=" . $version . "->2.1.2",$_SESSION['userid']);				
+						
 			break;			
 			
 	}
