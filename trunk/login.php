@@ -39,7 +39,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 		updateDatabase();	  
 		header('Location: index.php'); // Move to the home page of the admin section
 	  }else{
-		//only_for_testing//notifyInfo(__FILE__,"login",$row['id']);
+		if ($debug) notifyInfo(__FILE__,"login",$row['id']); //only_for_testing//
 	    if ($users_start_with_myevents=='1') {
 			header('Location: index.php?showmyevents=' . $_SESSION['userid']); // Move to the home page of the admin section
 		}else{

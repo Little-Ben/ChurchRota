@@ -105,6 +105,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	    		$users_start_with_myevents = '0';
 			}
 			
+		if(isset($_POST['debug_mode'])) 
+			{
+				$debug_mode = '1';
+			}
+		else
+			{
+	    		$debug_mode = '0';
+			}			
 			
 	$time_format_long = $_POST['time_format_long'];
 	$time_format_long = mysql_real_escape_string($time_format_long);
@@ -143,6 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		time_zone='$time_zone',
 		google_group_calendar='$google_group_calendar',
 		overviewemail='$overviewemail',
+		debug_mode='$debug_mode',
 		group_sorting_name='$group_sorting_name'"
 		;
 	
@@ -247,15 +256,18 @@ include('includes/header.php');
 				<label class="settings" for="snapshot_reduce_skills_by_group">Snapshot - show only skills up to user's max. used skill group:</label>
 				<input class="settings" name="snapshot_reduce_skills_by_group" id="snapshot_reduce_skills_by_group" type="checkbox" value="1" <? if($row['snapshot_reduce_skills_by_group']=='1')  { echo 'checked="checked"'; } else if($row['snapshot_reduce_skills_by_group'] == '0') { }?>  />
 				
-				<label class="settings" for="group_sorting_name">Snapshot - sort columns by skill group and skill name:</label>
-				<input class="settings" name="group_sorting_name" id="group_sorting_name" type="checkbox" value="1" <? if($row['group_sorting_name']=='1')  { echo 'checked="checked"'; } else if($row['group_sorting_name'] == '0') { }?>  />
+				<label class="settings" for="group_sorting_name" disabled >Snapshot - sort columns by skill group and skill name:</label>
+				<input class="settings" name="group_sorting_name" id="group_sorting_name" type="checkbox" disabled value="1" <? if($row['group_sorting_name']=='1')  { echo 'checked="checked"'; } else if($row['group_sorting_name'] == '0') { }?>  />
 
 				<label class="settings" for="logged_in_show_snapshot_button">Show button "Snapshot view" for users:</label>
 				<input class="settings" name="logged_in_show_snapshot_button" id="logged_in_show_snapshot_button" type="checkbox" value="1" <? if($row['logged_in_show_snapshot_button']=='1')  { echo 'checked="checked"'; } else if($row['logged_in_show_snapshot_button'] == '0') { }?>  />
 
 				<label class="settings" for="users_start_with_myevents">User starts with events filtered for "My Events":</label>
 				<input class="settings" name="users_start_with_myevents" id="users_start_with_myevents" type="checkbox" value="1" <? if($row['users_start_with_myevents']=='1')  { echo 'checked="checked"'; } else if($row['users_start_with_myevents'] == '0') { }?>  />
-			
+
+				<label class="settings" for="debug_mode">Debug Mode:</label>
+				<input class="settings" name="debug_mode" id="debug_mode" type="checkbox" value="1" <? if($row['debug_mode']=='1')  { echo 'checked="checked"'; } else if($row['debug_mode'] == '0') { }?>  />
+				
 			</div>
 		</div>
 		

@@ -48,6 +48,7 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 </head>
 <?php
 	$sqlSettings = "SELECT * FROM cr_settings";
+	
 	$resultSettings = mysql_query($sqlSettings) or die(mysql_error());
 	$rowSettings = mysql_fetch_array($resultSettings, MYSQL_ASSOC);
 	$lang_locale = $rowSettings[lang_locale];
@@ -73,7 +74,12 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 	}else{
 		$group_sorting_name = "groupID";
 	}	
-
+	
+	if ($maxGroup=='') 
+	{
+		$maxGroup=1;
+	}
+	
 	$sql = "SELECT count(*) as Anzahl FROM cr_groups where formatgroup<=" . $maxGroup;
 	$result = mysql_query($sql) or die(mysql_error());
 	$row = mysql_fetch_array($result, MYSQL_ASSOC);
@@ -114,7 +120,11 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 		<p>
 			<a class="eventTypeButton" href="snapshot.php">All</a>
 		<?php
-		$filter_sql = "SELECT * FROM cr_eventTypes ORDER BY id";
+		$filter_sql = "SELECT * FROM cr_eventTypes where id in 
+			(select `cr_events`.`type` FROM cr_events 
+			WHERE ".$whereTwoMonth."
+			AND cr_events.deleted = 0)
+			ORDER BY description";
 		$result = mysql_query($filter_sql) or die(mysql_error());
 	
 		while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {

@@ -5,7 +5,9 @@ include('includes/functions.php');
  // you have to open the session first 
  session_start(); 
 
-//only_for_testing//if (!isAdmin()) { notifyInfo(__FILE__,"logout",$_SESSION['userid']);	}
+ if (!isAdmin()) { 
+	if ($debug) notifyInfo(__FILE__,"logout",$_SESSION['userid']);	
+ }//only_for_testing//
 
  
  //remove all the variables in the session 

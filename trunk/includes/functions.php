@@ -16,11 +16,13 @@ if($holdQuery != true) {
 		$owner = $row['owner'];
 		$owneremail = $row['adminemailaddress'];
 		$version = $row['version'];	
+		$debug = $row['debug_mode'];
 	}
 }else{
 		$owner = 'A Church';
 		$owneremail = '-';
-		$version = '0.0.0';	
+		$version = '0.0.0';
+		$debug = 0;	
 }
 
 
