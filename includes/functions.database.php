@@ -100,6 +100,12 @@ function updateDatabase() {
 		case "2.1.1":		
 			executeDbSql("update cr_settings set version = '2.1.2'");						
 			notifyInfo(__FILE__,"db-update=" . $version . "->2.1.2",$_SESSION['userid']);				
+		case "2.1.2":		
+			executeDbSql("alter table cr_settings add(debug_mode int(1) DEFAULT '0')");
+			executeDbSql("update cr_settings set snapshot_reduce_skills_by_group = 0");
+			
+			executeDbSql("update cr_settings set version = '2.2.0'");						
+			notifyInfo(__FILE__,"db-update=" . $version . "->2.2.0",$_SESSION['userid']);				
 						
 			break;			
 			

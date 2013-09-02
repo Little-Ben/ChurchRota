@@ -10,15 +10,25 @@ Changelog of Church Rota
    twitter: @ChurchRota  and  @ChurchRota_Dev
 
 
---------------------------------------------------------------------------------   
+---------------------------------------------------------------------------   
+V2.2.0 - SVN tag 2013-09-02_v2_2_0 - Revision 21 - Benjamin Schmitt 
+- validate email addresses before sending Rota Overview Mail, error output
+- workaround for displaying error in snapshot 
+  (disabled new sorting feature (v2.1.1), need to find a bug)
+- reduce available filters according current used event types
+  (snapshot and event overview)
+- formatting GPL license file (html), added text version (LICENSE.TXT)
+- Debug Mode
+
+---------------------------------------------------------------------------   
 V2.1.2 - Revision 20 - Benjamin Schmitt 
 - Removed Google-Analytics due to privacy reasons
 
---------------------------------------------------------------------------------   
+---------------------------------------------------------------------------   
 V2.1.1 - Revision 19 - Benjamin Schmitt 
-- Snapshot - sort columns by skill group and skill name (new settings option)
+- Snapshot - sort columns by skill group and skill name (new option)
    
---------------------------------------------------------------------------------   
+---------------------------------------------------------------------------   
 V2.1.0 - SVN tag 2013-08_01_V2_1_0 - Benjamin Schmitt 
 
 security fixes:
@@ -36,24 +46,27 @@ new functionalities (and corresponding options in settings):
   + preview page (with editing posibility)
 - Google calender export per event in snapshot (via URL)
   + if logged in as normal user: only date, time, event type, location
-  + if logged in as admin user: same as user plus leader/preacher/band infos
+  + if logged in as admin user: same as user plus leader/preacher/band 
+    infos
   + utf8-wrapper (for URL-encoding)
   + field for Google Group Calendar ID (settings)
   + Time Zone
 - optional reduce events to "show my events" direct after users login
 - optional reduce snapshot to max defined skill group of logged in user 
   (not logged in => group 1), 
-  so the more sensitive a skill group should be, the higher set its skill group,
-  example: 
+  so the more sensitive a skill group should be, the higher set its skill 
+  group, example: 
     + band and host infos for not logged in users - group 1)
     + leading info should require group 2 (including infos of group 1)
-    + preacher info only for users with group 3 rights (including groups 1+2)
+    + preacher info only for users with group 3 rights 
+      (including groups 1+2)
     + always all infos for admin users
     -> a user with a skill defined for skill group 2 
          * can see band, host and leading 
          * but can not see preaching
 - optional only show actual month in snapshot,
-  also shows events of following month if actual day > 20 ("TwoMonthView") 
+  also shows events of following month if actual day > 20 
+  ("TwoMonthView") 
 - "array_combine" backport
 
 changes "behind the scenes":
@@ -79,15 +92,15 @@ ui changes:
 - add band instrument (already introduced with V.2.0.0)
 - only show initial letter of first name in snapshot 
 - first column of snapshot renamed "Date" ->  "Event"
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------
 V2.0.2 - SVN tag 2013-05-28_V2_0_2 - Benjamin Schmitt
 - bugfix install script (includes/functions.php)
 - update INSTALL.txt and rename to README.txt
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------
 V2.0.1 - SVN tag 2013-05-26_V2_0_1 - Benjamin Schmitt
 - bugfix: sending email for new users was broken (includes/functions.mail.php)
 - update: version string (includes/functions.database.php)
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------
 V2.0.0 - SVN tag 2013-05-22_V2_0_0
 
 latest version by David Bunce (as a copy of a current installation)
@@ -104,7 +117,8 @@ latest version by David Bunce (as a copy of a current installation)
     + removed submenu: View all bands
     + removed submenu: Add new band
     + removed comboboxes 'Add individuals', 'Add bands'
-	+ only show events that are not marked deleted and event date > today
+	+ only show events that are not marked deleted 
+          and event date > today
   - Main Menu 'Discussion' (discussion.php)
     + removed whole main menu
   - Main Menu 'Users' (viewUsers.php)
@@ -115,7 +129,8 @@ latest version by David Bunce (as a copy of a current installation)
     + fixed: sorting problem of control boxes, now within correct group
     + fixed: revoke 'make them an Admin', also revoked session admin rights 
   - snapshot.php
-	+ only show events that are not marked deleted and event date > today
+	+ only show events that are not marked deleted 
+          and event date > today
 	+ added filter possibility for event types
 	+ added Church Rota header (and menues, if user is logged in)
 
@@ -139,6 +154,6 @@ modifications by Benjamin Schmitt (on top of David's work)
   - added CHANGELOG.txt - this file
   - added INSTALL.txt - instruction steps for installation
   
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------
 V1.0.0 - SVN tag 2011-06-14_V1_0_0
 this is the initial version (churchrota.zip)

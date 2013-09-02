@@ -134,7 +134,11 @@ if(isLoggedIn()) {
 		<h2>Filter events by:</h2>
 		<p>
 		<?php
-		$filter_sql = "SELECT * FROM cr_eventTypes ORDER BY id";
+		$filter_sql = "SELECT * FROM cr_eventTypes where id in 
+			(select `cr_events`.`type` FROM cr_events 
+			WHERE date >= DATE(NOW())
+			AND cr_events.deleted = 0)
+			ORDER BY description";
 		$result = mysql_query($filter_sql) or die(mysql_error());
 	
 		while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {

@@ -21,6 +21,7 @@ $id = $_GET['id'];
 
 // If the form has been submitted, then we need to handle the data.
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+		if ($debug) notifyInfo(__FILE__,"pwd_change",$userID); //only_for_testing//
 		$oldPassword = mysql_real_escape_string($_POST['oldpassword']);
 		$newPassword = mysql_real_escape_string($_POST['newpassword']);
 		$checkPassword = mysql_real_escape_string($_POST['checkpassword']);

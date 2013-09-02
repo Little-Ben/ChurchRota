@@ -394,9 +394,22 @@ function notifyOverview($subject,$message) {
 		$queryRcpt="select email from cr_users where isOverviewRecipient=1";
 		$resultRcpt = mysql_query($queryRcpt) or die(mysql_error());
 		$i=0;
+		$err=0;
+		$bcc_err="<br>";
 		while($rowRcpt = mysql_fetch_array($resultRcpt, MYSQL_ASSOC)) {
-			$bcc = $bcc . 'Bcc: ' .$rowRcpt[email] . $crlf;
-			$i=$i+1;
+		
+			$teile = explode(",", $rowRcpt[email]);
+			foreach ( $teile as $adr )
+            {
+				if (preg_replace("/([a-zA-Z0-9._%+-]+)(@)([a-zA-Z0-9.-]+)(\.)([a-zA-Z]+)/i","# # #",trim($adr))=="# # #") {
+					$bcc = $bcc . 'Bcc: ' . trim($adr) . $crlf;
+					$i=$i+1;
+				} else {
+					$bcc_err = $bcc_err . $adr . $crlf;
+					$err = $err + 1;
+				}
+				
+			}
 		}
 		
 		//$to = '...';
@@ -406,14 +419,26 @@ function notifyOverview($subject,$message) {
 		'Content-Type: text/plain; charset=ISO-8859-1' . $crlf .
 		'Content-Transfer-Encoding: quoted-printable' . $crlf;
 		
-		mail($siteadmin, $subject, $message, $headers.$bcc);
-		mail($siteadmin, "ADMIN COPY: " . $subject, $message.$crlf.$bcc,$headers);
+		$mailOk = FALSE;
+		$mailOk = mail($siteadmin, $subject, $message, $headers.$bcc);
+		//$mailOk = mail($siteadmin, $subject, $message, $headers);
 		
-		if ($i==1) 
-			return $i." mail have been sent.";
-		else
-			return $i." mails has been sent.";
-
+		if ($bcc_err=="<br>")
+			$bcc_err="none";
+		
+		if ($mailOk == TRUE)
+		{
+			mail($siteadmin, "ADMIN COPY: " . $subject, $message.$crlf.$bcc,$headers);
+			if ($i==1)			
+				return $i." mail have been sent.<br><br>".str_replace($crlf,"<br>","Address errors: ".$bcc_err."<br><br>".$headers.$bcc);
+			else
+				return $i." mails has been sent.<br><br>".str_replace($crlf,"<br>","Address errors: ".$bcc_err."<br><br>".$headers.$bcc);
+			
+			
+		
+		} else {
+			return "Error: Error while sending mails! Please check addresses:<br><br>".str_replace($crlf,"<br>",$headers.$bcc);
+		}
 }
 
 function notifyAttack($fileName,$attackType,$attackerID) {
