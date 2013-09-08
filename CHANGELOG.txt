@@ -9,6 +9,40 @@ Changelog of Church Rota
    
    twitter: @ChurchRota  and  @ChurchRota_Dev
 
+   
+---------------------------------------------------------------------------
+V2.2.1 - Revision 23 - Benjamin Schmitt
+- settings: new user permission "Band Administrator",
+  possibility to only edit band details at an existing event
+- userView: list permissions per user (Admin, Band Admin, Overview)
+- userView: also highlight users with Band Admin permissions
+- index: show icon "edit event" for Band Admins
+- edit event: Band Admins can now edit band relevant data
+- snapshot: new sorting order (see v2.1.1)
+  therefore it was necessary to rewrite the code for cell filling,
+  should work now :-) 
+- fixed update functionality of band skills / instruments 
+- date/time formatting in security dialog when deleting an event
+- created links in GPL license file (html)
+
+Important:
+- please check your "Church Rota Behaviour" settings for 
+  + Snapshot - sort columns by skill group and skill name
+      with this update it is set "disabled"
+  + Snapshot - show only skills up to user's max. used skill group
+      it was set "disabled" by download zip of V2.2.0,
+	  update procedure is now correct, so if you have not installed
+	  V2.2.0 zip this is not relevant for you
+
+
+internal stuff:
+- new function: isBandAdmin
+- snapshot: code cosmetics (apostrophs for querying database rows)
+- editSkills: special treatment for skillgroup=2 (band), 
+  group cannot be deleted anymore,
+  it is used as a special group throughout the code 
+  (due to the band members)
+- new remove-function: removeBandSkill (except skill-id 2, see above)
 
 ---------------------------------------------------------------------------   
 V2.2.0 - SVN tag 2013-09-02_v2_2_0 - Revision 21 - Benjamin Schmitt 

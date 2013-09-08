@@ -27,6 +27,10 @@ session_start();
 
 $action = $_GET['action'];
 $eventID = $_GET['id'];
+$sessionUserID = $_SESSION['userid'];
+$actionName='Create';
+$userisBandAdmin = isBandAdmin($sessionUserID);
+
 
 if($action == "edit") {
 	$sql = "SELECT *, 
@@ -48,6 +52,8 @@ if($action == "edit") {
 		$comment = $row['comment'];
 		
 	}
+	
+	$actionName='Edit';
 } 
  
 if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
@@ -55,7 +61,7 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 	} else {
 	header('Location: login.php');
 }
-
+	
 // If the form has been submitted, then we need to handle the data.
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$date = $_POST['date'];
@@ -70,6 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$comment = mysql_real_escape_string($comment);
 	$editbandID = $_POST['band'];
 
+	
 	if($action == "edit") {
 		$sql = "UPDATE cr_events SET date = '$date', rehearsalDate = '$rehearsaldateactual', location = '$location', 
 		rehearsal = '$norehearsal', type = '$type', comment = '$comment' WHERE id = '$id'";
@@ -94,6 +101,8 @@ if(isset($rehearsaldate)) {
 		
 		// First array:
 		$sql = "SELECT skillID FROM cr_eventPeople WHERE eventID = '$eventID'";
+		if ($userisBandAdmin) $sql = $sql . " and skillID in (select skillID from cr_skills where groupid=2)";
+		
 		$result = mysql_query($sql) or die(mysql_error());
 		
 		while($row =  mysql_fetch_array($result, MYSQL_ASSOC)) {
@@ -141,17 +150,22 @@ if(isset($rehearsaldate)) {
 }
 $formatting = "true";
 
+if ($userisBandAdmin)
+	$hidden=true;
+else
+	$hidden=false;
+
 include('includes/header.php');
 ?>
 
 
 <div class="elementBackground">
-<h2>Create an Event</h2>
+<h2><?php echo $actionName ?> an Event</h2>
 
 	<form action="createEvent.php<? if(isset($formaction)) echo $formaction; ?>" method="post" id="createEvent">
 		<fieldset>
-			<label for="date">Date:</label>
-			<input name="date" id="date" type="text" value="<? if(isset($date)) echo $date; ?>" placeholder="Enter event date" />
+			<label for="date">Date: <? if(isset($date)&&($hidden)) echo $date; ?></label>
+			<input name="date" id="date" type="<? if($hidden) {echo "hidden";} else {echo "text";}?>" value="<? if(isset($date)) echo $date; ?>" placeholder="Enter event date" />
 			
 			<label for="norehearsal">Have this event without a rehearsal:</label>
 			<input name="norehearsal" id="norehearsal" type="checkbox" value="1"  <? if(isset($norehearsal) && $norehearsal != 0) { echo 'checked="checked"'; }  else {   } ?>  />
@@ -159,8 +173,8 @@ include('includes/header.php');
 			<label for="rehearsaldateactual">Rehearsal Date:</label>
 			<input name="rehearsaldateactual" id="rehearsaldateactual" value="<? if(isset($rehearsalDate)) echo $rehearsalDate; ?>" type="text" placeholder="Enter rehearsal date" />
 			
-			<label for="location">Location:</label>
-			<select name="location" id="location">
+			<label for="location">Location: <? if(isset($locationname)&&($hidden)) echo $locationname; ?></label>
+			<select name="location" id="location" <? if($hidden) echo "hidden"; ?>>
 				<option value="<? if(isset($location)) echo $location; ?>"><? if(isset($locationname)) echo $locationname; ?></option>
 				<? 
 				$sql = "SELECT * FROM cr_locations";
@@ -172,8 +186,8 @@ include('includes/header.php');
 				} ?>
 			</select>
 			
-			<label for="type">Type:</label>
-			<select name="type" id="type">
+			<label for="type">Type: <? if(isset($typename)&&($hidden)) echo $typename; ?></label>
+			<select name="type" id="type" <? if($hidden) echo "hidden"; ?>>
 				<option value="<? if(isset($type)) echo $type; ?>"><? if(isset($typename)) echo $typename; ?></option>
 				<? 
 				$sql = "SELECT * FROM cr_eventTypes";
@@ -185,11 +199,11 @@ include('includes/header.php');
 				} ?>
 			</select>
 			
-			<label for="comment">Comments</label>
-			<textarea name="comment" class="mceNoEditor"><? if(isset($comment)) echo $comment; ?></textarea>
+			<label for="comment">Comments: <? if(isset($comment)&&($hidden)) echo $comment; ?></label>
+			<textarea name="comment" class="mceNoEditor" <? if($hidden) echo "hidden"; ?>><? if(isset($comment)) echo $comment; ?></textarea>
 			
 		</fieldset>
-		<input type="submit" value="Edit event" />
+		<input type="submit" value="<?php echo $actionName ?> event" />
 		
 		<fieldset>
 			<legend><h2>Add people to the event:</h2></legend>
@@ -227,7 +241,15 @@ include('includes/header.php');
 					}
 					
 					if($viewPeople['inEvent'] != '') 
-					{ $checked =  'checked="checked"'; }  else { $checked = "";  }
+					{ $checked =  'checked="checked" '; }  else { $checked = "";  }
+					
+					if ($userisBandAdmin) {
+						if($viewPeople['groupID'] == '2') 
+							{ $disabled =  ""; }  
+						else 
+							{ $disabled = 'disabled';  }
+					} else 
+						{ $disabled =  ""; }
 					
 					if($viewPeople['skill'] != "") {
 						$skill = " - <em>" . $viewPeople['skill'] . "</em>";
@@ -236,9 +258,9 @@ include('includes/header.php');
 					}
 					if($position == 2) {
 						echo "<div class='checkboxitem right'><label class='styled' for='rehearsaldate[" .  $viewPeople['skillID'] . "]'>" .
-						$viewPeople['name'] .  $skill . "</em></label><input class='styled' " . $checked . "type='checkbox' id='rehearsaldate[" . 
+						$viewPeople['name'] .  $skill . "</em></label><input class='styled' " . $disabled . " " . $checked . "type='checkbox' id='rehearsaldate[" . 
 						$viewPeople['skillID'] . "]'	name='rehearsaldate[]' value='" .  
-						$viewPeople['skillID'] . "' /></div></div>";
+						$viewPeople['skillID'] . "' /></div></div>\r\n";
 						
 						$position = 1;
 					} else {
@@ -252,9 +274,9 @@ include('includes/header.php');
 						
 						echo "<div class='row" . $class . "'>
 						<div class='checkboxitem'><label class='styled' for='rehearsaldate[" .  $viewPeople['skillID'] . "]'>" .
-						$viewPeople['name'] .  $skill . "</em></label><input class='styled' " . $checked . "type='checkbox' id='rehearsaldate[" . 
+						$viewPeople['name'] .  $skill . "</em></label><input class='styled' " . $disabled . " " . $checked . "type='checkbox' id='rehearsaldate[" . 
 						$viewPeople['skillID'] . "]'	name='rehearsaldate[]' value='" .  
-						$viewPeople['skillID'] . "' /></div>";
+						$viewPeople['skillID'] . "' /></div>\r\n";
 						
 						$position = 2;
 					}
@@ -273,7 +295,7 @@ include('includes/header.php');
 						}
 			?>
 			</div>
-					<input type="submit" value="Edit event" />
+					<input type="submit" value="<?php echo $actionName ?> event" />
 				</fieldset>	
 			
 	</form>

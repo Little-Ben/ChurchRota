@@ -13,12 +13,12 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 }
 
 // Get the query string
-$eventtypeID = $_GET["eventtypeID"];
-$eventtyperemove = $_GET['eventtyperemove'];
+$bandskillID = $_GET["bandskillID"];
+$bandskillremove = $_GET['bandskillremove'];
 $method = $_GET['method'];
 
-if ($eventtyperemove == "true") {
- removeEventType($eventtypeID);
+if ($bandskillremove == "true") {
+ removeBandSkill($bandskillID);
  }
 
 // If the form has been submitted, then we need to handle the data.
@@ -70,18 +70,21 @@ include('includes/header.php');
 		echo '<input type="hidden" name="formindex[]" value="' . $row['id'] . '" />';
 		echo "<input name='description[]' value='" . $row['name'] . "' />";
 		
-		echo "<a href='bandskills.php?eventtyperemove=true&eventtypeID=" . $row['id'] . "'><img src='graphics/close.png' /></a><br />"; 
+		echo "<a href='bandskills.php?bandskillremove=true&bandskillID=" . $row['id'] . "'><img src='graphics/close.png' /></a><br />"; 
 	 } ?>
      </fieldset>
-     
+     <input type="submit" value="Update band skills" />
+	 </p>
+	 
 	 </form>
-	 <h2>Add a new band instrument:</h2>
+	 <h2>Add a new band skill:</h2>
+	 <p>
 	 <form action="bandskills.php?method=newtype" method="post">
 	 	<fieldset>
-	 		<p><label>New instrument:</label>
+	 		<p><label>New band skill / instrument:</label>
 	 		<input type="text" name="description" id="banddescription"/></p>
 	 	</fieldset>
-	 	<input type="submit" value="Add new skill" />
+	 	<input type="submit" value="Add new band skill" />
 	 </form>
 
 	</p>

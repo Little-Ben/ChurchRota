@@ -102,10 +102,16 @@ function updateDatabase() {
 			notifyInfo(__FILE__,"db-update=" . $version . "->2.1.2",$_SESSION['userid']);				
 		case "2.1.2":		
 			executeDbSql("alter table cr_settings add(debug_mode int(1) DEFAULT '0')");
-			executeDbSql("update cr_settings set snapshot_reduce_skills_by_group = 0");
+			executeDbSql("update cr_settings set group_sorting_name = 0");  //was a workaround, not needed anymore
 			
 			executeDbSql("update cr_settings set version = '2.2.0'");						
 			notifyInfo(__FILE__,"db-update=" . $version . "->2.2.0",$_SESSION['userid']);				
+		case "2.2.0":		
+			executeDbSql("alter table cr_users add(isBandAdmin char(2) NOT NULL DEFAULT '0')");
+			executeDbSql("update cr_settings set group_sorting_name = 0");
+			
+			executeDbSql("update cr_settings set version = '2.2.1'");						
+			notifyInfo(__FILE__,"db-update=" . $version . "->2.2.1",$_SESSION['userid']);				
 						
 			break;			
 			

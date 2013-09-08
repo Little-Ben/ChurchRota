@@ -40,6 +40,7 @@ if($action == "edit") {
 		$email = $row['email'];
 		$mobile = $row['mobile'];
 		$userisAdmin = $row['isAdmin'];
+		$userisBandAdmin = $row['isBandAdmin'];
 		$userisOverviewRecipient = $row['isOverviewRecipient'];
 	}
 } 
@@ -89,18 +90,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			{
 	    		$userisOverviewRecipient = '0';
 			}	
+
+	if(isset($_POST['isBandAdmin'])) 
+			{
+				$userisBandAdmin = '1';
+			}
+		else
+			{
+	    		$userisBandAdmin = '0';
+			}	
 			
 	if($action == "edit") {
 		// Update the database rather than insert new values
 		$sql = "UPDATE cr_users SET firstName = '$firstname', lastName = '$lastname', username = '$username', isAdmin = '$isAdminLocal',
-		email = '$email', mobile = '$mobile', isOverviewRecipient = '$userisOverviewRecipient' WHERE id = '$userID'";
+		email = '$email', mobile = '$mobile', isOverviewRecipient = '$userisOverviewRecipient', isBandAdmin = '$userisBandAdmin' WHERE id = '$userID'";
 	} else {
 		// Create a new record
 		$password = RandomPassword(8, true, true, true);
 		mailNewUser($firstname, $lastname, $email, $username, $password);
 		$passwordEncrypted = md5($password);
-	    $sql = ("INSERT INTO cr_users (firstName, lastName, username, isAdmin, email, mobile, password,isOverviewRecipient)
-VALUES ('$firstname', '$lastname', '$username', '$isAdminLocal', '$email', '$mobile', '$passwordEncrypted', '$userisOverviewRecipient')");
+	    $sql = ("INSERT INTO cr_users (firstName, lastName, username, isAdmin, email, mobile, password,isOverviewRecipient,isBandAdmin)
+VALUES ('$firstname', '$lastname', '$username', '$isAdminLocal', '$email', '$mobile', '$passwordEncrypted', '$userisOverviewRecipient', '$userisBandAdmin')");
 	}
 	
 	if (!mysql_query($sql))
@@ -221,11 +231,15 @@ include('includes/header.php');
 			<label for="lastname">Last name:</label>
 			<input name="lastname" id="lastname" type="text" value="<? echo $lastname; ?>" placeholder="Enter last name" />
 			
-			<label for="isAdmin">Make them an admin?:</label>
+			<label for="isAdmin">Make them an ADMIN?:</label>
 			<input name="isAdmin" id="isAdmin" type="checkbox" value="1" <? if($userisAdmin == '1') { echo 'checked="checked"'; } 
 			else if($userisAdmin == '0') { }?> />
 			
-			<label for="isOverviewRecipient">Make them an Overview Recipient?:</label>
+			<label for="isBandAdmin">Make them a BAND admin?:</label>
+			<input name="isBandAdmin" id="isBandAdmin" type="checkbox" value="1" <? if($userisBandAdmin == '1') { echo 'checked="checked"'; } 
+			else if($userisBandAdmin == '0') { }?> />
+			
+			<label for="isOverviewRecipient">Make them a MAIL OVERVIEW RECIPIENT?:</label>
 			<input name="isOverviewRecipient" id="isOverviewRecipient" type="checkbox" value="1" <? if($userisOverviewRecipient == '1') { echo 'checked="checked"'; } 
 			else if($userisOverviewRecipient == '0') { }?> />
 			
