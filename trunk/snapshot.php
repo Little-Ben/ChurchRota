@@ -2,7 +2,7 @@
 /*
 	This file is part of Church Rota.
 	
-	Copyright (C) 2011 David Bunce
+	Copyright (C) 2011 David Bunce, Benjamin Schmitt
 
     Church Rota is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,15 +29,20 @@ session_start();
  
 if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 	// Just continue the code
+	
+	//check users maximal skillgroup (maxGroup), if logged in.
 		$sql = "select max(formatgroup) as max_group from cr_skills s, cr_groups g where s.groupID=g.groupID and s.userID=". $_SESSION['userid'];
 		$result = mysql_query($sql) or die(mysql_error());
 		$row = mysql_fetch_array($result, MYSQL_ASSOC);
-		$maxGroup = $row[max_group];
+		$maxGroup = $row['max_group'];
+		if ($maxGroup=='') $maxGroup=1;
 	} 
 	else
 	{	
+		//if not logged in, only show skills of skillgroup 1
 		$maxGroup=1;
 	}
+	//echo "maxGroup=".$maxGroup."<br>";
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -51,39 +56,32 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 	
 	$resultSettings = mysql_query($sqlSettings) or die(mysql_error());
 	$rowSettings = mysql_fetch_array($resultSettings, MYSQL_ASSOC);
-	$lang_locale = $rowSettings[lang_locale];
-	$time_format_short = $rowSettings[time_format_short];
-	//$userTZ="Europe/Berlin";
-	$userTZ=$rowSettings[time_zone];
-	$google_group_calendar=$rowSettings[google_group_calendar];
+	$lang_locale = $rowSettings['lang_locale'];
+	$time_format_short = $rowSettings['time_format_short'];
+	$userTZ=$rowSettings['time_zone'];
+	$google_group_calendar=$rowSettings['google_group_calendar'];
 	
+	if ((isAdmin()) || ($rowSettings['snapshot_reduce_skills_by_group']=='0')) {
+		$maxGroup=999;  //show all skill groups, if admin or option not used
+	} 
 	
-	if ($rowSettings[snapshot_show_two_month]=='1') {
+	if ($rowSettings['snapshot_show_two_month']=='1') {
 		$whereTwoMonth = "Year(date) = Year(Now()) AND ((Month(date) = Month(Now())) OR ((Month(date) = Month(Now())+1) AND (Day(Now())>20)))";
 	}else{
 		//$whereTwoMonth = "1=1";
 		$whereTwoMonth = "cr_events.date >= DATE(NOW())";
 	}
-	
-	if ((isAdmin()) || ($rowSettings[snapshot_reduce_skills_by_group]=='0')) {
-		$maxGroup=999;  //show all groups, backward compatibility
-	} 
 
-	if ($rowSettings[group_sorting_name]=='1') {
+	if ($rowSettings['group_sorting_name']=='1') {
 		$group_sorting_name = "formatgroup,description";
 	}else{
 		$group_sorting_name = "groupID";
 	}	
 	
-	if ($maxGroup=='') 
-	{
-		$maxGroup=1;
-	}
-	
-	$sql = "SELECT count(*) as Anzahl FROM cr_groups where formatgroup<=" . $maxGroup;
+	$sql = "SELECT count(*) as colcount FROM cr_groups where formatgroup<=" . $maxGroup;
 	$result = mysql_query($sql) or die(mysql_error());
 	$row = mysql_fetch_array($result, MYSQL_ASSOC);
-	$colCnt = $row[Anzahl]+2;
+	$colCnt = $row['colcount']+2;
 
 	if (isset($_GET['column_width'])) {
 		$colWidth=$_GET['column_width'];
@@ -144,7 +142,7 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 <tr>
 	<td ><strong>Event</strong></td>
 	<?
-	$sql = "SELECT * FROM cr_groups where formatgroup<=" . $maxGroup . " ORDER BY " . $group_sorting_name;
+	$sql = "SELECT * FROM cr_groups where formatgroup <= " . $maxGroup . " ORDER BY " . $group_sorting_name;
 	$result = mysql_query($sql) or die(mysql_error());
 	
 	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
@@ -183,9 +181,9 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 	$result = mysql_query($sql) or die(mysql_error());
 	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 		$eventID = $row['id'];
-		$preacher="-";
-		$leader="-";
-		$band="-";
+		$preacher="";
+		$leader="";
+		$band="";
 		echo "<tr>";
 		echo "<td >";
 		setlocale(LC_TIME, $lang_locale); //de_DE
@@ -193,7 +191,6 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 
 		//$row['sundayDate'] 
 		echo "<br /><em>&nbsp;&nbsp;&nbsp;" . $row['eventType'] . "<br /><em>&nbsp;&nbsp;&nbsp;" . $row['eventLocation']. "</td><td >"; 
-		$i = 0;
 				$sqlPeople = "SELECT *,
 				(SELECT CONCAT(if(`firstname`='Team',`firstname`,concat(LEFT(`firstname`,1),'.')), ' ', `lastname`) FROM cr_users WHERE `cr_users`.id = `cr_skills`.`userID` ORDER BY `cr_users`.firstname) 
 				AS `name`, 
@@ -201,48 +198,46 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 				GROUP_CONCAT(skill) AS joinedskill
 				FROM cr_skills WHERE skillID IN (SELECT skillID FROM cr_eventPeople WHERE eventID = '$eventID' and groupID in (select groupID from cr_groups where formatgroup<=" . $maxGroup . ")) 
 				GROUP BY skillID ORDER BY groupID, name";
-				
-				$resultPeople = mysql_query($sqlPeople) or die(mysql_error());
-				
-				while($viewPeople = mysql_fetch_array($resultPeople, MYSQL_ASSOC)) {
-					$place = $categoryID[$i];
-					$groupID = $viewPeople['groupID'];
-
-					if($groupID == $place) { 
-						echo $viewPeople['name'];
-						echo "<br />";
-					} else { 
-						$i = $i + 1;
-						$place = $categoryID[$i];
-						echo "</td><td>";
-	
-						if($groupID == $place) { 
+								
+				for ($i=0;$i<count($categoryID);$i++)
+				{
+					$resultPeople = mysql_query($sqlPeople) or die(mysql_error());
+					while($viewPeople = mysql_fetch_array($resultPeople, MYSQL_ASSOC)) {
+						$groupID = $viewPeople['groupID'];
+						if ($groupID==$categoryID[$i])
+						{
+							//writing name/s into snapshot cell
 							echo $viewPeople['name'];
 							echo "<br />";
-						} else {
-							while ($groupID != $place) {
-								$i = $i + 1;
-								$place = $categoryID[$i];
-								echo "</td><td>";
-							}
-							echo $viewPeople['name'] . "<br />";
+							//no break or continue, because there could be other viewPeople with same categoryID	
+						
+						
+							//variable to save name for google calendar subject
+							//neede if user is admin
+							//only append name, if not already in variable
+							$separator = ", ";
+							$currentName = substr($viewPeople['category'],0,1).": ".$viewPeople['name'];
+							if (($groupID == 10) && (strpos($preacher,$currentName)===false))  
+								$preacher = trim($preacher. $separator . $currentName, $separator);
+								
+							if (($groupID == 11) && (strpos($leader,$currentName)===false))  
+								$leader = trim($leader . $separator . $currentName,$separator);
+								
+							if (($groupID == 2) && (strpos($band,$currentName)===false))  
+								$band = trim($band . $separator . $currentName,$separator);
 						}
 					}
-
-					if ($groupID == 10)  
-						$preacher=substr($viewPeople['category'],0,1).": ".$viewPeople['name'];
-					if ($groupID == 11)  
-						$leader=substr($viewPeople['category'],0,1).": ".$viewPeople['name'];
-					if ($groupID == 2)  
-						$band=substr($viewPeople['category'],0,1).": ".$viewPeople['name'];
-				} 	
-				
-				for ($i ; $i < (count($categoryID)-1); $i++) {
 					echo "</td><td>";
 				}
-				
-				echo "</td><td>";
-				
+
+				//create subject for google calendar
+				$separator = " / ";
+				$calSubject = ltrim($leader . $separator , $separator);
+				$calSubject = $calSubject . ltrim($preacher . $separator , $separator);
+				$calSubject = $calSubject . ltrim($band , $separator);
+				$calSubject = ltrim($calSubject . " ");
+				//echo $calSubject;
+								
 				putenv("TZ=".$userTZ);
 				$eventDate = $row['sundayDate'];
 				$eventDateGMT = gmdate("Ymd\THis\Z",strtotime($eventDate." ".date("T",strtotime($eventDate))));
@@ -251,20 +246,11 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 				$eventDateEndGMT = gmdate("Ymd\THis\Z",strtotime($eventDate." ".date("T",strtotime($eventDate))));
 				//echo $eventDateEndGMT;
 				
-				
-				////echo "<a href=\"http://www.google.com/calendar/event?action=TEMPLATE&text=VP%3A%20".$leader."%20/%20P%3A%20".$preacher."%20/%20M%3A%20".$band."%20(".$row['eventType'].")&dates=".strftime("%Y%m%dT%H%M%SZ",strtotime($row['sundayDate']))."/".strftime("%Y%m%dT%H%M%SZ",strtotime($row['sundayDate']))."&details=&location=".$row['eventLocation']."&trp=false&sprop=&sprop=name:&ctz=Europe/Berlin\" target=\"_blank\">";
-				//echo "<a href=\"http://www.google.com/calendar/event?action=TEMPLATE&text=".$row['eventType']."&dates=".strftime("%Y%m%dT%H%M%SZ",strtotime($row['sundayDate']))."/".strftime("%Y%m%dT%H%M%SZ",strtotime($row['sundayDate']))."&details=&location=".$row['eventLocation']."&trp=false&sprop=&sprop=name:&ctz=Europe/Berlin\" target=\"_blank\">";
-				//&src=5vokrij4fv8k011dcmt38rt7ik@group.calendar.google.com
 				if (isAdmin()) {
-					//echo "<a href=\"http://www.google.com/calendar/event?action=TEMPLATE&text=VP%3A%20".$leader."%20/%20P%3A%20".$preacher."%20/%20M%3A%20".$band."%20(".$row['eventType'].")&dates=".strftime("%Y%m%dT%H%M%SZ",strtotime($row['gmtDate']))."/".strftime("%Y%m%dT%H%M%SZ",strtotime($row['gmtEndDate']))."&details=&location=".$row['eventLocation']."&trp=false&sprop=&sprop=name:&src=5vokrij4fv8k011dcmt38rt7ik@group.calendar.google.com&ctz=Europe/Berlin\" target=\"_blank\">";
-					echo "<a href=\"http://www.google.com/calendar/event?action=TEMPLATE&text=".urlencode(utf8_wrapper($leader." / ".$preacher." / ".$band." (".$row['eventType'].")"))."&dates=".$eventDateGMT."/".$eventDateEndGMT."&details=&location=".urlencode(utf8_wrapper($row['eventLocation']))."&trp=false&sprop=&sprop=name:&src=".$google_group_calendar."&ctz=".$userTZ."\" target=\"_blank\">";
+					echo "<a href=\"http://www.google.com/calendar/event?action=TEMPLATE&text=".urlencode(utf8_wrapper($calSubject."(".$row['eventType'].")"))."&dates=".$eventDateGMT."/".$eventDateEndGMT."&details=&location=".urlencode(utf8_wrapper($row['eventLocation']))."&trp=false&sprop=&sprop=name:&src=".$google_group_calendar."&ctz=".$userTZ."\" target=\"_blank\">";
 				}else{	
 					echo "<a href=\"http://www.google.com/calendar/event?action=TEMPLATE&text=".urlencode(utf8_wrapper($row['eventType']))."&dates=".$eventDateGMT."/".$eventDateEndGMT."&details=&location=".urlencode(utf8_wrapper($row['eventLocation']))."&trp=false&sprop=&sprop=name:&ctz=".$userTZ."\" target=\"_blank\">";
 				}
-					//echo "<a href=\"http://www.google.com/calendar/event?action=TEMPLATE&text=VP%3A%20".$leader."%20/%20P%3A%20".$preacher."%20/%20M%3A%20".$band."%20(".$row['eventType'].")&dates=".strftime("%Y%m%dT%H%M%SZ",strtotime($row['sundayDate']))."/".strftime("%Y%m%dT%H%M%SZ",strtotime($row['sundayDate']))."&details=&location=".$row['eventLocation']."&trp=false&sprop=&sprop=name:&ctz=Europe/Berlin\" target=\"_blank\">";
-				
-				//echo "<img src=\"//www.google.com/calendar/images/ext/gc_button6.gif\" border=0></a>";
-				//echo "GCal</a>";
 				echo "<img src=\"//www.google.com/calendar/images/ext/gc_button1.gif\" border=0></a>";
 				
 		echo "</td></tr>\r\n";

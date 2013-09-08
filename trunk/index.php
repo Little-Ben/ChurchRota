@@ -24,6 +24,9 @@ include('includes/functions.php');
 
 // Start the session. This checks whether someone is logged in and if not redirects them
 session_start();
+
+$sessionUserID = $_SESSION['userid'];
+$userisBandAdmin = isBandAdmin($sessionUserID);
  
 if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 	// Just continue the code
@@ -222,9 +225,10 @@ if(isLoggedIn()) {
 			echo strftime($rowSettings[time_format_long],strtotime($row['sundayDate']));
 			//echo $row['sundayDate'];
 			echo "</a>";
-			if(isAdmin()) { 
+			if(isAdmin()||$userisBandAdmin) { 
 				echo " <a href='createEvent.php?action=edit&id=$eventID'><img src='graphics/tool.png' /></a> ";
-				
+			}
+			if(isAdmin()) { 				
 				if($row['notified'] == "1") {
 					echo "<a href='index.php?notifyEveryone=true&eventID=$eventID'><img src='graphics/emailsent.png' /></a> ";
 				} else {
@@ -247,7 +251,7 @@ if(isLoggedIn()) {
 			} ?>
 			<div id="deleteModal<?php echo $eventID; ?>" class="reveal-modal">
      			<h1>Really delete event?</h1>
-				<p>Are you sure you really want to delete the event taking place on <?php echo $row['sundayDate']; ?>? There is no way of undoing this action.</p>
+				<p>Are you sure you really want to delete the event taking place on <?php echo strftime($rowSettings[time_format_normal],strtotime($row['sundayDate'])); ?>? There is no way of undoing this action.</p>
 				<p><a class="button" href="index.php?eventremove=true&wholeEventID=<?php echo $eventID; ?>">Sure, delete the event</a></p>
      			<a class="close-reveal-modal">&#215;</a>
 			</div>
@@ -287,17 +291,18 @@ if(isLoggedIn()) {
 					
 					if(isAdmin()) {
 					
-					
-					if($viewPeople['notified'] == "1") {
-						$notified = " <a href='index.php?notifyIndividual=$viewPeople[userID]&eventID=$eventID&skillID=$viewPeople[skillID]'>
-						<img src='graphics/emailsent.png' /></a> ";
-					} else {
-						$notified = " <a href='index.php?notifyIndividual=$viewPeople[userID]&eventID=$eventID&skillID=$viewPeople[skillID]'>
-						<img src='graphics/email.png' /></a> ";
-				}
+						
+						if($viewPeople['notified'] == "1") {
+							$notified = " <a href='index.php?notifyIndividual=$viewPeople[userID]&eventID=$eventID&skillID=$viewPeople[skillID]'>
+							<img src='graphics/emailsent.png' /></a> ";
+						} else {
+							$notified = " <a href='index.php?notifyIndividual=$viewPeople[userID]&eventID=$eventID&skillID=$viewPeople[skillID]'>
+							<img src='graphics/email.png' /></a> ";
+						}
 						$usefulBits = $notified . " <a class='delete' href='index.php?skillremove=true&eventID=$eventID&skillID=$viewPeople[skillID]'>
 						<img src='graphics/close.png' /></a> <br />";
-						} else {
+					} else {
+						
 						$usefulBits = "<br />";
 						}
 				

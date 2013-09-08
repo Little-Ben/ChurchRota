@@ -63,11 +63,14 @@ function removeUser($userID) {
 } 
 
 function removeSkillGroups($skillID) {
-	$query = "DELETE FROM cr_groups WHERE groupID = '$skillID'";
-	mysql_query($query) or die(mysql_error());
-	
-	$query = "DELETE FROM cr_skills WHERE groupID = '$skillID'";
-	mysql_query($query) or die(mysql_error());
+	if ($skillID != 2)  // 2: special group, hardcoded funcionality for band and its members, can't be deleted
+	{
+		$query = "DELETE FROM cr_groups WHERE groupID = '$skillID'";
+		mysql_query($query) or die(mysql_error());
+		
+		$query = "DELETE FROM cr_skills WHERE groupID = '$skillID'";
+		mysql_query($query) or die(mysql_error());
+	}
 	header ("Location: editSkills.php");
 } 
 
@@ -101,5 +104,11 @@ function removeEvent($removeWholeEvent) {
 function removeBand($removeBand) {
 	$query = "DELETE FROM cr_bands WHERE bandID = '$removeBand'";
 	mysql_query($query) or die(mysql_error());
+} 
+
+function removeBandSkill($bandskillid) {
+	$query = "DELETE FROM cr_instruments WHERE id = '$bandskillid'";
+	mysql_query($query) or die(mysql_error());
+	header ("Location: bandskills.php");
 } 
 ?>

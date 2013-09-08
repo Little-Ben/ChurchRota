@@ -29,7 +29,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
       $_SESSION['isAdmin'] = $row['isAdmin']; // Set the admin status to be carried across this session
       $_SESSION['userid'] = $row['id'];
       $_SESSION['name'] = $row['firstName'] . " " . $row['lastName'];
-	
+	  $_SESSION['isBandAdmin'] = $row['isBandAdmin']; // Set the band admin status to be carried across this session
 		
 
 

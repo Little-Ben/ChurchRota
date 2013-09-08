@@ -24,7 +24,7 @@ include('includes/header.php'); ?>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GNU GENERAL PUBLIC LICENSE<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Version 3, 29 June 2007<br>
 <br>
- Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/><br>
+ Copyright (C) 2007 Free Software Foundation, Inc. <a href="http://fsf.org/" target="_blank">&lt;http://fsf.org/&gt;</a><br>
  Everyone is permitted to copy and distribute verbatim copies<br>
  of this license document, but changing it is not allowed.<br>
 <br>
@@ -668,7 +668,7 @@ the "copyright" line and a pointer to where the full notice is found.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;GNU General Public License for more details.<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;You should have received a copy of the GNU General Public License<br>
-&nbsp;&nbsp;&nbsp;&nbsp;along with this program.&nbsp;&nbsp;If not, see <http://www.gnu.org/licenses/>.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;along with this program.&nbsp;&nbsp;If not, see <a href="http://www.gnu.org/licenses/" target="_blank">&lt;http://www.gnu.org/licenses/&gt;</a>.<br>
 <br>
 Also add information on how to contact you by electronic and paper mail.<br>
 <br>
@@ -687,14 +687,14 @@ might be different; for a GUI interface, you would use an "about box".<br>
 &nbsp;&nbsp;You should also get your employer (if you work as a programmer) or school,<br>
 if any, to sign a "copyright disclaimer" for the program, if necessary.<br>
 For more information on this, and how to apply and follow the GNU GPL, see<br>
-<http://www.gnu.org/licenses/>.<br>
+<a href="http://www.gnu.org/licenses/" target="_blank">&lt;http://www.gnu.org/licenses/&gt;</a>.<br>
 <br>
 &nbsp;&nbsp;The GNU General Public License does not permit incorporating your program<br>
 into proprietary programs.&nbsp;&nbsp;If your program is a subroutine library, you<br>
 may consider it more useful to permit linking proprietary applications with<br>
 the library.&nbsp;&nbsp;If this is what you want to do, use the GNU Lesser General<br>
 Public License instead of this License.&nbsp;&nbsp;But first, please read<br>
-<http://www.gnu.org/philosophy/why-not-lgpl.html>.
+<a href="http://www.gnu.org/philosophy/why-not-lgpl.html" target="_blank">&lt;http://www.gnu.org/philosophy/why-not-lgpl.html&gt;</a>.
 </div>
 
 
