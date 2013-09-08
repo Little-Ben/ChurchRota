@@ -31,7 +31,11 @@ $sessionUserID = $_SESSION['userid'];
 $actionName='Create';
 $userisBandAdmin = isBandAdmin($sessionUserID);
 
-
+if ($userisBandAdmin)
+	$hidden=true;
+else
+	$hidden=false;
+	
 if($action == "edit") {
 	$sql = "SELECT *, 
 	(SELECT description FROM cr_locations WHERE cr_locations.id = cr_events.location) AS locationname, 
@@ -144,16 +148,12 @@ if(isset($rehearsaldate)) {
 	// Otherwise there was nothing in rehearsal date and we should just delete all people from the event
 	} else {
 		$delete_all_sql = "DELETE FROM cr_eventPeople WHERE eventID = '$eventID'";
+		if ($userisBandAdmin) $delete_all_sql = $delete_all_sql . " and skillID in (select skillID from cr_skills where groupid=2)";
 		mysql_query($delete_all_sql) or die(mysql_error());
 	}
 	header ( "Location: index.php#section" . $eventID);
 }
 $formatting = "true";
-
-if ($userisBandAdmin)
-	$hidden=true;
-else
-	$hidden=false;
 
 include('includes/header.php');
 ?>

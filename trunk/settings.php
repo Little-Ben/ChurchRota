@@ -257,7 +257,7 @@ include('includes/header.php');
 				<input class="settings" name="snapshot_reduce_skills_by_group" id="snapshot_reduce_skills_by_group" type="checkbox" value="1" <? if($row['snapshot_reduce_skills_by_group']=='1')  { echo 'checked="checked"'; } else if($row['snapshot_reduce_skills_by_group'] == '0') { }?>  />
 				
 				<label class="settings" for="group_sorting_name" >Snapshot - sort columns by skill group and skill name:</label>
-				<input class="settings" name="group_sorting_name" id="group_sorting_name" type="checkbox" disabled value="1" <? if($row['group_sorting_name']=='1')  { echo 'checked="checked"'; } else if($row['group_sorting_name'] == '0') { }?>  />
+				<input class="settings" name="group_sorting_name" id="group_sorting_name" type="checkbox" value="1" <? if($row['group_sorting_name']=='1')  { echo 'checked="checked"'; } else if($row['group_sorting_name'] == '0') { }?>  />
 
 				<label class="settings" for="logged_in_show_snapshot_button">Show button "Snapshot view" for users:</label>
 				<input class="settings" name="logged_in_show_snapshot_button" id="logged_in_show_snapshot_button" type="checkbox" value="1" <? if($row['logged_in_show_snapshot_button']=='1')  { echo 'checked="checked"'; } else if($row['logged_in_show_snapshot_button'] == '0') { }?>  />

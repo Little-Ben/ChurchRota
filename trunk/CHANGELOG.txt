@@ -9,7 +9,11 @@ Changelog of Church Rota
    
    twitter: @ChurchRota  and  @ChurchRota_Dev
 
-   
+---------------------------------------------------------------------------
+V2.2.1 - Revision 24 - Benjamin Schmitt
+- enabled settings checkbox for snapshot sorting again (not only label)
+- fixed: error since rev. 23, when deleting ALL band members as Band Admin
+
 ---------------------------------------------------------------------------
 V2.2.1 - Revision 23 - Benjamin Schmitt
 - settings: new user permission "Band Administrator",
