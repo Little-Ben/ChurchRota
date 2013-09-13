@@ -128,6 +128,43 @@ function updateInstruments($key, $description) {
   	}
 }
 
+function insertStatistics($type,$script,$detail1="",$detail2="",$detail3="") {
+
+	//if type=logout, then update login record (session-statitic-id) and exit 
+	//fallthrough if no login_statistic_id in session 
+	if (strtolower($detail1) == 'logout') {  
+		$stat_id = $_SESSION['login_statistic_id'];
+		if (($stat_id != "")&&($stat_id != "0")) {
+			$sql =        "UPDATE cr_statistics ";
+			$sql = $sql . "SET detail1=concat(detail1,'/','$detail1'), detail2=TIMEDIFF('" . date("Y-m-d H:i:s") . "',date)";
+			$sql = $sql . "WHERE id=" . $stat_id;
+			if (!mysql_query($sql))
+			{
+				die('Error: ' . mysql_error());
+			}
+			return;
+		}
+	}
+	
+	//if not type=logout (or missing login_statistic_id in session), 
+	//then insert new record with given parameters to db
+	
+	//insert of statistic info
+	$sql =        "INSERT INTO cr_statistics (userID,date,type,script,detail1,detail2,detail3) ";
+	$sql = $sql . "VALUES ('".$_SESSION['userid']."','" . date("Y-m-d H:i:s") . "','$type','$script','$detail1','$detail2','$detail3')";
+	if (!mysql_query($sql))
+	{
+		die('Error: ' . mysql_error());
+	}
+	
+	//save auto-increment-id as session-statistic-id, when type=login 
+	if (strtolower($detail1) == 'login') {
+		//get inserted auto-increment-id
+		$_SESSION['login_statistic_id'] = mysql_insert_id();
+	}
+	
+}
+
 
 function utf8_wrapper($txt) {
 	if (!ini_get('default_charset')=='utf-8') {

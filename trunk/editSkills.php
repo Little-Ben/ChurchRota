@@ -10,6 +10,11 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 	// Just continue the code
 	} else {
 	header('Location: login.php');
+	exit;
+}
+if (!isAdmin()) {
+	header('Location: error.php?no=100&page='.basename($_SERVER['SCRIPT_FILENAME']));
+	exit;
 }
 
 // Get the query string

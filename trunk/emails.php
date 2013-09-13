@@ -27,7 +27,15 @@ session_start();
  
 if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 	// Just continue the code
-	} 
+	} else {
+	header('Location: login.php');
+	exit;
+} 
+if (!isAdmin()) {
+	header('Location: error.php?no=100&page='.basename($_SERVER['SCRIPT_FILENAME']));
+	exit;
+}
+
 
 // Handle details from the header 
 $removeEventID = $_GET['eventID'];
@@ -48,7 +56,9 @@ if($notifyEveryone == "true") {
 	notifyEveryone($removeEventID);
 }
 
-notifyIndividual($notifyIndividual, $removeEventID, $removeSkillID);
+if(isset($notifyIndividual)) {
+	notifyIndividual($notifyIndividual, $removeEventID, $removeSkillID);
+}
 
 // If the form has been sent, we need to handle the data.
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -89,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	}
 }
 $formatting = "light";
-$sql = "DELETE FROM cr_subscriptions";
+$sql = "select * FROM cr_subscriptions";
 $result = mysql_query($sql) ; 
 
 while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {

@@ -10,6 +10,7 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 	// Just continue the code
 	} else {
 	header('Location: login.php');
+	exit;
 }
 
 $action = $_GET['action'];
@@ -21,7 +22,6 @@ $id = $_GET['id'];
 
 // If the form has been submitted, then we need to handle the data.
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-		if ($debug) notifyInfo(__FILE__,"pwd_change",$userID); //only_for_testing//
 		$oldPassword = mysql_real_escape_string($_POST['oldpassword']);
 		$newPassword = mysql_real_escape_string($_POST['newpassword']);
 		$checkPassword = mysql_real_escape_string($_POST['checkpassword']);
@@ -46,6 +46,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				$message = "Password incorrect, please try again";
 				$status = "fail";
 			}
+			
+			$firstname = $row['firstName'];
+			$lastname = $row['lastName'];
 		}
 		
 		
@@ -53,13 +56,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			// Update the database rather than insert new values
 			//$sql = "UPDATE cr_users SET password = '$newPassword' WHERE id = '$userID'";
 			$sql = "UPDATE cr_users SET password = '$newPassword' WHERE id = '$id'";
-		
+
+			//if ($debug) notifyInfo(__FILE__,"pwd_change",$userID); //only_for_testing//
+			if ($debug) insertStatistics("user",__FILE__,"pwd_change",$status);
+
+			
 			if (!mysql_query($sql))
 			{
 			die('Error: ' . mysql_error());
 			}
 		}
 } 
+else
+{
+		//no POST -> we are in edit mode
+		$sql = "SELECT * FROM cr_users WHERE id = '$id'";
+		$result = mysql_query($sql) or die(mysql_error());
+		$row = mysql_fetch_array($result, MYSQL_ASSOC);
+		$firstname = $row['firstName'];
+		$lastname = $row['lastName'];
+}
 include('includes/header.php');
 ?>
 
@@ -74,6 +90,7 @@ include('includes/header.php');
 <form action="#" method="post" id="addUser">
 		<fieldset>
 		<?php echo $firstname . " " . $lastname . "<br>"; ?>
+
 			<label for="oldpassword" ><?php if (!isAdmin()) { echo "Old password:"; }?></label>
 			<input name="oldpassword" id="oldpassword" <?php if (isAdmin()) { echo "type=\"hidden\""; }else{ echo "type=\"password\""; } ?> />
 			
@@ -91,6 +108,7 @@ include('includes/header.php');
 <?php
 }else{
 	notifyAttack(__FILE__,"Password Change Attack",$userID);
+	if ($debug) insertStatistics("system",__FILE__,"Password Change Attack");
 }
 ?>	
 	

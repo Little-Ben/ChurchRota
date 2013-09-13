@@ -183,5 +183,9 @@
 			echo (basename($_SERVER['SCRIPT_FILENAME'])=='editSkills.php'? 'class="active"' : '');
 			echo (basename($_SERVER['SCRIPT_FILENAME'])=='locations.php'? 'class="active"' : '');?>><a  href="settings.php">Settings</a></li>
 			<? }  ?>
+			<? if(isLoggedIn()) { ?>
+			<li <?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='logout.php'? 'class="active"' : '');?>><a  href="logout.php">Logout</a></li>
+			<? }  ?>
+			
 		</ul>
 	</div>

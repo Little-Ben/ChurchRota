@@ -24,12 +24,28 @@ include('includes/functions.php');
 
 // Start the session. This checks whether someone is logged in and if not redirects them
 session_start();
+ 
+if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
+	// Just continue the code
+	} else {
+	header('Location: login.php');
+	exit;
+}
 
+// Handle details from the header 
 $action = $_GET['action'];
 $eventID = $_GET['id'];
 $sessionUserID = $_SESSION['userid'];
+
 $actionName='Create';
 $userisBandAdmin = isBandAdmin($sessionUserID);
+
+if (($userisBandAdmin)||(isAdmin())) {
+	// Just continue the code
+	} else {
+	header('Location: error.php?no=100&page='.basename($_SERVER['SCRIPT_FILENAME']));
+}
+
 
 if ($userisBandAdmin)
 	$hidden=true;
@@ -59,12 +75,7 @@ if($action == "edit") {
 	
 	$actionName='Edit';
 } 
- 
-if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
-	// Just continue the code
-	} else {
-	header('Location: login.php');
-}
+
 	
 // If the form has been submitted, then we need to handle the data.
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

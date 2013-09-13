@@ -30,7 +30,7 @@ $userisBandAdmin = isBandAdmin($sessionUserID);
  
 if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 	// Just continue the code
-	} 
+} 
 
 // Handle details from the header 
 $removeEventID = $_GET['eventID'];
@@ -44,32 +44,34 @@ $eventremove = $_GET['eventremove'];
 $notifyOverview = $_GET['notifyOverview'];
 $filter = $_GET['filter'];
 
-// Method to remove  someone from the band
-if($eventremove == "true") {
-	removeEvent($removeWholeEvent);
-	header ( "Location: index.php#section" . $removeEventID);
-}
+if (isAdmin()) {
 
-if($skillremove == "true") {
-	removeEventPeople($removeEventID, $removeSkillID);
-	header ( "Location: index.php#section" . $removeEventID);
-}
+	// Method to remove  someone from the band
+	if($eventremove == "true") {
+		removeEvent($removeWholeEvent);
+		header ( "Location: index.php#section" . $removeEventID);
+	}
 
-if($notifyOverview == "true") {
-	//$msg = notifyOverview();
-	//header ( "Location: index.php");
-	header ( "Location: overview.php");
-}
+	if($skillremove == "true") {
+		removeEventPeople($removeEventID, $removeSkillID);
+		header ( "Location: index.php#section" . $removeEventID);
+	}
 
-if($notifyEveryone == "true") {
-	notifyEveryone($removeEventID);
-	header ( "Location: index.php#section" . $removeEventID);
-}
+	if($notifyOverview == "true") {
+		//$msg = notifyOverview();
+		header ( "Location: overview.php");
+	}
 
-if($notifyIndividual != "") {
-	notifyIndividual($notifyIndividual, $removeEventID, $removeSkillID);
-	header ( "Location: index.php#section" . $removeEventID);
-} 
+	if($notifyEveryone == "true") {
+		notifyEveryone($removeEventID);
+		header ( "Location: index.php#section" . $removeEventID);
+	}
+
+	if($notifyIndividual != "") {
+		notifyIndividual($notifyIndividual, $removeEventID, $removeSkillID);
+		header ( "Location: index.php#section" . $removeEventID);
+	} 
+}
 
 // If the form has been sent, we need to handle the data.
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

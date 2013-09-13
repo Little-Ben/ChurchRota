@@ -25,6 +25,17 @@ include('includes/functions.php');
 // Start the session. This checks whether someone is logged in and if not redirects them
 session_start();
 
+if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
+	// Just continue the code
+	} else {
+	header('Location: login.php');
+	exit;
+} 
+if (!isAdmin()) {
+	header('Location: error.php?no=100&page='.basename($_SERVER['SCRIPT_FILENAME']));
+	exit;
+}
+
 $skillID = $_GET['id'];
 
 	$sql = "SELECT *
@@ -38,12 +49,6 @@ $skillID = $_GET['id'];
 		
 	}
 
- 
-if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
-	// Just continue the code
-	} else {
-	header('Location: login.php');
-}
 
 // If the form has been submitted, then we need to handle the data.
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
