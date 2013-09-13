@@ -9,6 +9,14 @@ Changelog of Church Rota
    
    twitter: @ChurchRota  and  @ChurchRota_Dev
 
+---------------------------------------------------------------------------
+V2.3.0 - Revision 27 - Benjamin Schmitt
+- fixed: pre update logging in with "debug mode" and db < v2.3.0 works now
+         
+         if "cr_statistics not found" then do one of the follwing steps
+         - disable "debug mode" with web interface of a version < 2.3.0
+         - use this revision
+         - manually update database: update cr_settings set debug_mode=0;
 
 ---------------------------------------------------------------------------
 File release (V2.3.0) and SVN tag (2013-09-13_v2_3_0) - Revision 26   
@@ -20,6 +28,10 @@ V2.3.0 - Revision 25 - Benjamin Schmitt
   + "debug mode" additional: browser, login, logout, pwd_change
 - new: logout possibility now on each page (in header)
 - fix: users full name is now shown when changing own password 
+
+IMPORTANT:
+- Disable "Debug mode" before updating to that version
+
 
 internal stuff:
 - new function: insertStatistics
