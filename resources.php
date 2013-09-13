@@ -10,6 +10,7 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 	// Just continue the code
 	} else {
 	header('Location: login.php');
+	exit;
 }
 
 // Handle details from the header 

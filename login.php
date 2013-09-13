@@ -31,7 +31,8 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
       $_SESSION['name'] = $row['firstName'] . " " . $row['lastName'];
 	  $_SESSION['isBandAdmin'] = $row['isBandAdmin']; // Set the band admin status to be carried across this session
 		
-
+	//statistic 
+	  if ($debug) insertStatistics("user",__FILE__,"login",null,$_SERVER['HTTP_USER_AGENT']);
 
 	
    	// after login we move to the main page
@@ -39,7 +40,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 		updateDatabase();	  
 		header('Location: index.php'); // Move to the home page of the admin section
 	  }else{
-		if ($debug) notifyInfo(__FILE__,"login",$row['id']); //only_for_testing//
+		//if ($debug) notifyInfo(__FILE__,"login",$row['id']); //only_for_testing//
 	    if ($users_start_with_myevents=='1') {
 			header('Location: index.php?showmyevents=' . $_SESSION['userid']); // Move to the home page of the admin section
 		}else{

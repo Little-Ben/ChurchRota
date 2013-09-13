@@ -5,10 +5,34 @@ Changelog of Church Rota
    http://sourceforge.net/projects/churchrota/
    
    Code SVN Repository (LATEST = TRUNK)
-   http://sourceforge.net/p/churchrota/code/
+   http://sourceforge.net/p/churchrota/code/HEAD/tree/trunk
    
    twitter: @ChurchRota  and  @ChurchRota_Dev
 
+
+---------------------------------------------------------------------------
+File release (V2.3.0) and SVN tag (2013-09-13_v2_3_0) - Revision 26   
+
+---------------------------------------------------------------------------
+V2.3.0 - Revision 25 - Benjamin Schmitt
+- new: statistics information page
+  + standard mode: db_update, attacks 
+  + "debug mode" additional: browser, login, logout, pwd_change
+- new: logout possibility now on each page (in header)
+- fix: users full name is now shown when changing own password 
+
+internal stuff:
+- new function: insertStatistics
+- style.css: definitions for general th 
+             and new class "statistics" for table, th, td
+- new pages: statistic.php, error.php
+- login and user check on every page
+- removed files (obvious copying error) 
+  + /includes/createEvent.php
+  + /includes/editPassword.php
+  + /includes/index.php
+- corrected relative paths in sidebar.php
+  
 ---------------------------------------------------------------------------
 V2.2.1 - Revision 24 - Benjamin Schmitt
 - enabled settings checkbox for snapshot sorting again (not only label)
@@ -34,7 +58,7 @@ Important:
   + Snapshot - sort columns by skill group and skill name
       with this update it is set "disabled"
   + Snapshot - show only skills up to user's max. used skill group
-      it was set "disabled" by download zip of V2.2.0,
+      it was mistakenly set "disabled" by download zip of V2.2.0,
 	  update procedure is now correct, so if you have not installed
 	  V2.2.0 zip this is not relevant for you
 

@@ -29,6 +29,11 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 	// Just continue the code
 	} else {
 	header('Location: login.php');
+	exit;
+}
+if (!isAdmin()) {
+	header('Location: error.php?no=100&page='.basename($_SERVER['SCRIPT_FILENAME']));
+	exit;
 }
 
 $action = $_GET['action'];
@@ -265,7 +270,7 @@ include('includes/header.php');
 				<label class="settings" for="users_start_with_myevents">User starts with events filtered for "My Events":</label>
 				<input class="settings" name="users_start_with_myevents" id="users_start_with_myevents" type="checkbox" value="1" <? if($row['users_start_with_myevents']=='1')  { echo 'checked="checked"'; } else if($row['users_start_with_myevents'] == '0') { }?>  />
 
-				<label class="settings" for="debug_mode">Debug Mode:</label>
+				<label class="settings" for="debug_mode">Debug Mode (adds more details about user actions to internal statistics):</label>
 				<input class="settings" name="debug_mode" id="debug_mode" type="checkbox" value="1" <? if($row['debug_mode']=='1')  { echo 'checked="checked"'; } else if($row['debug_mode'] == '0') { }?>  />
 				
 			</div>
@@ -301,5 +306,6 @@ include('includes/header.php');
 	<div class="item"><a href="editSkills.php">Edit skills</a></div>
 	<div class="item"><a href="bandskills.php">Edit band skills</a></div>
 	<div class="item"><a href="locations.php">Edit Locations</a></div>
+	<div class="item"><a href="statistics.php">View Statistics</a></div>
 </div>
 <? include('includes/footer.php'); ?>

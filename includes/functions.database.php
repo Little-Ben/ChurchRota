@@ -102,17 +102,34 @@ function updateDatabase() {
 			notifyInfo(__FILE__,"db-update=" . $version . "->2.1.2",$_SESSION['userid']);				
 		case "2.1.2":		
 			executeDbSql("alter table cr_settings add(debug_mode int(1) DEFAULT '0')");
-			executeDbSql("update cr_settings set group_sorting_name = 0");  //was a workaround, not needed anymore
+			executeDbSql("update cr_settings set group_sorting_name = 0");  //was a workaround, fixed in V2.2.1
 			
 			executeDbSql("update cr_settings set version = '2.2.0'");						
 			notifyInfo(__FILE__,"db-update=" . $version . "->2.2.0",$_SESSION['userid']);				
 		case "2.2.0":		
 			executeDbSql("alter table cr_users add(isBandAdmin char(2) NOT NULL DEFAULT '0')");
-			executeDbSql("update cr_settings set group_sorting_name = 0");
+			executeDbSql("update cr_settings set group_sorting_name = 0"); //due to an error reset it again
 			
 			executeDbSql("update cr_settings set version = '2.2.1'");						
 			notifyInfo(__FILE__,"db-update=" . $version . "->2.2.1",$_SESSION['userid']);				
-						
+		case "2.2.1":					
+				$sql = "CREATE TABLE IF NOT EXISTS `cr_statistics` (
+				  `id` int(11) NOT NULL AUTO_INCREMENT,
+				  `userid` int(6) NOT NULL DEFAULT '0',
+				  `date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+				  `type` text NOT NULL,
+				  `detail1` text NOT NULL,
+				  `detail2` text NOT NULL,
+				  `detail3` text NOT NULL,
+				  `script` text NOT NULL,
+				  PRIMARY KEY (`id`)
+				) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=50";
+			executeDbSql($sql);
+			
+			executeDbSql("update cr_settings set version = '2.3.0'");						
+			notifyInfo(__FILE__,"db-update=" . $version . "->2.3.0",$_SESSION['userid']);				
+			insertStatistics("system",__FILE__,"db-update","2.3.0",$version);
+
 			break;			
 			
 	}
