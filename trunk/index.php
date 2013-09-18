@@ -27,6 +27,7 @@ session_start();
 
 $sessionUserID = $_SESSION['userid'];
 $userisBandAdmin = isBandAdmin($sessionUserID);
+$userisEventEditor = isEventEditor($sessionUserID);
  
 if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 	// Just continue the code
@@ -227,7 +228,7 @@ if(isLoggedIn()) {
 			echo strftime($rowSettings[time_format_long],strtotime($row['sundayDate']));
 			//echo $row['sundayDate'];
 			echo "</a>";
-			if(isAdmin()||$userisBandAdmin) { 
+			if(isAdmin()||$userisBandAdmin||$userisEventEditor) { 
 				echo " <a href='createEvent.php?action=edit&id=$eventID'><img src='graphics/tool.png' /></a> ";
 			}
 			if(isAdmin()) { 				

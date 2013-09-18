@@ -30,9 +30,10 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
       $_SESSION['userid'] = $row['id'];
       $_SESSION['name'] = $row['firstName'] . " " . $row['lastName'];
 	  $_SESSION['isBandAdmin'] = $row['isBandAdmin']; // Set the band admin status to be carried across this session
-		
+	  $_SESSION['isEventEditor'] = $row['isEventEditor']; // Set the event editor status to be carried across this session
+			
 	//statistic 
-	  if (($debug) && ($rowSettings['version']=='2.3.0')) insertStatistics("user",__FILE__,"login",null,$_SERVER['HTTP_USER_AGENT']);
+	  if (($debug) && ($rowSettings['version']=='2.3.1')) insertStatistics("user",__FILE__,"login",null,$_SERVER['HTTP_USER_AGENT']);
 
 	
    	// after login we move to the main page
