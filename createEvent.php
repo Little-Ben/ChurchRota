@@ -39,8 +39,9 @@ $sessionUserID = $_SESSION['userid'];
 
 $actionName='Create';
 $userisBandAdmin = isBandAdmin($sessionUserID);
+$userisEventEditor = isEventEditor($sessionUserID);
 
-if (($userisBandAdmin)||(isAdmin())) {
+if (($userisBandAdmin)||($userisEventEditor)||(isAdmin())) {
 	// Just continue the code
 	} else {
 	header('Location: error.php?no=100&page='.basename($_SERVER['SCRIPT_FILENAME']));
@@ -48,9 +49,14 @@ if (($userisBandAdmin)||(isAdmin())) {
 
 
 if ($userisBandAdmin)
-	$hidden=true;
+	$hiddenForBandAdmin=true;
 else
-	$hidden=false;
+	$hiddenForBandAdmin=false;
+
+if ($userisEventEditor)
+	$hiddenForEventEditor=true;
+else
+	$hiddenForEventEditor=false;	
 	
 if($action == "edit") {
 	$sql = "SELECT *, 
@@ -117,6 +123,7 @@ if(isset($rehearsaldate)) {
 		// First array:
 		$sql = "SELECT skillID FROM cr_eventPeople WHERE eventID = '$eventID'";
 		if ($userisBandAdmin) $sql = $sql . " and skillID in (select skillID from cr_skills where groupid=2)";
+		if ($userisEventEditor) $sql = $sql . " and skillID in (select skillID from cr_skills where groupid!=2)";
 		
 		$result = mysql_query($sql) or die(mysql_error());
 		
@@ -160,6 +167,7 @@ if(isset($rehearsaldate)) {
 	} else {
 		$delete_all_sql = "DELETE FROM cr_eventPeople WHERE eventID = '$eventID'";
 		if ($userisBandAdmin) $delete_all_sql = $delete_all_sql . " and skillID in (select skillID from cr_skills where groupid=2)";
+		if ($userisEventEditor) $delete_all_sql = $delete_all_sql . " and skillID in (select skillID from cr_skills where groupid!=2)";
 		mysql_query($delete_all_sql) or die(mysql_error());
 	}
 	header ( "Location: index.php#section" . $eventID);
@@ -175,20 +183,20 @@ include('includes/header.php');
 
 	<form action="createEvent.php<? if(isset($formaction)) echo $formaction; ?>" method="post" id="createEvent">
 		<fieldset>
-			<label for="date">Date: <? if(isset($date)&&($hidden)) echo $date; ?></label>
-			<input name="date" id="date" type="<? if($hidden) {echo "hidden";} else {echo "text";}?>" value="<? if(isset($date)) echo $date; ?>" placeholder="Enter event date" />
+			<label for="date">Date: <strong><? if(isset($date)&&(($hiddenForBandAdmin)||($hiddenForEventEditor))) echo $date; ?></strong></label>
+			<input name="date" id="date" type="<? if(($hiddenForBandAdmin)||($hiddenForEventEditor)) {echo "hidden";} else {echo "text";}?>" value="<? if(isset($date)) echo $date; ?>" placeholder="Enter event date" />
 			
-			<label for="norehearsal">Have this event without a rehearsal:</label>
-			<input name="norehearsal" id="norehearsal" type="checkbox" value="1"  <? if(isset($norehearsal) && $norehearsal != 0) { echo 'checked="checked"'; }  else {   } ?>  />
+			<label for="norehearsal">Have this event without a rehearsal: <strong><? if(isset($norehearsal)&&($hiddenForEventEditor)) echo ($norehearsal ? "yes" : "no") ; ?></strong></label>
+			<input name="norehearsal" id="norehearsal" type="<? if($hiddenForEventEditor) {echo "hidden";} else {echo "checkbox";}?>" value="1"  <? if(isset($norehearsal) && $norehearsal != 0) { echo 'checked="checked"'; }  else {   } ?>  />
 			
-			<label for="rehearsaldateactual">Rehearsal Date:</label>
-			<input name="rehearsaldateactual" id="rehearsaldateactual" value="<? if(isset($rehearsalDate)) echo $rehearsalDate; ?>" type="text" placeholder="Enter rehearsal date" />
+			<label for="rehearsaldateactual">Rehearsal Date: <strong><? if(isset($rehearsalDate)&&($hiddenForEventEditor)) echo $rehearsalDate ; ?></strong></label>
+			<input name="rehearsaldateactual" id="rehearsaldateactual" type="<? if($hiddenForEventEditor) {echo "hidden";} else {echo "text";}?>" value="<? if(isset($rehearsalDate)) echo $rehearsalDate; ?>" placeholder="Enter rehearsal date" />
 			
-			<label for="location">Location: <? if(isset($locationname)&&($hidden)) echo $locationname; ?></label>
-			<select name="location" id="location" <? if($hidden) echo "hidden"; ?>>
+			<label for="location">Location: <strong><? if(isset($locationname)&&($hiddenForBandAdmin)) echo $locationname; ?></strong></label>
+			<select name="location" id="location" <? if($hiddenForBandAdmin) echo "hidden"; ?>>
 				<option value="<? if(isset($location)) echo $location; ?>"><? if(isset($locationname)) echo $locationname; ?></option>
 				<? 
-				$sql = "SELECT * FROM cr_locations";
+				$sql = "SELECT * FROM cr_locations order by description";
 				$result = mysql_query($sql) or die(mysql_error());
 	
 				while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
@@ -197,11 +205,11 @@ include('includes/header.php');
 				} ?>
 			</select>
 			
-			<label for="type">Type: <? if(isset($typename)&&($hidden)) echo $typename; ?></label>
-			<select name="type" id="type" <? if($hidden) echo "hidden"; ?>>
+			<label for="type">Type: <strong><? if(isset($typename)&&($hiddenForBandAdmin)) echo $typename; ?></strong></label>
+			<select name="type" id="type" <? if($hiddenForBandAdmin) echo "hidden"; ?>>
 				<option value="<? if(isset($type)) echo $type; ?>"><? if(isset($typename)) echo $typename; ?></option>
 				<? 
-				$sql = "SELECT * FROM cr_eventTypes";
+				$sql = "SELECT * FROM cr_eventTypes order by description";
 				$result = mysql_query($sql) or die(mysql_error());
 	
 				while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
@@ -210,8 +218,8 @@ include('includes/header.php');
 				} ?>
 			</select>
 			
-			<label for="comment">Comments: <? if(isset($comment)&&($hidden)) echo $comment; ?></label>
-			<textarea name="comment" class="mceNoEditor" <? if($hidden) echo "hidden"; ?>><? if(isset($comment)) echo $comment; ?></textarea>
+			<label for="comment">Comments: <? if(isset($comment)&&($hiddenForBandAdmin)) echo $comment; ?></label>
+			<textarea name="comment" class="mceNoEditor" <? if($hiddenForBandAdmin) echo "hidden"; ?>><? if(isset($comment)) echo $comment; ?></textarea>
 			
 		</fieldset>
 		<input type="submit" value="<?php echo $actionName ?> event" />
@@ -259,9 +267,18 @@ include('includes/header.php');
 							{ $disabled =  ""; }  
 						else 
 							{ $disabled = 'disabled';  }
-					} else 
-						{ $disabled =  ""; }
-					
+					} else { 
+						if ($userisEventEditor) {
+							if($viewPeople['groupID'] != '2') 
+								{ $disabled =  ""; }  
+							else 
+								{ $disabled = 'disabled';  }
+						} else {
+							$disabled =  "";
+						}
+					}
+						
+						
 					if($viewPeople['skill'] != "") {
 						$skill = " - <em>" . $viewPeople['skill'] . "</em>";
 					} else {

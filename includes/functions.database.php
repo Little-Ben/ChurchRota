@@ -129,7 +129,12 @@ function updateDatabase() {
 			executeDbSql("update cr_settings set version = '2.3.0'");						
 			notifyInfo(__FILE__,"db-update=" . $version . "->2.3.0",$_SESSION['userid']);				
 			insertStatistics("system",__FILE__,"db-update","2.3.0",$version);
-
+		case "2.3.0":		
+			executeDbSql("alter table cr_users add(isEventEditor char(2) NOT NULL DEFAULT '0')");
+			
+			executeDbSql("update cr_settings set version = '2.3.1'");						
+			notifyInfo(__FILE__,"db-update=" . $version . "->2.3.1",$_SESSION['userid']);	
+			insertStatistics("system",__FILE__,"db-update","2.3.1",$version);
 			break;			
 			
 	}

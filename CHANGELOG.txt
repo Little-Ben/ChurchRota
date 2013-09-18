@@ -9,6 +9,24 @@ Changelog of Church Rota
    
    twitter: @ChurchRota  and  @ChurchRota_Dev
 
+
+---------------------------------------------------------------------------
+V2.3.1 - Revision 28 - Benjamin Schmitt
+- statistics: interpretation of browser info (more readable)
+- statistics: only list browser info, if it is not empty (!='')
+- statistics: fixed deletion of user statistics 
+- settings: new user permission "Event Editor",
+  possibility to only edit details of an existing event
+- userView: added "Event Editor" to listing of permissions per user
+- userView: also highlight users with Event Editor permissions
+- index: show icon "edit event" for Event Editors
+- edit event: Event Editor now can edit event relevant data
+- edit event: text representation of non-editable data 
+              is formatted bold (strong) now
+
+internal stuff:
+- new function: isEventEditor
+
 ---------------------------------------------------------------------------
 V2.3.0 - Revision 27 - Benjamin Schmitt
 - fixed: pre update logging in with "debug mode" and db < v2.3.0 works now

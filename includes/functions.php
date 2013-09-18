@@ -53,6 +53,24 @@ function isBandAdmin($userid) {
 	}
 }
 
+function isEventEditor($userid) {
+
+	$sqlUsers = "SELECT * FROM cr_users WHERE id = '$userid'";
+	//echo $sqlUsers;
+	$resultUsers = mysql_query($sqlUsers) or die(mysql_error); 
+
+	while($rowUsers =  mysql_fetch_array($resultUsers, MYSQL_ASSOC)) {
+		$userisEventEditor = $rowUsers['isEventEditor'];
+	}
+	//echo "->".$userisEventEditor;
+
+	if($userisEventEditor == "1") {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 function isLoggedIn() {
 	if($_SESSION['db_is_logged_in'] == true) {
 		return true;

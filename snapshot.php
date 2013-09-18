@@ -67,6 +67,7 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 	
 	if ($rowSettings['snapshot_show_two_month']=='1') {
 		$whereTwoMonth = "Year(date) = Year(Now()) AND ((Month(date) = Month(Now())) OR ((Month(date) = Month(Now())+1) AND (Day(Now())>20)))";
+		$whereTwoMonth = $whereTwoMonth . " and cr_events.date >= DATE(NOW())";
 	}else{
 		//$whereTwoMonth = "1=1";
 		$whereTwoMonth = "cr_events.date >= DATE(NOW())";

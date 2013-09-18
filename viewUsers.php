@@ -55,7 +55,7 @@ include ('includes/header.php');
 		$id = $row['id'];
 		?>
 		
-		<div class="elementBackground <? if(($row['isAdmin'] == "1") || ($row['isBandAdmin'] == "1")) { echo 'highlight'; }?>">
+		<div class="elementBackground <? if(($row['isAdmin'] == "1") || ($row['isBandAdmin'] == "1") || ($row['isEventEditor'] == "1")) { echo 'highlight'; }?>">
 			<h2><div class="elementHead arrowwaiting"><a name="section<?php echo $row['id']; ?>"><? echo $row['firstName'] . " " . $row['lastName']; ?></a></div>
 			<div class="elementContent"><p><strong>Email address:</strong> <a href="mailto:<? echo $row['email']; ?>"><? echo $row['email']; ?></a><br />
 			<strong>Mobile:</strong> <? echo $row['mobile']; ?></p>
@@ -108,6 +108,7 @@ include ('includes/header.php');
 			echo "<p><strong>Permissions:</strong><br />";						
 			if($row['isAdmin'] == '1') { echo "Administrator<br />"; } 
 			if($row['isBandAdmin'] == '1') { echo "Band Administrator<br />"; } 
+			if($row['isEventEditor'] == '1') { echo "Event Editor<br />"; } 
 			if($row['isOverviewRecipient'] == '1') { echo "Overview Recipient"; } 
 			echo "</p></div>";?>
 		</div>		</div>
