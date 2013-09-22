@@ -7,10 +7,18 @@ include('includes/functions.password.php');
 include('includes/functions.users.php');
 include('includes/functions.database.php');
 
-if($holdQuery != true) {
+if((isset($holdQuery)) || ($holdQuery == true)) {
+		//set variables during installtion to default values
+		$owner = 'A Church';
+		$owneremail = '-';
+		$version = '0.0.0';
+		$debug = 0;	
+
+}else{
+	//if call is not during installation, 
+	//query real values from db for these variables
 	$sql = "SELECT * FROM cr_settings";
 	$result = mysql_query($sql) or die(mysql_error());
-
 
 	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 		$owner = $row['owner'];
@@ -18,14 +26,7 @@ if($holdQuery != true) {
 		$version = $row['version'];	
 		$debug = $row['debug_mode'];
 	}
-}else{
-		$owner = 'A Church';
-		$owneremail = '-';
-		$version = '0.0.0';
-		$debug = 0;	
 }
-
-
 
 function isAdmin() {
 	if($_SESSION['isAdmin'] == "1") {
