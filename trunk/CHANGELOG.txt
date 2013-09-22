@@ -11,7 +11,14 @@ Changelog of Church Rota
 
 
 ---------------------------------------------------------------------------
-V2.3.1 - Revision 28 - Benjamin Schmitt
+V2.3.2 - SVN only - Revision 29 - Benjamin Schmitt
+- includes/functions.php: 
+  check if variable "holdQuery" exists during installation, then set 
+  variables to default value instead of db query (because db not ready);
+  otherwise -> query real values from db
+
+---------------------------------------------------------------------------
+V2.3.1 - SVN only - Revision 28 - Benjamin Schmitt
 - statistics: interpretation of browser info (more readable)
 - statistics: only list browser info, if it is not empty (!='')
 - statistics: fixed deletion of user statistics 
