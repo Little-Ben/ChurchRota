@@ -11,7 +11,7 @@ Changelog of Church Rota
 
 
 ---------------------------------------------------------------------------
-V2.3.3 - SVN only - Revision 30 - Benjamin Schmitt
+V2.3.3 - SVN only - Revision 30 and 31 - Benjamin Schmitt
 - code corrections - replaced all "<?" with "<?php",
   WAMP users may use "error_reporting = E_ERROR" in php.ini 
 

@@ -314,7 +314,7 @@ include('includes/header.php');
 		
 		<fieldset>
         <h3>Other roles</h3>
-        	<?			
+        	<?php			
 		$sql = "SELECT *, 
 			(SELECT groupID FROM cr_skills WHERE cr_skills.groupID = cr_groups.groupID AND cr_skills.userID = '$userID' LIMIT 1) AS inSkill
 			FROM cr_groups WHERE groupID != 2 ORDER BY groupID";

@@ -83,7 +83,7 @@ if($action == "new" || $action == "edit") {
 ?>
 <div class="elementBackground highlight">
 	<h2><a name="addBand">Add a new resource:</a></h2>
-	<form id="addEesource" method="post" action="<?php echo $actionlink; ?>" enctype="multipart/form-data">
+	<form id="addResource" method="post" action="<?php echo $actionlink; ?>" enctype="multipart/form-data">
 				<fieldset>
 					<label for="resourcename">Resource name:</label>
 					<input id="resourcename" type="text" name="resourcename" value="<?php echo $resourcename; ?>" placeholder="Enter resource name:" />
@@ -112,7 +112,7 @@ if($action == "new" || $action == "edit") {
 		<div class="item"><a href="resources.php">View all resources</a></div>
 	</div>
 
-<?	} else {
+<?php	} else {
 	$sql = "SELECT * FROM cr_documents ORDER BY title";
 	$result = mysql_query($sql) or die(mysql_error());
 	
