@@ -115,6 +115,6 @@ include('includes/header.php');
 </div>
 
 <div id="right">
-		<div class="item"><a href="addUser.php?action=edit&id=<? echo $_SESSION['userid']; ?>">Edit my account</a></div>
+		<div class="item"><a href="addUser.php?action=edit&id=<?php echo $_SESSION['userid']; ?>">Edit my account</a></div>
 </div>
-<? include('includes/footer.php'); ?>
+<?php include('includes/footer.php'); ?>

@@ -108,8 +108,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	
 	<div class="elementBackground">
 	<h2>New post</h2>
-	<p>You are commenting as <strong><? echo $_SESSION['name']; ?></strong></p>
-	<form id="addTopic" method="post" action="discussiontopic.php?parentid=<? echo $parentid; ?>">
+	<p>You are commenting as <strong><?php echo $_SESSION['name']; ?></strong></p>
+	<form id="addTopic" method="post" action="discussiontopic.php?parentid=<?php echo $parentid; ?>">
 				<fieldset>
 					<label for="discussiontopic">Title:</label>
 					<input id="discussiontopic" type="text" name="discussiontopic" placeholder="Enter discussion topic:" />					
@@ -123,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				</fieldset>		
 	</form>
 	</div>
-	<?
+	<?php
 } else { 
 	// Otherwise we want to display the requested topic
 	
@@ -138,16 +138,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	?>
 	<div class="elementBackground highlight">
 	<h2>Topic: <?php echo $row['topicName']; ?></h2>
-	<p>You are commenting as <strong><? echo $_SESSION['name']; ?></strong></p>
+	<p>You are commenting as <strong><?php echo $_SESSION['name']; ?></strong></p>
 	</div>
 	
 	<div class="elementBackground">
 	<h2><a name="addcategory"><?php echo $row['name']; ?></a> - <span class="postdate"><em><?php echo $row['dateFormatted']; ?></em></span> 
-	<? if(isAdmin()) { echo "<a href='discussiontopic.php?redirect=true&postremove=true&postid=" . $row['id'] . "&parentid=" . $parentid . "'><img src='graphics/close.png' /></a><br />"; }?>
+	<?php if(isAdmin()) { echo "<a href='discussiontopic.php?redirect=true&postremove=true&postid=" . $row['id'] . "&parentid=" . $parentid . "'><img src='graphics/close.png' /></a><br />"; }?>
 	</h2>
 	<p><?php echo stripslashes($topic); ?></p>
 	</div>
-	<?
+	<?php
 	}
 	
 	// Then we get all the posts that go in the topic
@@ -162,11 +162,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	?>
 	<div class="elementBackground">
 	<h2><a name="addcategory"><?php echo $row['name']; ?></a> - <span class="postdate"><em><?php echo $row['dateFormatted']; ?></em></span>
-	<? if(isAdmin()) { echo "<a href='discussiontopic.php?postremove=true&postid=" . $row['id'] . "&parentid=" . $parentid . "&id=" . $id . "'><img src='graphics/close.png' /></a>"; }?></h2>
+	<?php if(isAdmin()) { echo "<a href='discussiontopic.php?postremove=true&postid=" . $row['id'] . "&parentid=" . $parentid . "&id=" . $id . "'><img src='graphics/close.png' /></a>"; }?></h2>
 	<p><?php echo stripslashes($topic); ?></p>
 	</div>
 	
-	<?
+	<?php
 	
 	
 	// At the end of the stream of posts, we want to have the possibility of replying
@@ -208,11 +208,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	</div>
 	
 
-<? 
+<?php 
 }
 ?>
 <div id="right">
-		<? echo $subscribe; ?>
+		<?php echo $subscribe; ?>
 		
 </div>
-<? include('includes/footer.php'); ?>
+<?php include('includes/footer.php'); ?>

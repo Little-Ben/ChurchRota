@@ -97,10 +97,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$listParents = $listParents . "<option value='" . $categoryID . "'>" . $categoryName . "</option>";
 		?>
 		<div class="elementBackground highlight">
-			<h2><a href="discussion.php?categoryid=<?php echo $categoryID; ?>"><? echo $row['name']; ?></a> <? 
+			<h2><a href="discussion.php?categoryid=<?php echo $categoryID; ?>"><?php echo $row['name']; ?></a> <?php 
 			if(isAdmin()) { echo "<a href='discussion.php?categoryremove=true&categoryid=$categoryID'><img src='graphics/close.png' /></a>"; } ?></h2>
 			<p><?php echo $row['description']; ?></p>
-            <? if ($row['firstName'] != "") { 
+            <?php if ($row['firstName'] != "") { 
 				// If there is no topic name, get the topic name of the parent topic
 				if($row['topicName'] == "") {
 					$topichandler = $row['topicParent'];
@@ -113,11 +113,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				} else { 
 					$topicName = $row['topicName'];
 				} ?>
-			<p><strong>Latest post:</strong> <? echo $topicName . " <strong>by</strong> " . $row['firstName']; ?></p>
-            <? } ?>
+			<p><strong>Latest post:</strong> <?php echo $topicName . " <strong>by</strong> " . $row['firstName']; ?></p>
+            <?php } ?>
 		
 		</div>		
-	<?
+	<?php
 	}
 	
 	if($areaid == "") {
@@ -150,10 +150,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		
 		?>
 		<div class="elementBackground">
-			<h2><a href="discussiontopic.php?id=<?php echo $row['id']; ?>&parentid=<?php echo $categoryID; ?>"><? echo $row['topicName']; ?></a>
-			<? if(isAdmin()) { echo "<a href='discussion.php?discussionremove=true&categoryid=" . $row['id'] . "'><img src='graphics/close.png' /></a>"; } ?></h2>
+			<h2><a href="discussiontopic.php?id=<?php echo $row['id']; ?>&parentid=<?php echo $categoryID; ?>"><?php echo $row['topicName']; ?></a>
+			<?php if(isAdmin()) { echo "<a href='discussion.php?discussionremove=true&categoryid=" . $row['id'] . "'><img src='graphics/close.png' /></a>"; } ?></h2>
 			<p><strong>Posted:</strong> <?php echo $row['dateFormatted']; ?> <strong>by</strong> <?php echo $row['name']; ?></p>
-			 <? 
+			 <?php 
 			 $latestpostsql = "SELECT *, 
 		(SELECT CONCAT(`firstname`, ' ', `lastname`) FROM cr_users WHERE `cr_users`.id = `cr_discussion`.`userID` ) AS `name`, 
 		(SELECT id FROM cr_discussion WHERE cr_discussion.CategoryParent = '$areaid' ORDER BY cr_discussion.id DESC LIMIT 0,1) AS `postid`,
@@ -167,13 +167,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			 
 			 while ($latestpostrow = mysql_fetch_array($latestpostresult, MYSQL_ASSOC)) {
 			  ?>
-			<p><strong>Latest post:</strong> <? echo $latestpostrow['firstName'] . " <strong>on</strong> " . $latestpostrow['topicDate']; ?></p>
-            <? } ?>	
+			<p><strong>Latest post:</strong> <?php echo $latestpostrow['firstName'] . " <strong>on</strong> " . $latestpostrow['topicDate']; ?></p>
+            <?php } ?>	
 		</div>
-		<?
+		<?php
 	}
 	?>
-	<? if($areaid != "") { 
+	<?php if($areaid != "") { 
 		$sql = "SELECT id FROM cr_subscriptions WHERE `cr_subscriptions`.userid = $userID AND `cr_subscriptions`.`categoryid` = '$areaid'";
 		$result = mysql_query($sql) or die(mysql_error());
 		
@@ -192,7 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			
 	
 	 } ?>
-	<?
+	<?php
 if(isAdmin() && $action == 'newcategory') {
 ?>
 <div class="elementBackground">
@@ -205,7 +205,7 @@ if(isAdmin() && $action == 'newcategory') {
 					<label for="categoryparent">Category parent:</label>
 					<select name="categoryparent" id="categoryparent">
 						<option value="0"></option>
-						<? echo $listParents; ?>
+						<?php echo $listParents; ?>
 					</select>
 					
 					
@@ -218,17 +218,17 @@ if(isAdmin() && $action == 'newcategory') {
 				</fieldset>		
 	</form>
 </div>
-<?
+<?php
 } // End the admin loop
  ?>
 <div id="right">
-		<? echo $subscribe;
+		<?php echo $subscribe;
 		
-		if(isAdmin()) { ?><div class="item"><a href="discussion.php?action=newcategory">Add a new category</a></div><? } 
+		if(isAdmin()) { ?><div class="item"><a href="discussion.php?action=newcategory">Add a new category</a></div><?php } 
 		if ($areaid == "") { 
 		
 		} else { ?>
-      		<div class="item"><a href="discussiontopic.php?parentid=<? echo $areaid; ?>">Add a new post</a></div>
-        <? } ?>
+      		<div class="item"><a href="discussiontopic.php?parentid=<?php echo $areaid; ?>">Add a new post</a></div>
+        <?php } ?>
 	</div>
-<? include('includes/footer.php'); ?>
+<?php include('includes/footer.php'); ?>

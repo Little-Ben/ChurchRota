@@ -345,7 +345,7 @@ so this is the last stage in the installation. Simply enter an administator user
 
 </div>
 
-<? 
+<?php 
 $owner='A Church';
 $version='0.0.0';
 include('includes/footer.php'); ?>

@@ -176,7 +176,7 @@ include('includes/header.php');
 <div class="elementBackground">
 <form action="#" method="post" id="settings">
 		<fieldset>
-		<?
+		<?php
 		$sql = "SELECT * FROM cr_settings";
 		$result = mysql_query($sql) or die(mysql_error());
 		
@@ -187,13 +187,13 @@ include('includes/header.php');
 			</div>
 			<div class="elementContent" >
 				<label class="owner" for="siteurl">Enter your organisation name:</label>
-				<input class="owner" name="owner" id="owner" type="text" value="<? echo $row['owner'];?>"  />
+				<input class="owner" name="owner" id="owner" type="text" value="<?php echo $row['owner'];?>"  />
 				
 				<label class="settings" for="siteurl">Enter URL of your website:</label>
-				<input class="settings" name="siteurl" id="siteurl" type="text" value="<? echo $row['siteurl'];?>"  />
+				<input class="settings" name="siteurl" id="siteurl" type="text" value="<?php echo $row['siteurl'];?>"  />
 				
 				<label class="settings" for="siteadminemail">Enter your admin email address:</label>
-				<input class="settings" name="siteadminemail" id="siteadminemail" type="text" value="<? echo $row['adminemailaddress'];?>"  />
+				<input class="settings" name="siteadminemail" id="siteadminemail" type="text" value="<?php echo $row['adminemailaddress'];?>"  />
 			</div>
 		</div>
 		
@@ -205,19 +205,19 @@ include('includes/header.php');
 			<div class="elementContent" >
 				
 				<label class="settings" for="notificationemail">Enter the text you would like at the bottom of a notification email:</label>
-				<textarea id="notificationemail" type="text" name="notificationemail"><? echo $row['notificationemail'];?></textarea>
+				<textarea id="notificationemail" type="text" name="notificationemail"><?php echo $row['notificationemail'];?></textarea>
 				
 				<label class="settings" for="norehearsalemail">Text to display for events with no rehearsal</label>
-				<textarea id="norehearsalemail" type="text" name="norehearsalemail"><? echo $row['norehearsalemail'];?></textarea>
+				<textarea id="norehearsalemail" type="text" name="norehearsalemail"><?php echo $row['norehearsalemail'];?></textarea>
 				
 				<label class="settings" for="yesrehearsal">Text to display for advertising rehearsal</label>
-				<textarea id="yesrehearsal" type="text" name="yesrehearsal"><? echo $row['yesrehearsal'];?></textarea>
+				<textarea id="yesrehearsal" type="text" name="yesrehearsal"><?php echo $row['yesrehearsal'];?></textarea>
 				
 				<label class="settings" for="newusermessage">Email to new users</label>
-				<textarea id="newusermessage" type="text" name="newusermessage"><? echo $row['newusermessage'];?></textarea>
+				<textarea id="newusermessage" type="text" name="newusermessage"><?php echo $row['newusermessage'];?></textarea>
 				
 				<label class="settings" for="overviewemail">Email for monthly overview</label>
-				<textarea id="overviewemail" type="text" name="overviewemail"><? echo $row['overviewemail'];?></textarea>
+				<textarea id="overviewemail" type="text" name="overviewemail"><?php echo $row['overviewemail'];?></textarea>
 				
 			</div>
 		</div>
@@ -229,20 +229,20 @@ include('includes/header.php');
 			<div class="elementContent" >
 				
 				<label class="settings" for="lang_locale">Language locale (e.g. en_GB):</label>
-				<input class="settings" name="lang_locale" id="lang_locale" type="text" value="<? echo $row['lang_locale'];?>"  />
+				<input class="settings" name="lang_locale" id="lang_locale" type="text" value="<?php echo $row['lang_locale'];?>"  />
 				<label class="settings"><?php //echo setlocale(LC_ALL,null); ?></label>
 
 				<label class="settings" for="time_format_long">Long time format (pattern see php strftime):</label>
-				<input class="settings" name="time_format_long" id="time_format_long" type="text" value="<? echo $row['time_format_long'];?>"  />
+				<input class="settings" name="time_format_long" id="time_format_long" type="text" value="<?php echo $row['time_format_long'];?>"  />
 
 				<label class="settings" for="time_format_normal">Standard time format (pattern see php  strftime):</label>
-				<input class="settings" name="time_format_normal" id="time_format_normal" type="text" value="<? echo $row['time_format_normal'];?>"  />
+				<input class="settings" name="time_format_normal" id="time_format_normal" type="text" value="<?php echo $row['time_format_normal'];?>"  />
 
 				<label class="settings" for="time_format_short">Short time format (pattern see php strftime):</label>
-				<input class="settings" name="time_format_short" id="time_format_short" type="text" value="<? echo $row['time_format_short'];?>"  />
+				<input class="settings" name="time_format_short" id="time_format_short" type="text" value="<?php echo $row['time_format_short'];?>"  />
 
 				<label class="settings" for="time_zone">Time Zone (see php "List of Supported Timezones", e.g. Europe/London):</label>
-				<input class="settings" name="time_zone" id="time_zone" type="text" value="<? echo $row['time_zone'];?>"  />
+				<input class="settings" name="time_zone" id="time_zone" type="text" value="<?php echo $row['time_zone'];?>"  />
 			</div>
 		</div>
 		
@@ -253,25 +253,25 @@ include('includes/header.php');
 			<div class="elementContent" >
 					
 				<label class="settings" for="event_sorting_latest">Event overview - show latest events first:</label>
-				<input class="settings" name="event_sorting_latest" id="event_sorting_latest" type="checkbox" value="1" <? if($row['event_sorting_latest']=='1')  { echo 'checked="checked"'; } else if($row['event_sorting_latest'] == '0') { }?>  />
+				<input class="settings" name="event_sorting_latest" id="event_sorting_latest" type="checkbox" value="1" <?php if($row['event_sorting_latest']=='1')  { echo 'checked="checked"'; } else if($row['event_sorting_latest'] == '0') { }?>  />
 				
 				<label class="settings" for="snapshot_show_two_month">Snapshot - show only current month (and following if current day>20):</label>
-				<input class="settings" name="snapshot_show_two_month" id="snapshot_show_two_month" type="checkbox" value="1" <? if($row['snapshot_show_two_month']=='1')  { echo 'checked="checked"'; } else if($row['snapshot_show_two_month'] == '0') { }?>  />
+				<input class="settings" name="snapshot_show_two_month" id="snapshot_show_two_month" type="checkbox" value="1" <?php if($row['snapshot_show_two_month']=='1')  { echo 'checked="checked"'; } else if($row['snapshot_show_two_month'] == '0') { }?>  />
 
 				<label class="settings" for="snapshot_reduce_skills_by_group">Snapshot - show only skills up to user's max. used skill group:</label>
-				<input class="settings" name="snapshot_reduce_skills_by_group" id="snapshot_reduce_skills_by_group" type="checkbox" value="1" <? if($row['snapshot_reduce_skills_by_group']=='1')  { echo 'checked="checked"'; } else if($row['snapshot_reduce_skills_by_group'] == '0') { }?>  />
+				<input class="settings" name="snapshot_reduce_skills_by_group" id="snapshot_reduce_skills_by_group" type="checkbox" value="1" <?php if($row['snapshot_reduce_skills_by_group']=='1')  { echo 'checked="checked"'; } else if($row['snapshot_reduce_skills_by_group'] == '0') { }?>  />
 				
 				<label class="settings" for="group_sorting_name" >Snapshot - sort columns by skill group and skill name:</label>
-				<input class="settings" name="group_sorting_name" id="group_sorting_name" type="checkbox" value="1" <? if($row['group_sorting_name']=='1')  { echo 'checked="checked"'; } else if($row['group_sorting_name'] == '0') { }?>  />
+				<input class="settings" name="group_sorting_name" id="group_sorting_name" type="checkbox" value="1" <?php if($row['group_sorting_name']=='1')  { echo 'checked="checked"'; } else if($row['group_sorting_name'] == '0') { }?>  />
 
 				<label class="settings" for="logged_in_show_snapshot_button">Show button "Snapshot view" for users:</label>
-				<input class="settings" name="logged_in_show_snapshot_button" id="logged_in_show_snapshot_button" type="checkbox" value="1" <? if($row['logged_in_show_snapshot_button']=='1')  { echo 'checked="checked"'; } else if($row['logged_in_show_snapshot_button'] == '0') { }?>  />
+				<input class="settings" name="logged_in_show_snapshot_button" id="logged_in_show_snapshot_button" type="checkbox" value="1" <?php if($row['logged_in_show_snapshot_button']=='1')  { echo 'checked="checked"'; } else if($row['logged_in_show_snapshot_button'] == '0') { }?>  />
 
 				<label class="settings" for="users_start_with_myevents">User starts with events filtered for "My Events":</label>
-				<input class="settings" name="users_start_with_myevents" id="users_start_with_myevents" type="checkbox" value="1" <? if($row['users_start_with_myevents']=='1')  { echo 'checked="checked"'; } else if($row['users_start_with_myevents'] == '0') { }?>  />
+				<input class="settings" name="users_start_with_myevents" id="users_start_with_myevents" type="checkbox" value="1" <?php if($row['users_start_with_myevents']=='1')  { echo 'checked="checked"'; } else if($row['users_start_with_myevents'] == '0') { }?>  />
 
 				<label class="settings" for="debug_mode">Debug Mode (adds more details about user actions to internal statistics):</label>
-				<input class="settings" name="debug_mode" id="debug_mode" type="checkbox" value="1" <? if($row['debug_mode']=='1')  { echo 'checked="checked"'; } else if($row['debug_mode'] == '0') { }?>  />
+				<input class="settings" name="debug_mode" id="debug_mode" type="checkbox" value="1" <?php if($row['debug_mode']=='1')  { echo 'checked="checked"'; } else if($row['debug_mode'] == '0') { }?>  />
 				
 			</div>
 		</div>
@@ -283,7 +283,7 @@ include('includes/header.php');
 			<div class="elementContent" >
 			
 				<label class="settings" for="google_group_calendar">Google Group Calendar ID (for admin snapshot, e.g.&nbsp;5vpkrij4fv8k011dcmt38rt7ik@group.calendar.google.com):</label>
-				<input class="settings" name="google_group_calendar" id="google_group_calendar" type="text" value="<? echo $row['google_group_calendar'];?>"  />
+				<input class="settings" name="google_group_calendar" id="google_group_calendar" type="text" value="<?php echo $row['google_group_calendar'];?>"  />
 			
 			</div>
 		</div>
@@ -291,7 +291,7 @@ include('includes/header.php');
 		<div class="elementBackground">
 			
 			
-		<?
+		<?php
 		}
 		?>
 			
@@ -308,4 +308,4 @@ include('includes/header.php');
 	<div class="item"><a href="locations.php">Edit Locations</a></div>
 	<div class="item"><a href="statistics.php">View Statistics</a></div>
 </div>
-<? include('includes/footer.php'); ?>
+<?php include('includes/footer.php'); ?>

@@ -1,4 +1,4 @@
-<?
+<?php
 function addPeople($id, $skillid) {
 	$sql = ("INSERT INTO cr_eventPeople (eventID, skillID) VALUES ('$id', '$skillid')");
 	

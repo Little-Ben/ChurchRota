@@ -181,21 +181,21 @@ include('includes/header.php');
 <div class="elementBackground">
 <h2><?php echo $actionName ?> an Event</h2>
 
-	<form action="createEvent.php<? if(isset($formaction)) echo $formaction; ?>" method="post" id="createEvent">
+	<form action="createEvent.php<?php if(isset($formaction)) echo $formaction; ?>" method="post" id="createEvent">
 		<fieldset>
-			<label for="date">Date: <strong><? if(isset($date)&&(($hiddenForBandAdmin)||($hiddenForEventEditor))) echo $date; ?></strong></label>
-			<input name="date" id="date" type="<? if(($hiddenForBandAdmin)||($hiddenForEventEditor)) {echo "hidden";} else {echo "text";}?>" value="<? if(isset($date)) echo $date; ?>" placeholder="Enter event date" />
+			<label for="date">Date: <strong><?php if(isset($date)&&(($hiddenForBandAdmin)||($hiddenForEventEditor))) echo $date; ?></strong></label>
+			<input name="date" id="date" type="<?php if(($hiddenForBandAdmin)||($hiddenForEventEditor)) {echo "hidden";} else {echo "text";}?>" value="<?php if(isset($date)) echo $date; ?>" placeholder="Enter event date" />
 			
-			<label for="norehearsal">Have this event without a rehearsal: <strong><? if(isset($norehearsal)&&($hiddenForEventEditor)) echo ($norehearsal ? "yes" : "no") ; ?></strong></label>
-			<input name="norehearsal" id="norehearsal" type="<? if($hiddenForEventEditor) {echo "hidden";} else {echo "checkbox";}?>" value="1"  <? if(isset($norehearsal) && $norehearsal != 0) { echo 'checked="checked"'; }  else {   } ?>  />
+			<label for="norehearsal">Have this event without a rehearsal: <strong><?php if(isset($norehearsal)&&($hiddenForEventEditor)) echo ($norehearsal ? "yes" : "no") ; ?></strong></label>
+			<input name="norehearsal" id="norehearsal" type="<?php if($hiddenForEventEditor) {echo "hidden";} else {echo "checkbox";}?>" value="1"  <?php if(isset($norehearsal) && $norehearsal != 0) { echo 'checked="checked"'; }  else {   } ?>  />
 			
-			<label for="rehearsaldateactual">Rehearsal Date: <strong><? if(isset($rehearsalDate)&&($hiddenForEventEditor)) echo $rehearsalDate ; ?></strong></label>
-			<input name="rehearsaldateactual" id="rehearsaldateactual" type="<? if($hiddenForEventEditor) {echo "hidden";} else {echo "text";}?>" value="<? if(isset($rehearsalDate)) echo $rehearsalDate; ?>" placeholder="Enter rehearsal date" />
+			<label for="rehearsaldateactual">Rehearsal Date: <strong><?php if(isset($rehearsalDate)&&($hiddenForEventEditor)) echo $rehearsalDate ; ?></strong></label>
+			<input name="rehearsaldateactual" id="rehearsaldateactual" type="<?php if($hiddenForEventEditor) {echo "hidden";} else {echo "text";}?>" value="<?php if(isset($rehearsalDate)) echo $rehearsalDate; ?>" placeholder="Enter rehearsal date" />
 			
-			<label for="location">Location: <strong><? if(isset($locationname)&&($hiddenForBandAdmin)) echo $locationname; ?></strong></label>
-			<select name="location" id="location" <? if($hiddenForBandAdmin) echo "hidden"; ?>>
-				<option value="<? if(isset($location)) echo $location; ?>"><? if(isset($locationname)) echo $locationname; ?></option>
-				<? 
+			<label for="location">Location: <strong><?php if(isset($locationname)&&($hiddenForBandAdmin)) echo $locationname; ?></strong></label>
+			<select name="location" id="location" <?php if($hiddenForBandAdmin) echo "hidden"; ?>>
+				<option value="<?php if(isset($location)) echo $location; ?>"><?php if(isset($locationname)) echo $locationname; ?></option>
+				<?php 
 				$sql = "SELECT * FROM cr_locations order by description";
 				$result = mysql_query($sql) or die(mysql_error());
 	
@@ -205,10 +205,10 @@ include('includes/header.php');
 				} ?>
 			</select>
 			
-			<label for="type">Type: <strong><? if(isset($typename)&&($hiddenForBandAdmin)) echo $typename; ?></strong></label>
-			<select name="type" id="type" <? if($hiddenForBandAdmin) echo "hidden"; ?>>
-				<option value="<? if(isset($type)) echo $type; ?>"><? if(isset($typename)) echo $typename; ?></option>
-				<? 
+			<label for="type">Type: <strong><?php if(isset($typename)&&($hiddenForBandAdmin)) echo $typename; ?></strong></label>
+			<select name="type" id="type" <?php if($hiddenForBandAdmin) echo "hidden"; ?>>
+				<option value="<?php if(isset($type)) echo $type; ?>"><?php if(isset($typename)) echo $typename; ?></option>
+				<?php 
 				$sql = "SELECT * FROM cr_eventTypes order by description";
 				$result = mysql_query($sql) or die(mysql_error());
 	
@@ -218,15 +218,15 @@ include('includes/header.php');
 				} ?>
 			</select>
 			
-			<label for="comment">Comments: <? if(isset($comment)&&($hiddenForBandAdmin)) echo $comment; ?></label>
-			<textarea name="comment" class="mceNoEditor" <? if($hiddenForBandAdmin) echo "hidden"; ?>><? if(isset($comment)) echo $comment; ?></textarea>
+			<label for="comment">Comments: <?php if(isset($comment)&&($hiddenForBandAdmin)) echo $comment; ?></label>
+			<textarea name="comment" class="mceNoEditor" <?php if($hiddenForBandAdmin) echo "hidden"; ?>><?php if(isset($comment)) echo $comment; ?></textarea>
 			
 		</fieldset>
 		<input type="submit" value="<?php echo $actionName ?> event" />
 		
 		<fieldset>
 			<legend><h2>Add people to the event:</h2></legend>
-			<?
+			<?php
 				$sqlPeople = "SELECT *,
 				(SELECT CONCAT(`firstname`, ' ', `lastname`) FROM cr_users WHERE `cr_users`.id = `cr_skills`.`userID` ORDER BY `cr_users`.firstname) AS `name`, 
 				(SELECT `description` FROM cr_groups WHERE `cr_skills`.`groupID` = `cr_groups`.`groupID`) AS `category`, 
@@ -330,4 +330,4 @@ include('includes/header.php');
 </div>
 
 
-<? include('includes/footer.php'); ?>
+<?php include('includes/footer.php'); ?>

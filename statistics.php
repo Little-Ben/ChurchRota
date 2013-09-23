@@ -197,15 +197,15 @@ include('includes/header.php');
 			</div>
 		
 </div>
-<? 
+<?php 
 if(isAdmin()) { ?>
 <div id="right">
 		<div class="item"><a href="settings.php">Back to settings</a></div>
 		<?php	if($method != "showall") { ?>
 		<div class="item"><a href="statistics.php?method=showall">Show all statistics</a></div>
-		<? } else { ?>
+		<?php } else { ?>
 		<div class="item"><a href="statistics.php">Show latest statistics</a></div>
-		<? } ?>
+		<?php } ?>
 </div>
-<? } ?>
-<? include('includes/footer.php'); ?>
+<?php } ?>
+<?php include('includes/footer.php'); ?>

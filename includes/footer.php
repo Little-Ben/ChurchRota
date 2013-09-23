@@ -1,4 +1,4 @@
-<? /*
+<?php /*
 	This file is part of Church Rota.
 	
 	Copyright (C) 2011 David Bunce
@@ -19,7 +19,7 @@
 ?>
 <div id="footer">
 	<div id="footercontent">
-	<strong><? echo $owner; ?>:</strong> church management system powered by <a href="https://sourceforge.net/projects/churchrota/">Church Rota</a> v.<?php echo $version; ?><br />
+	<strong><?php echo $owner; ?>:</strong> church management system powered by <a href="https://sourceforge.net/projects/churchrota/">Church Rota</a> v.<?php echo $version; ?><br />
 	Church Rota is released under the <a href="license.php">GPL License</a> and is copyright &copy; David Bunce and Benjamin Schmitt in 2011-2013.<br /></div>
 	</div>
 </div>

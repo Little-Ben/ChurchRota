@@ -91,10 +91,10 @@ include('includes/header.php');
 <div class="elementBackground">
 <h2>Edit skill: <?php echo $skilldescription; ?></h2>
 
-	<form action="editsingleskill.php?id=<? if(isset($skillID)) echo $skillID; ?>" method="post" id="createEvent">
+	<form action="editsingleskill.php?id=<?php if(isset($skillID)) echo $skillID; ?>" method="post" id="createEvent">
 		
 		<fieldset>
-			<?
+			<?php
 				$sqlPeople = "SELECT *,
 				(SELECT groupID FROM cr_skills WHERE cr_skills.userid = cr_users.id AND cr_skills.groupID = '$skillID' LIMIT 1) as existing
 				FROM cr_users
@@ -135,4 +135,4 @@ include('includes/header.php');
 </div>
 
 
-<? include('includes/footer.php'); ?>
+<?php include('includes/footer.php'); ?>

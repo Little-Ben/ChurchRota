@@ -68,7 +68,7 @@ include('includes/header.php');
         <form action="bandskills.php" method="post">
         <fieldset>
         
-		<? $sql = "SELECT * FROM cr_instruments ORDER BY name";
+		<?php $sql = "SELECT * FROM cr_instruments ORDER BY name";
 	$result = mysql_query($sql) or die(mysql_error());
 	
 	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) { 
@@ -96,11 +96,11 @@ include('includes/header.php');
 		
 	
 </div>
-<? 
+<?php 
 if(isAdmin()) { ?>
 <div id="right">
 		<div class="item"><a href="settings.php">Back to settings</a></div>
 		<div class="item"><a href="createEvent.php">Create a new event</a></div>
 </div>
-<? } ?>
-<? include('includes/footer.php'); ?>
+<?php } ?>
+<?php include('includes/footer.php'); ?>

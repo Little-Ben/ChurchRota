@@ -44,26 +44,26 @@ include('includes/header.php');
 ?>
 
 <div class="elementBackground">
-<?
+<?php
 	$namesql = "SELECT firstName, lastName FROM cr_users WHERE id = '$userID'";
 	$nameresult = mysql_query($namesql) or die(mysql_error());
 	
 	while($nametag = mysql_fetch_array($nameresult, MYSQL_ASSOC)) {
 		?>
-		<p>Enter new skills for <? echo $nametag['firstName'] . " " . $nametag['lastName']; } ?></p>
+		<p>Enter new skills for <?php echo $nametag['firstName'] . " " . $nametag['lastName']; } ?></p>
 <form action="#" method="post" id="addSkill">
 		<fieldset>
 		<label for="groups">Skill type:</label>
 			<select name="groups" id="groups">
-<?
+<?php
 	$sql = "SELECT * FROM cr_groups";
 	$result = mysql_query($sql) or die(mysql_error());
 	
 	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 		?>
-		<option value="<? echo $row['groupID']; ?>"><? echo $row['description']; ?></option>
+		<option value="<?php echo $row['groupID']; ?>"><?php echo $row['description']; ?></option>
 	
-	<?
+	<?php
 	}
 
 ?>
@@ -74,9 +74,9 @@ include('includes/header.php');
 		</fieldset>
 	</form>	
 </div>
-<? if(isAdmin()) { ?>
+<?php if(isAdmin()) { ?>
 <div id="right">
 		<div class="item"><a href="viewUsers.php">View all users</a></div>
 </div>
-<? } ?>
-<? include('includes/footer.php'); ?>
+<?php } ?>
+<?php include('includes/footer.php'); ?>

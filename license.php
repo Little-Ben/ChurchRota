@@ -698,4 +698,4 @@ Public License instead of this License.&nbsp;&nbsp;But first, please read<br>
 </div>
 
 
-<? include('includes/footer.php'); ?>
+<?php include('includes/footer.php'); ?>

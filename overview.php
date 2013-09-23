@@ -74,10 +74,10 @@ if ($overviewSent == "")
 				<label class="settings">This message will be sent to ALL users flagged as "Overview Recipient".</label>
 				
 				<label class="settings" for="prev_subject">Subject:</label>	
-				<input class="settings" name="prev_subject" id="prev_subject" type="text" value="<? echo $overviewArr[0];?>"  />
+				<input class="settings" name="prev_subject" id="prev_subject" type="text" value="<?php echo $overviewArr[0];?>"  />
 				
 				<label class="settings" for="prev_message">Message to <?php echo $rowRcpt["CNT"]; ?> user/s:</label>
-				<textarea class="mceNoEditor" id="prev_message" type="text" name="prev_message"><? echo $overviewArr[1];?></textarea>
+				<textarea class="mceNoEditor" id="prev_message" type="text" name="prev_message"><?php echo $overviewArr[1];?></textarea>
 			
 			</div>
 			<input type="submit" value="Send email" class="settings" />

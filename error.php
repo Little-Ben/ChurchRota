@@ -47,4 +47,4 @@ The following error has occured
 </div>
 
 
-<? include('includes/footer.php'); ?>
+<?php include('includes/footer.php'); ?>
