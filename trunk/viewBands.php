@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <div id="right">
 			<div class="item"><a href="viewBands.php">View all bands</a></div>
 		</div>
-<? }  else {
+<?php }  else {
 
 	$sql = "SELECT * FROM cr_bands ORDER BY bandLeader";
 	$result = mysql_query($sql) or die(mysql_error());
@@ -99,11 +99,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$bandid = $row['bandID']; 
 		?>
 		<div class="elementBackground">
-			<h2><a name="section<?php echo $row['bandID']; ?>"><? echo $row['bandLeader']; ?></a> <? if(isAdmin()) { echo "
+			<h2><a name="section<?php echo $row['bandID']; ?>"><?php echo $row['bandLeader']; ?></a> <?php if(isAdmin()) { echo "
 			<a href='editBand.php?id=" . $bandid ."'><img src='graphics/tool.png' /></a>
 			<a href='viewBands.php?skillremove=true&bandid=" . $bandid . "'><img src='graphics/close.png' /></a>"; } ?></h2>
 			
-				<?
+				<?php
 				$bandID = $row['bandID'];
 				
 				// Selects band members from database and concatanates a username onto them.
@@ -133,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				$resultaddMembers = mysql_query($sqladdMembers) or die(mysql_error());
 				?>
 			
-			<form id="addMember<?php echo $row['bandID']; ?>" action="viewBands.php?formAction=newMember&band=<? echo  $row['bandID']; ?>" method="post">
+			<form id="addMember<?php echo $row['bandID']; ?>" action="viewBands.php?formAction=newMember&band=<?php echo  $row['bandID']; ?>" method="post">
 				<fieldset>
 					<label for="name">Add members:</label>
 					<select name="name" id="name">
@@ -151,8 +151,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		<div id="right">
 			<div class="item"><a href="editBand.php">Add a new band</a></div>
 		</div>
-	<?
+	<?php
 	}
 }
 ?>
-<? include('includes/footer.php'); ?>
+<?php include('includes/footer.php'); ?>

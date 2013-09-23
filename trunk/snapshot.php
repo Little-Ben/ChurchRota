@@ -96,13 +96,13 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 <div id="header">
 		<a href="index.php" id="logo"><img src="graphics/logo.jpg" alt="Church Rota Logo" width="263" height="48" /></a>
 		<ul>
-			<? if(isLoggedIn()) { ?>
+			<?php if(isLoggedIn()) { ?>
 			<li <?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='index.php'? 'class="active"' : '');?>><a  href="index.php">Home</a></li>
 			
 			<li <?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='resources.php'? 'class="active"' : '');?> ><a href="resources.php">Resources</a></li>
 			<li <?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='discussion.php'? 'class="active"' : '');?>
-			<? if(!isAdmin()) { ?><li <?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='addUser.php'? 'class="active"' : '');?>><a href="addUser.php?action=edit&id=<? echo $_SESSION['userid']; ?>">My account</a></li><? } ?>
-			<? }
+			<?php if(!isAdmin()) { ?><li <?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='addUser.php'? 'class="active"' : '');?>><a href="addUser.php?action=edit&id=<?php echo $_SESSION['userid']; ?>">My account</a></li><?php } ?>
+			<?php }
 			if(isAdmin()) { ?>
 			<li <?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='viewUsers.php'? 'class="active"' : '');
 			echo (basename($_SERVER['SCRIPT_FILENAME'])=='addUser.php'? 'class="active"' : ''); ?> ><a href="viewUsers.php">Users</a></li>
@@ -110,10 +110,10 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 			echo (basename($_SERVER['SCRIPT_FILENAME'])=='editeventtype.php'? 'class="active"' : '');
 			echo (basename($_SERVER['SCRIPT_FILENAME'])=='editSkills.php'? 'class="active"' : '');
 			echo (basename($_SERVER['SCRIPT_FILENAME'])=='locations.php'? 'class="active"' : '');?>><a  href="settings.php">Settings</a></li>			
-			<? }  ?>
-			<? if(isLoggedIn()) { ?>
+			<?php }  ?>
+			<?php if(isLoggedIn()) { ?>
 			<li <?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='logout.php'? 'class="active"' : '');?>><a  href="logout.php">Logout</a></li>
-			<? }  ?>
+			<?php }  ?>
 			
 		</ul>
 	</div>
@@ -143,10 +143,10 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 		?>
 	</p>
 	</div>
-<table class="snapshot" width='<? echo (($colCnt)*$colWidth); ?>'>
+<table class="snapshot" width='<?php echo (($colCnt)*$colWidth); ?>'>
 <tr>
 	<td ><strong>Event</strong></td>
-	<?
+	<?php
 	$sql = "SELECT * FROM cr_groups where formatgroup <= " . $maxGroup . " ORDER BY " . $group_sorting_name;
 	$result = mysql_query($sql) or die(mysql_error());
 	

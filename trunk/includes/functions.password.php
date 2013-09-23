@@ -24,7 +24,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *******************************************************************************/
 ?>
-<? 
+<?php 
 function make_seed()    //Function make_seed from http://www.php.net/manual/en/function.srand.php
 {
   list($usec, $sec) = explode(' ', microtime());

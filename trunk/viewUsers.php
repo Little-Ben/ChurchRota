@@ -47,7 +47,7 @@ $hidefirst = true;
 include ('includes/header.php');
 ?>
 
-<?
+<?php
 	$sql = "SELECT * FROM cr_users ORDER BY firstName";
 	$result = mysql_query($sql) or die(mysql_error());
 	
@@ -55,12 +55,12 @@ include ('includes/header.php');
 		$id = $row['id'];
 		?>
 		
-		<div class="elementBackground <? if(($row['isAdmin'] == "1") || ($row['isBandAdmin'] == "1") || ($row['isEventEditor'] == "1")) { echo 'highlight'; }?>">
-			<h2><div class="elementHead arrowwaiting"><a name="section<?php echo $row['id']; ?>"><? echo $row['firstName'] . " " . $row['lastName']; ?></a></div>
-			<div class="elementContent"><p><strong>Email address:</strong> <a href="mailto:<? echo $row['email']; ?>"><? echo $row['email']; ?></a><br />
-			<strong>Mobile:</strong> <? echo $row['mobile']; ?></p>
+		<div class="elementBackground <?php if(($row['isAdmin'] == "1") || ($row['isBandAdmin'] == "1") || ($row['isEventEditor'] == "1")) { echo 'highlight'; }?>">
+			<h2><div class="elementHead arrowwaiting"><a name="section<?php echo $row['id']; ?>"><?php echo $row['firstName'] . " " . $row['lastName']; ?></a></div>
+			<div class="elementContent"><p><strong>Email address:</strong> <a href="mailto:<?php echo $row['email']; ?>"><?php echo $row['email']; ?></a><br />
+			<strong>Mobile:</strong> <?php echo $row['mobile']; ?></p>
 			<p><strong>Skills:</strong><br />
-				<?
+				<?php
 					$userID = $row['id'];
 					$sqlskills = "SELECT * FROM cr_skills WHERE cr_skills.userID = '$userID'";
 					$resultskills = mysql_query($sqlskills) or die(mysql_error());
@@ -98,11 +98,11 @@ include ('includes/header.php');
 							
 							<div id="deleteModal<?php echo $id; ?>" class="reveal-modal">
      							<h1>Really delete user?</h1>
-								<p>Are you sure you really want to delete <? echo $row['firstName'] . " " . $row['lastName']; ?> as a user? There is no way of undoing this action.</p>
+								<p>Are you sure you really want to delete <?php echo $row['firstName'] . " " . $row['lastName']; ?> as a user? There is no way of undoing this action.</p>
 								<p><a class="button" href="addUser.php?userremove=true&id=<?php echo $id; ?>">Sure, delete the user</a></p>
      							<a class="close-reveal-modal">&#215;</a>
 							</div>
-							<?
+							<?php
 						}
 			echo "<div class='isAdmin'>";
 			echo "<p><strong>Permissions:</strong><br />";						
@@ -112,7 +112,7 @@ include ('includes/header.php');
 			if($row['isOverviewRecipient'] == '1') { echo "Overview Recipient"; } 
 			echo "</p></div>";?>
 		</div>		</div>
-	<?
+	<?php
 	}
 	
 	if(isAdmin()) {
@@ -122,5 +122,5 @@ include ('includes/header.php');
 		<div class="item"><a href="addUser.php">Add a new user</a></div>
 		
 	</div>
-	<? } ?>
-<? include('includes/footer.php'); ?>
+	<?php } ?>
+<?php include('includes/footer.php'); ?>

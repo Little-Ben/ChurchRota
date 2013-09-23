@@ -1,4 +1,4 @@
-<?
+<?php
 $action = $db->escape($_GET['action']);
 $userID = $db->escape($_GET['id']);
 $userremove = $db->escape($_GET['userremove']);

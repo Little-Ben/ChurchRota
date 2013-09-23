@@ -89,17 +89,17 @@ include('includes/header.php');
 <div class="elementBackground">
 <h2>Edit a band</h2>
 
-	<form action="editBand.php?id=<? echo $bandID; ?>" method="post" id="createEvent">
+	<form action="editBand.php?id=<?php echo $bandID; ?>" method="post" id="createEvent">
 		<fieldset>
 			<label for="bandleader"></label>
-			<input name="bandleader" id="bandleader" type="text" value="<? echo $bandLeader; ?>" placeholder="Enter band leader" />
+			<input name="bandleader" id="bandleader" type="text" value="<?php echo $bandLeader; ?>" placeholder="Enter band leader" />
 				
 			
 		</fieldset>
 		<h2>Add people to the band:</h2>
 		<fieldset>
 					
-			<?
+			<?php
 				$sqlPeople = "SELECT *,
 				(SELECT CONCAT(`firstname`, ' ', `lastname`) FROM cr_users WHERE `cr_users`.id = `cr_skills`.`userID` ORDER BY `cr_users`.firstname) AS `name`, 
 				(SELECT skillID FROM cr_bandMembers WHERE `cr_bandMembers`.`skillID` = `cr_skills`.`skillID` AND `cr_bandMembers`.`bandID` = '$bandID'
@@ -174,4 +174,4 @@ include('includes/header.php');
 </div>
 
 
-<? include('includes/footer.php'); ?>
+<?php include('includes/footer.php'); ?>

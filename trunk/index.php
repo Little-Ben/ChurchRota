@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
-<? $formatting = "light";
+<?php $formatting = "light";
 include('includes/header.php'); 
 
 if(isLoggedIn()) { 
@@ -160,7 +160,7 @@ if(isLoggedIn()) {
 		?>
 	</p>
 	</div>
-	<?
+	<?php
 
 	if($showmyevents == "" && $filter == "") {
 		
@@ -222,8 +222,8 @@ if(isLoggedIn()) {
 		}
 		
 		?>
-		<div class="elementBackground" id="event<? echo $eventID; ?>">
-			<h2><? echo '<a name="section' . $eventID . '">';
+		<div class="elementBackground" id="event<?php echo $eventID; ?>">
+			<h2><?php echo '<a name="section' . $eventID . '">';
 			setlocale(LC_TIME, $rowSettings[lang_locale]);
 			echo strftime($rowSettings[time_format_long],strtotime($row['sundayDate']));
 			//echo $row['sundayDate'];
@@ -240,12 +240,12 @@ if(isLoggedIn()) {
 				
 				echo "<a href='#' data-reveal-id='deleteModal".$eventID."'><img src='graphics/close.png' /></a>"; 
 			}?></h2>
-			<div class="elementHead arrowwaiting"><p><? if($rehearsal != "1") { ?><strong>Rehearsal:</strong> <? echo 
+			<div class="elementHead arrowwaiting"><p><?php if($rehearsal != "1") { ?><strong>Rehearsal:</strong> <?php echo 
 			strftime($rowSettings[time_format_normal],strtotime($row['rehearsalDateFormatted']));
-			?><br /><? } ?>
-			<strong>Location:</strong> <? echo $row['eventLocation']; ?><br />
-			<strong>Type:</strong> <? echo $row['eventType']; ?></p>
-			<? if($row['comment'] != "") {
+			?><br /><?php } ?>
+			<strong>Location:</strong> <?php echo $row['eventLocation']; ?><br />
+			<strong>Type:</strong> <?php echo $row['eventType']; ?></p>
+			<?php if($row['comment'] != "") {
 				echo "<div class='shaded'>";
 				echo "<strong>Comments:</strong><p>";
 				echo $row['comment'];
@@ -261,7 +261,7 @@ if(isLoggedIn()) {
 			</div>
 			<div class="elementContent">
 			<table>
-			<?
+			<?php
 				$sqlPeople = "SELECT *,
 				(SELECT CONCAT(`firstname`, ' ', `lastname`) FROM cr_users WHERE `cr_users`.id = `cr_skills`.`userID` ORDER BY `cr_users`.firstname) 
 				AS `name`, 
@@ -362,39 +362,39 @@ if(isLoggedIn()) {
 			echo "</tr>	</table>";
 			?>
 				</div></div>
-	<?
+	<?php
 	}
 } else {
 ?>
 <div class="elementBackground">
-<h2>Welcome to <? echo $owner; ?> Rota</h2>
-<p>For privacy reasons, the rota is not available publically. If you attend <? echo $owner; ?>, please login using your user details. 
+<h2>Welcome to <?php echo $owner; ?> Rota</h2>
+<p>For privacy reasons, the rota is not available publically. If you attend <?php echo $owner; ?>, please login using your user details. 
 
-If you are unsure of your user details, please email <a href="mailto:<? echo $owneremail; ?>">the office</a> to request a reminder.</p>
+If you are unsure of your user details, please email <a href="mailto:<?php echo $owneremail; ?>">the office</a> to request a reminder.</p>
 
 </div>
 
-<? } ?>
+<?php } ?>
 
 <div id="right">
-<? if(isAdmin()) {?>
+<?php if(isAdmin()) {?>
 		<div class="item"><a href="createEvent.php">Create a new event</a></div>
-<? }
+<?php }
    if((isAdmin()) || ($logged_in_show_snapshot_button=='1')) {?>		
 		<div class="item"><a href="snapshot.php" target="_blank">Snapshot view</a></div>
-<? } 
+<?php } 
    if(isAdmin()) {?>
 		<div class="item"><a href="index.php?notifyOverview=true">Send Mail Overview</a></div>
-		<? } ?>
-		<? if(isLoggedIn()) {
+		<?php } ?>
+		<?php if(isLoggedIn()) {
 			if($showmyevents == "") { ?>
-			<div class="item"><a href="index.php?showmyevents=<? echo $_SESSION['userid']; ?>">Show only my events</a></div>
-			<? } else { ?>
+			<div class="item"><a href="index.php?showmyevents=<?php echo $_SESSION['userid']; ?>">Show only my events</a></div>
+			<?php } else { ?>
 			<div class="item"><a href="index.php">Show all events</a></div>
-			<? } ?>
+			<?php } ?>
 		<div class="item"><a href="logout.php">Logout</a></div>
-		<? } ?>
-		<? if(!isLoggedIn()) { ?>
+		<?php } ?>
+		<?php if(!isLoggedIn()) { ?>
 		<div class="item"><form action="login.php" method="post" >
 		<fieldset>
 			<label for="username">Username:</label>
@@ -406,7 +406,7 @@ If you are unsure of your user details, please email <a href="mailto:<? echo $ow
 			<input type="submit" value="Login now" />
 		</fieldset>
 	</form></div>
-		<? } ?>
+		<?php } ?>
 	</div>
 	
-<? include('includes/footer.php'); ?>
+<?php include('includes/footer.php'); ?>

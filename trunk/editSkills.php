@@ -91,7 +91,7 @@ include('includes/header.php');
         <form action="editSkills.php" method="post">
         <fieldset>
         <strong>Group 1:</strong><br />
-		<? $sql = "SELECT * FROM cr_groups ORDER BY formatgroup, groupid";
+		<?php $sql = "SELECT * FROM cr_groups ORDER BY formatgroup, groupid";
 	$result = mysql_query($sql) or die(mysql_error());
 	$formatgroup = 1;
 	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) { 
@@ -126,11 +126,11 @@ include('includes/header.php');
      </form>
 	 
 </div>
-<? 
+<?php 
 if(isAdmin()) { ?>
 <div id="right">
 		<div class="item"><a href="settings.php">Back to settings</a></div>
 		<div class="item"><a href="viewUsers.php">View all users</a></div>
 </div>
-<? } ?>
-<? include('includes/footer.php'); ?>
+<?php } ?>
+<?php include('includes/footer.php'); ?>

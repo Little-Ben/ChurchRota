@@ -21,7 +21,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-	<title>Church Rota - <? echo $owner; ?></title>
+	<title>Church Rota - <?php echo $owner; ?></title>
 	<link rel="stylesheet" type="text/css" href="includes/style.css" />
 	<link rel="stylesheet" type="text/css" href="includes/jquery-ui.css" />
 	<link rel="stylesheet" type="text/css" href="css/reveal.css">
@@ -40,7 +40,7 @@
   })();
 */
 </script>
-	<? if(isset($formatting) && $formatting == "true") { ?>
+	<?php if(isset($formatting) && $formatting == "true") { ?>
 	<script src="includes/churchrota.js" language="javascript" type="text/javascript"></script>
     <script src="includes/jquery.jeditable.js" language="javascript" type="text/javascript"></script>
 	<script src="includes/jquery-ui.js" language="javascript" type="text/javascript"></script>
@@ -68,7 +68,7 @@
 			timeFormat: 'hh:mm:ss'
 		});
 		
-		$('.edit_area').editable('<? if(isset($sendurl)) echo $sendurl; ?>', {
+		$('.edit_area').editable('<?php if(isset($sendurl)) echo $sendurl; ?>', {
 			type : 'textarea',
 			cancel    : 'Cancel',
         	 submit    : 'OK',
@@ -82,7 +82,7 @@
          		window.location.reload();
    			}
 		});
-		$('.edit').editable('<? if(isset($sendurl)) echo $sendurl; ?>', {
+		$('.edit').editable('<?php if(isset($sendurl)) echo $sendurl; ?>', {
 			"submitdata": function () {
 			return {
 				editableaction: 'edit',
@@ -95,7 +95,7 @@
 		});
 	});
 </script >
-	<? } 
+	<?php } 
 	
 	else { ?>
 	<script src="includes/jquery.confirm.js" type="text/javascript"></script>
@@ -104,10 +104,10 @@
 		$(document).ready(function()
 		{
   			$(".elementContent").hide();
-			<? if(isset($hidefirst) && $hidefirst != true) { ?> 
+			<?php if(isset($hidefirst) && $hidefirst != true) { ?> 
 			$(".elementContent:first").show()
 			$('.elementHead:first').removeClass('arrowwaiting').addClass('arrowactive'); 
-			<? } ?>
+			<?php } ?>
   			$(".elementHead").click(function()
   			{
     			$(this).next(".elementContent").slideToggle(600);
@@ -157,7 +157,7 @@
 	});
 	
 	</script>
-	<? } ?>
+	<?php } ?>
 </head>
 <body>
 <div id="toTop">
@@ -168,13 +168,13 @@
 	<div id="header">
 		<a href="index.php" id="logo"><img src="graphics/logo.jpg" alt="Church Rota Logo" width="263" height="48" /></a>
 		<ul>
-			<? if(isLoggedIn()) { ?>
+			<?php if(isLoggedIn()) { ?>
 			<li <?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='index.php'? 'class="active"' : '');?>><a  href="index.php">Home</a></li>
 			
 			<li <?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='resources.php'? 'class="active"' : '');?> ><a href="resources.php">Resources</a></li>
 			<li <?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='discussion.php'? 'class="active"' : '');?>
-			<? if(!isAdmin()) { ?><li <?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='addUser.php'? 'class="active"' : '');?>><a href="addUser.php?action=edit&id=<? echo $_SESSION['userid']; ?>">My account</a></li><? } ?>
-			<? }
+			<?php if(!isAdmin()) { ?><li <?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='addUser.php'? 'class="active"' : '');?>><a href="addUser.php?action=edit&id=<?php echo $_SESSION['userid']; ?>">My account</a></li><?php } ?>
+			<?php }
 			if(isAdmin()) { ?>
 			<li <?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='viewUsers.php'? 'class="active"' : '');
 			echo (basename($_SERVER['SCRIPT_FILENAME'])=='addUser.php'? 'class="active"' : ''); ?> ><a href="viewUsers.php">Users</a></li>
@@ -182,10 +182,10 @@
 			echo (basename($_SERVER['SCRIPT_FILENAME'])=='editeventtype.php'? 'class="active"' : '');
 			echo (basename($_SERVER['SCRIPT_FILENAME'])=='editSkills.php'? 'class="active"' : '');
 			echo (basename($_SERVER['SCRIPT_FILENAME'])=='locations.php'? 'class="active"' : '');?>><a  href="settings.php">Settings</a></li>
-			<? }  ?>
-			<? if(isLoggedIn()) { ?>
+			<?php }  ?>
+			<?php if(isLoggedIn()) { ?>
 			<li <?php echo (basename($_SERVER['SCRIPT_FILENAME'])=='logout.php'? 'class="active"' : '');?>><a  href="logout.php">Logout</a></li>
-			<? }  ?>
+			<?php }  ?>
 			
 		</ul>
 	</div>

@@ -83,24 +83,24 @@ if($action == "new" || $action == "edit") {
 ?>
 <div class="elementBackground highlight">
 	<h2><a name="addBand">Add a new resource:</a></h2>
-	<form id="addEesource" method="post" action="<? echo $actionlink; ?>" enctype="multipart/form-data">
+	<form id="addEesource" method="post" action="<?php echo $actionlink; ?>" enctype="multipart/form-data">
 				<fieldset>
 					<label for="resourcename">Resource name:</label>
-					<input id="resourcename" type="text" name="resourcename" value="<? echo $resourcename; ?>" placeholder="Enter resource name:" />
+					<input id="resourcename" type="text" name="resourcename" value="<?php echo $resourcename; ?>" placeholder="Enter resource name:" />
 					
-					<? if($action == "edit" && $resourcelink != "") { ?>
+					<?php if($action == "edit" && $resourcelink != "") { ?>
 					<label for="resourcelink">Resource link:</label>
-					<input id="resourcelink" type="text" name="resourcelink" value="<? echo $resourcelink; ?>" placeholder="Enter resource link:" />
+					<input id="resourcelink" type="text" name="resourcelink" value="<?php echo $resourcelink; ?>" placeholder="Enter resource link:" />
 					
-					<? } else if($action == "edit" && $resourcelink == "") { ?>
+					<?php } else if($action == "edit" && $resourcelink == "") { ?>
 					<p>Resource was a file upload. There is currently no way of editing this. Please delete and create anew.</p>
-					<? } else { ?>
+					<?php } else { ?>
 					<label for="resourcefile">Upload:</label>
 					<input id="resourcefile" type="file" name="resourcefile" />
-					<? } ?>
+					<?php } ?>
 					
 					<label for="resourcedescription">Resource description:</label>
-					<textarea id="resourcedescription" type="text" class="noMCE" name="resourcedescription"><? echo $resourcedescription; ?></textarea>
+					<textarea id="resourcedescription" type="text" class="noMCE" name="resourcedescription"><?php echo $resourcedescription; ?></textarea>
 					
 					
 					
@@ -120,31 +120,31 @@ if($action == "new" || $action == "edit") {
 	$resourceID = $row['id'];
 		?>
 		<div class="elementBackground">
-			<? if($row['url'] != "") {
+			<?php if($row['url'] != "") {
 				?><a href="documents/<?php echo $row['url']; ?>" target="_blank">
-			<? } else { ?>
+			<?php } else { ?>
 				<a href="<?php echo $row['link']; ?>" target="_blank">
-			<? } ?>
-			<h2 id="title<? echo $resourceID; ?>">
-				<? echo $row['title']; ?>
-				<? if(isAdmin()) { 
+			<?php } ?>
+			<h2 id="title<?php echo $resourceID; ?>">
+				<?php echo $row['title']; ?>
+				<?php if(isAdmin()) { 
 				echo "<a href='resources.php?action=edit&id=$resourceID'><img src='graphics/tool.png' /></a> "; 
 				echo "<a href='resources.php?removeresource=true&id=$resourceID'><img src='graphics/close.png' /></a>"; 
 				} ?>
              </h2></a> 
                
 			
-			<div id="<? echo $resourceID; ?>"><p><?php echo $row['description']; ?></p></div>
+			<div id="<?php echo $resourceID; ?>"><p><?php echo $row['description']; ?></p></div>
 			
 		</div>		
 	
-	<? }
+	<?php }
 	if(isAdmin()) { ?>
 		<div id="right">
 		<div class="item"><a href="resources.php?action=new">Add a new resource</a></div>
 		</div>
-	<? }
+	<?php }
 	
 	
 } ?>
-<? include('includes/footer.php'); ?>
+<?php include('includes/footer.php'); ?>

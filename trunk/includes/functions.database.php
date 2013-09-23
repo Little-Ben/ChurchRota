@@ -139,6 +139,10 @@ function updateDatabase() {
 			executeDbSql("update cr_settings set version = '2.3.2'");						
 			notifyInfo(__FILE__,"db-update=" . $version . "->2.3.2",$_SESSION['userid']);	
 			insertStatistics("system",__FILE__,"db-update","2.3.2",$version);
+		case "2.3.2":	
+			executeDbSql("update cr_settings set version = '2.3.3'");						
+			notifyInfo(__FILE__,"db-update=" . $version . "->2.3.3",$_SESSION['userid']);	
+			insertStatistics("system",__FILE__,"db-update","2.3.3",$version);
 
 			break;			
 			

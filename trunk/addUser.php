@@ -219,7 +219,7 @@ include('includes/header.php');
 
 
 <div class="elementBackground">
-<?
+<?php
 	// Work out what action we need to give the form
 	if($action == "edit") {
 		$formstring = "id=$userID&action=$action";
@@ -228,36 +228,36 @@ include('includes/header.php');
 	}	
 
 ?>
-<form action="addUser.php?<? echo $formstring; ?>" method="post" id="addUser">
+<form action="addUser.php?<?php echo $formstring; ?>" method="post" id="addUser">
 		<fieldset>
 			
-			<? 
+			<?php 
 			if(isAdmin()) { 
 				$isCompromised=false;
 			?>
 			<label for="firstname">First name:</label>
-			<input name="firstname" id="firstname" type="text" value="<? echo $firstname; ?>" placeholder="Enter first name" />
+			<input name="firstname" id="firstname" type="text" value="<?php echo $firstname; ?>" placeholder="Enter first name" />
 			
 			<label for="lastname">Last name:</label>
-			<input name="lastname" id="lastname" type="text" value="<? echo $lastname; ?>" placeholder="Enter last name" />
+			<input name="lastname" id="lastname" type="text" value="<?php echo $lastname; ?>" placeholder="Enter last name" />
 			
 			<label for="isAdmin">Make them an ADMIN?:</label>
-			<input name="isAdmin" id="isAdmin" type="checkbox" value="1" <? if($userisAdmin == '1') { echo 'checked="checked"'; } 
+			<input name="isAdmin" id="isAdmin" type="checkbox" value="1" <?php if($userisAdmin == '1') { echo 'checked="checked"'; } 
 			else if($userisAdmin == '0') { }?> />
 			
 			<label for="isBandAdmin">Make them a BAND admin?:</label>
-			<input name="isBandAdmin" id="isBandAdmin" type="checkbox" value="1" <? if($userisBandAdmin == '1') { echo 'checked="checked"'; } 
+			<input name="isBandAdmin" id="isBandAdmin" type="checkbox" value="1" <?php if($userisBandAdmin == '1') { echo 'checked="checked"'; } 
 			else if($userisBandAdmin == '0') { }?> />
 
 			<label for="isEventEditor">Make them an EVENT EDITOR?:</label>
-			<input name="isEventEditor" id="isEventEditor" type="checkbox" value="1" <? if($userisEventEditor == '1') { echo 'checked="checked"'; } 
+			<input name="isEventEditor" id="isEventEditor" type="checkbox" value="1" <?php if($userisEventEditor == '1') { echo 'checked="checked"'; } 
 			else if($userisEventEditor == '0') { }?> />
 			
 			<label for="isOverviewRecipient">Make them a MAIL OVERVIEW RECIPIENT?:</label>
-			<input name="isOverviewRecipient" id="isOverviewRecipient" type="checkbox" value="1" <? if($userisOverviewRecipient == '1') { echo 'checked="checked"'; } 
+			<input name="isOverviewRecipient" id="isOverviewRecipient" type="checkbox" value="1" <?php if($userisOverviewRecipient == '1') { echo 'checked="checked"'; } 
 			else if($userisOverviewRecipient == '0') { }?> />
 			
-			<? } else {
+			<?php } else {
 			
 				if ($userID == $sessionUserID) {
 					echo $firstname . " " . $lastname;
@@ -272,16 +272,16 @@ include('includes/header.php');
 			if (!$isCompromised) {
 			?>
 			<label for="email">Email:</label>
-			<input id="email" name="email" type="text" value="<? echo $email; ?>" placeholder="Enter their email address" />
+			<input id="email" name="email" type="text" value="<?php echo $email; ?>" placeholder="Enter their email address" />
 			
 			<label for="mobile">Mobile number:</label>
-			<input id="mobile" name="mobile" type="text" value="<? echo $mobile; ?>" placeholder="Enter their mobile number" />
-			<? } ?>
+			<input id="mobile" name="mobile" type="text" value="<?php echo $mobile; ?>" placeholder="Enter their mobile number" />
+			<?php } ?>
 		</fieldset>
-		<? if(isAdmin()) { ?>
+		<?php if(isAdmin()) { ?>
         <fieldset>
         <h3>Band skills:</h3>
-        <?
+        <?php
 							
         	$sql2 = "SELECT *, 
 			(SELECT skill FROM cr_skills WHERE cr_skills.skill = cr_instruments.name AND userID = '$userID') AS description
@@ -377,7 +377,7 @@ include('includes/header.php');
 			} ?>
         
         </fieldset>
-		<? if (!$isCompromised) {
+		<?php if (!$isCompromised) {
 				if($action == "edit") {
 					echo '<input type="submit" value="Save changes" />';
 				} else { 
@@ -387,14 +387,14 @@ include('includes/header.php');
 	</form>
 </div>
 <div id="right">
-<? if(isAdmin()) { ?>
+<?php if(isAdmin()) { ?>
 
 		<div class="item"><a href="viewUsers.php">View all users</a></div>
-		<? }
+		<?php }
 		if (!$isCompromised) {
 			if($action == "edit") {		?>
-				<div class="item"><a href="editPassword.php?id=<? echo $id; ?>">Change password</a></div>
-			<? }
+				<div class="item"><a href="editPassword.php?id=<?php echo $id; ?>">Change password</a></div>
+			<?php }
 		}?>
 </div>
-<? include('includes/footer.php'); ?>
+<?php include('includes/footer.php'); ?>
