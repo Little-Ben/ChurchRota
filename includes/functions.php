@@ -1,4 +1,14 @@
 <?php
+
+
+function utf8_wrapper($txt) {
+	if (!ini_get('default_charset')=='utf-8') {
+		return utf8_encode($txt);
+	}else{
+		return $txt;
+	}
+}
+
 include('includes/functions.mail.php');
 include('includes/functions.remove.php');
 include('includes/functions.discussion.php');
@@ -185,12 +195,5 @@ function insertStatistics($type,$script,$detail1="",$detail2="",$detail3="") {
 }
 
 
-function utf8_wrapper($txt) {
-	if (!ini_get('default_charset')=='utf-8') {
-		return utf8_encode($txt);
-	}else{
-		return $txt;
-	}
-}
 
 ?>

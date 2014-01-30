@@ -143,6 +143,52 @@ function updateDatabase() {
 			executeDbSql("update cr_settings set version = '2.3.3'");						
 			notifyInfo(__FILE__,"db-update=" . $version . "->2.3.3",$_SESSION['userid']);	
 			insertStatistics("system",__FILE__,"db-update","2.3.3",$version);
+		case "2.3.3":	
+			executeDbSql("
+                CREATE FUNCTION getBrowserInfo (user_agent VARCHAR(255)) RETURNS VARCHAR(100)
+                 BEGIN
+                  DECLARE v_browser,v_os VARCHAR(20);
+                  DECLARE v_agent VARCHAR(255);
+                
+                  SET v_browser = 'OTHER';
+                  SET v_os = 'OTHER';
+                
+                  select detail3 into v_agent 
+                    from cr_statistics 
+                    where detail1='login'
+                    order by date desc
+                    limit 1;
+                
+                  if (user_agent = '-') then
+                   SET v_agent = upper(v_agent);
+                  else
+                   SET v_agent = upper(user_agent);
+                  end if;
+                  
+                  if (instr(v_agent,'IE')>0) then set v_browser= 'IE';
+                   elseif (instr(v_agent,'OPERA')>0) then set v_browser= 'OPERA';
+                   elseif (instr(v_agent,'NETSCAPE')>0) then set v_browser= 'NETSCAPE';
+                   elseif (instr(v_agent,'FIREFOX')>0) then set v_browser= 'FIREFOX';
+                   elseif (instr(v_agent,'FLOCK')>0) then set v_browser= 'FLOCK';
+                   elseif (instr(v_agent,'CHROME')>0) then set v_browser= 'CHROME';
+                   elseif (instr(v_agent,'SAFARI')>0) then set v_browser= 'SAFARI';   
+                   elseif (instr(v_agent,'MOZILLA')>0) then set v_browser= 'MOZILLA';      
+                  end if;
+                
+                  if (instr(v_agent,'WINDOWS')>0) then set v_os= 'WINDOWS';
+                   elseif (instr(v_agent,'IPHONE')>0) then set v_os= 'IPHONE';
+                   elseif (instr(v_agent,'IPAD')>0) then set v_os= 'IPAD';
+                   elseif (instr(v_agent,'ANDROID')>0) then set v_os= 'ANDROID';
+                   elseif (instr(v_agent,'MAC')>0) then set v_os= 'MAC';   
+				   elseif (instr(v_agent,'LINUX')>0) then set v_os= 'LINUX'; 
+                  end if;
+                
+                  RETURN CONCAT(v_browser ,' / ',v_os);
+                END;"
+                );						
+			executeDbSql("update cr_settings set version = '2.3.4'");			
+			notifyInfo(__FILE__,"db-update=" . $version . "->2.3.4",$_SESSION['userid']);	
+			insertStatistics("system",__FILE__,"db-update","2.3.4",$version);
 
 			break;			
 			

@@ -17,52 +17,6 @@ if (!isAdmin()) {
 	exit;
 }
 
-function detect($user_agent) 
-{	
-	////--------------------------------------------------------------------
-	////code by blpgirl (Leyla Maria Bonilla Palacio, Columbia, http://loquelediga.com/) - found on http://snipplr.com/view/35381/
-	////which references class 'browserdetect' by Paul Scott, South Africa - on http://www.phpclasses.org/browse/package/2827.html
-	////allowed to use under Terms of GPL
-	////--------------------------------------------------------------------
-	
-    //nota: firefox debe ir luego de mozilla pues el user agent tiene ambos
-    //y flock debe ir luego de mozilla y firefox por la misma razon
-    //chrome también debe ir despues de mozilla y safari porque los contiene a ambos
-    //funciona porque siempre queda el valor de la última cadena encontrada
-    $browser = array ("IE","OPERA","MOZILLA","NETSCAPE","FIREFOX","SAFARI", "FLOCK", "CHROME");
-    $os = array ("WINDOWS","MAC","IPHONE","IPAD","ANDROID"); //// modiefied, was: ("WINDOWS","MAC","IPHONE");
-    $info['browser'] = "OTHER";
-    $info['os'] = "OTHER";
-    ////$user_agent = $_SERVER['HTTP_USER_AGENT'];  ////modiefied, is given now by parameter
-    //Por cada valor del array de navegadores
-    foreach ($browser as $parent)
-    {
-		//con strtoupper devuelve la cadena en mayúsculas y con strpos devuelve la posicion de la cadena
-		//Si no se encuentra la cadena, devuelve FALSE
-		$s = strpos(strtoupper($user_agent), $parent);
-		//el user agent siempre suelta: Navegador/NumVersion o Navegador NumVersion pa explorer
-		//con esto se tiene la posicion para la version que es justo despues del navegador (s + tamaño nombre navegador)
-		$f = $s + strlen($parent);
-		//devuelve la cadena que empieza en el caracter f y termina en f+5
-		$version = substr($user_agent, $f, 5);
-		//reemplaza el numero, punto o / en la cadena version y lo reemplaza por vacio
-		$version = preg_replace('/[^0-9,.]/','',$version);
-		if (!($s===false)) ////modified, was: if ($s)
-		{
-			//como se encontro el navegador, se asignan los valores
-			$info['browser'] = $parent;
-			$info['version'] = $version;
-		}
-    }
-    foreach ($os as $val)
-    {
-		//eregi encuentra subcadenas sin diferenciar mayusculas de minusculas
-		if (eregi($val,strtoupper($user_agent))) $info['os'] = $val;
-    }
-	return $info;
-}
-
-
 // Get the query string
 $method = $_GET["method"];
 
@@ -134,23 +88,17 @@ include('includes/header.php');
 			if ($debug) {
 				echo "<table class=\"statistics\">";
 				echo "<thead>";
-				echo "<tr><th >Browser Identification</th><th>Count</th></tr>";
+				echo "<tr><th >Browser / Platform</th><th>Count</th></tr>";
 				echo "</thead>";
 				echo "<tbody>";
 				
-					$sql = "SELECT detail3 as browser, count(*) as count from cr_statistics where detail1 like 'login%' and detail3!='' group by detail3 order by count desc ".$browserLimit;
+					$sql = "SELECT getBrowserInfo(detail3) as browser,count(*) as count from cr_statistics where detail1 like 'login%' and detail3!='' group by getBrowserInfo(detail3) order by count desc ".$browserLimit;
+
 					$result = mysql_query($sql) or die(mysql_error());
 					while($row = mysql_fetch_array($result, MYSQL_ASSOC)) { 
 						extract($row);
 						echo "<tr>";
-						//echo "<td>".$browser."</td>";
-
-						//$arrBrowser = get_browser($browser,true)
-						//echo "<td>".$arrBrowser['parent']." on ".$arrBrowser['platform']."</td>";
-						
-						//http://snipplr.com/view/35381/detectar-browser/
-						$d = detect($browser);
-						echo "<td>".$d['browser']." ".$d['version']." on ".$d['os']."</td>";
+						echo "<td>".$browser."</td>";
 						echo "<td>".$count."</td>";
 						echo "</tr>";
 					}

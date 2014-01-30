@@ -9,12 +9,22 @@ Changelog of Church Rota
    
    twitter: @ChurchRota  and  @ChurchRota_Dev
 
+---------------------------------------------------------------------------
+V2.3.4 - SVN only - Revision 32 - Benjamin Schmitt - 2014-01-30
+- database: new MySQL function "getBrowserInfo" for browser identification
+- statistics: now uses getBrowserInfo
+- footer: change of copyright year 
+- login: current version number for login
 
 ---------------------------------------------------------------------------
 V2.3.3 - SVN only - Revision 30 and 31 - Benjamin Schmitt
 - code corrections - replaced all "<?" with "<?php",
   WAMP users may use "error_reporting = E_ERROR" in php.ini 
-
+  
+  see "short_open_tag" in php.ini,
+  recommendation: set to "off",
+  ChurchRota now only uses "<?php", so both values (on/off) will work
+  
 ---------------------------------------------------------------------------
 V2.3.2 - SVN only - Revision 29 - Benjamin Schmitt
 - includes/functions.php: 
