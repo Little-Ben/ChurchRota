@@ -71,23 +71,43 @@ function mailNewUser($firstname, $lastname, $email, $username, $password) {
 		$siteurl = $row['siteurl'];
 		$siteadmin = $row['adminemailaddress'];
 	}
+	
+	
+		//line seperator for mails
+		//rfc sais \r\n, but this makes trouble in outlook. several spaces plus \n works fine in outlook and thunderbird.
+		//spaces to suppress automatic removal of "unnecessary linefeeds" in outlook 2003
+		$crlf="      \n"; 
+	
 		$name = $firstname . " " . $lastname;
 		$message = str_replace("[name]", $name, $message);
 		$message = str_replace("[username]", $username, $message);
 		$message = str_replace("[password]", $password, $message);
 		$message = str_replace("[siteurl]", $siteurl, $message);
 		
-		$headers = 'From: ' .$siteadmin . "\r\n" .
-		'Reply-To: ' .$siteadmin . "\r\n";
+		$headers = 'From: ' .$siteadmin . $crlf .
+		'Reply-To: ' .$siteadmin . $crlf .
+		'Mime-Version: 1.0' . $crlf .
+		'Content-Type: text/plain; charset=ISO-8859-1' . $crlf .
+		'Content-Transfer-Encoding: quoted-printable' . $crlf;
 		
 		$subject = "Important information: New user account created for " . $name;
 		
-		mail($email, $subject, $message, $headers);
-		
-		$adminemail = $siteadmin;
-		$subject = "ADMIN COPY: " . $subject;
-		mail($adminemail, $subject, $message, $headers);
-		
+		if (($firstname != 'FirstName') && ($lastname != 'LastName'))
+		{
+			$message = str_replace("\r\n",$crlf,$message); 
+			mail($email, $subject, $message, $headers);
+			
+			$adminemail = $siteadmin;
+			$subject = "ADMIN COPY: " . $subject;
+			mail($adminemail, $subject, $message, $headers);
+		}
+		else
+		{
+			$msgArray[0] = $subject;
+			$msgArray[1] = $message;
+			
+			return $msgArray;
+		}
 }
 
 function emailTemplate($message, $name, $date, $location, $rehearsal, $rotaoutput, $username, $siteurl) {
@@ -333,7 +353,7 @@ function notifyOverview($subject,$message) {
 				//$to = 'rota_test@schmittendrin.de';
 				//$subject = "Rota Test: " ;
 				
-				$query="select id,DATE_FORMAT(date,'%m/%d/%Y %H:%i:%S') AS sundayDate,location,type,comment,group_concat(rota separator ' / ') as joinedskills
+				$query="select id,DATE_FORMAT(date,'%m/%d/%Y %H:%i:%S') AS sundayDate,location,type,comment,group_concat(rota separator '\r\n') as joinedskills
 				from (
 				select e.id,e.date, l.description location ,t.description type,e.comment,g.groupID,g.description, concat(u.firstname,' ',u.lastname) as name,CONCAT(substr(g.description,1,1), ': ', u.firstname,' ',u.lastname) as rota
 				from cr_eventPeople ep, cr_events e, cr_skills s, cr_groups g, cr_users u, cr_locations l, cr_eventTypes t
@@ -359,12 +379,14 @@ function notifyOverview($subject,$message) {
 				$sundayDate;
 				while($row = mysql_fetch_array($userresult, MYSQL_ASSOC)) {
 					$sundayDate = $row['sundayDate'];
+					
 					$overview = $overview . strftime($time_format_normal,strtotime($row['sundayDate']));
 					$overview = $overview . " - ";
-					$overview = $overview . $row['joinedskills'];
-					$overview = $overview . " - ";
 					$overview = $overview . $row['type'];
-					////$overview = $overview . $crlf;
+					$overview = $overview . "\r\n";
+					
+					$overview = $overview . $row['joinedskills'];
+					$overview = $overview . "\r\n";
 					$overview = $overview . "\r\n";
 				
 				}
