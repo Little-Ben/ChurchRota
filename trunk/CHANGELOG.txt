@@ -10,12 +10,16 @@ Changelog of Church Rota
    twitter: @ChurchRota  and  @ChurchRota_Dev
    
    About versioning:
-   - X.Y.0   ->   File release; and SVN (less often)
-   - X.Y.Z   ->   SVN only release (less tested)
+   - X.Y.0   ->   File release; and SVN     ->  less often
+   - X.Y.Z   ->   SVN only release          ->  less tested
    
 
 ---------------------------------------------------------------------------
-V2.3.5 - SVN - Revision 34 - Benjamin Schmitt - 2014-02-24
+V2.4.0 - SVN + FILE - Revision 34 - Benjamin Schmitt - 2014-02-26
+- File release (V2.4.0) and SVN tag (2014-02-26_v2_4_0) 
+
+---------------------------------------------------------------------------
+V2.3.5 - SVN - Revision 33 - Benjamin Schmitt - 2014-02-25
 - overview mail: more small-device friendly format (shorter lines) 
 - new user mail: set charset and linebreaks (in analogy to overview mail)
 
