@@ -17,6 +17,8 @@ Changelog of Church Rota
 ---------------------------------------------------------------------------
 V2.4.0 - SVN + FILE - Revision 34 - Benjamin Schmitt - 2014-02-26
 - File release (V2.4.0) and SVN tag (2014-02-26_v2_4_0) 
+- Rev. 33 - Changelog
+- Rev. 35 - version number 2.4.0 changes
 
 ---------------------------------------------------------------------------
 V2.3.5 - SVN - Revision 33 - Benjamin Schmitt - 2014-02-25
