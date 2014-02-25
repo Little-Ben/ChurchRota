@@ -172,8 +172,16 @@ VALUES ('$firstname', '$lastname', '$username', '$isAdminLocal', '$email', '$mob
 		
 		if(isset($otherskills)) {
 			if($action == "edit") { 
-			$sql2 = "SELECT *
-				FROM cr_groups WHERE groupID != 2 AND groupID IN (SELECT groupID FROM cr_skills WHERE cr_skills.groupID = cr_groups.groupID AND cr_skills.userID = '$userID') ORDER BY groupID";
+			//$sql2 = "SELECT *
+			//	FROM cr_groups WHERE groupID != 2 AND groupID IN (SELECT groupID FROM cr_skills WHERE cr_skills.groupID = cr_groups.groupID AND cr_skills.userID = '$userID') ORDER BY groupID";
+				
+			$sql2 = "SELECT distinct g.groupID
+						FROM cr_groups g
+						inner join cr_skills s on s.groupID = g.groupID 
+						and g.groupID != 2
+						AND s.userID = '$userID'
+						ORDER BY g.groupID";
+						
 			$result2 = mysql_query($sql2) or die(mysql_error());
 			while($row = mysql_fetch_array($result2, MYSQL_ASSOC)) 
 			{ 
@@ -315,9 +323,18 @@ include('includes/header.php');
 		<fieldset>
         <h3>Other roles</h3>
         	<?php			
-		$sql = "SELECT *, 
-			(SELECT groupID FROM cr_skills WHERE cr_skills.groupID = cr_groups.groupID AND cr_skills.userID = '$userID' LIMIT 1) AS inSkill
-			FROM cr_groups WHERE groupID != 2 ORDER BY groupID";
+		//$sql = "SELECT *, 
+		//	(SELECT groupID FROM cr_skills WHERE cr_skills.groupID = cr_groups.groupID AND cr_skills.userID = '$userID' LIMIT 1) AS inSkill
+		//	FROM cr_groups WHERE groupID != 2 ORDER BY groupID";
+			
+		$sql = "select g.groupID,g.description,g.rehearsal,g.formatgroup,g.short_name,min(s.groupID) inSkill
+					from cr_groups g
+					left outer join cr_skills s on g.groupID=s.groupID
+					and s.userID='$userID'
+					WHERE g.groupID != 2 
+					GROUP BY g.groupID,g.description,g.rehearsal,g.formatgroup,g.short_name
+					ORDER BY g.groupID";
+					
 			$result = mysql_query($sql) or die(mysql_error());
 			$i = 1;
 			$position = 1;
@@ -327,7 +344,7 @@ include('includes/header.php');
 					
 					
 					if($row['inSkill'] != '') 
-					{ $checked =  'checked="checked"'; }  else { $checked = "";  }
+					{ $checked =  'checked=\'checked\' '; }  else { $checked = "";  }
 					
 					
 					if($position == 2) {

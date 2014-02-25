@@ -51,18 +51,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$overviewSent = notifyOverview($prev_subject,$prev_message);
 }
 
-$overviewArr = notifyOverview("",""); 
+if ($action == "MailNewUserTest")
+{
+	$overviewArr = mailNewUser("FirstName","LastName","TestEmail","TestUser","TestPwd"); 
+	$rowRcptCnt = 1;
+	$hint = "This message will be sent to new users.";
+	$title = "Mail Preview";
+}
+else
+{
+	$overviewArr = notifyOverview("",""); 
+	$queryRcpt="select count(email) as CNT from cr_users where isOverviewRecipient=1";
+	$resultRcpt = mysql_query($queryRcpt) or die(mysql_error());
+	$rowRcpt = mysql_fetch_array($resultRcpt, MYSQL_ASSOC);
+	$rowRcptCnt = $rowRcpt["CNT"];
+	$hint = "This message will be sent to ALL users flagged as \"Overview Recipient\".";
+	$title = "Rota Overview Mail";
+}
 
 $formatting = "true";
 
-$queryRcpt="select count(email) as CNT from cr_users where isOverviewRecipient=1";
-$resultRcpt = mysql_query($queryRcpt) or die(mysql_error());
-$rowRcpt = mysql_fetch_array($resultRcpt, MYSQL_ASSOC);
+
 
 include('includes/header.php');
 ?>
 <div class="elementBackground">
-<h2>Rota Overview Mail</h2>	
+<h2><?php echo $title; ?></h2>	
 <?php
 if ($overviewSent == "")
 {
@@ -71,16 +85,18 @@ if ($overviewSent == "")
 		<fieldset>
 			<div class="elementContent" >	
 				
-				<label class="settings">This message will be sent to ALL users flagged as "Overview Recipient".</label>
+				<label class="settings"><?php echo $hint; ?></label>
 				
 				<label class="settings" for="prev_subject">Subject:</label>	
 				<input class="settings" name="prev_subject" id="prev_subject" type="text" value="<?php echo $overviewArr[0];?>"  />
 				
-				<label class="settings" for="prev_message">Message to <?php echo $rowRcpt["CNT"]; ?> user/s:</label>
+				<label class="settings" for="prev_message">Message to <?php echo $rowRcptCnt; ?> user/s:</label>
 				<textarea class="mceNoEditor" id="prev_message" type="text" name="prev_message"><?php echo $overviewArr[1];?></textarea>
 			
 			</div>
+			<?php if ($action == "") { ?>
 			<input type="submit" value="Send email" class="settings" />
+			<?php } ?>
 		</fieldset>
 	</form>
 

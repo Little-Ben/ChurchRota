@@ -92,7 +92,16 @@ include('includes/header.php');
 				echo "</thead>";
 				echo "<tbody>";
 				
-					$sql = "SELECT getBrowserInfo(detail3) as browser,count(*) as count from cr_statistics where detail1 like 'login%' and detail3!='' group by getBrowserInfo(detail3) order by count desc ".$browserLimit;
+					$sql = "SELECT VERSION( ) AS mysql_version";
+					$result = mysql_query($sql) or die("MySQL-Error: ".mysql_error());
+					$dbv = mysql_fetch_array($result, MYSQL_ASSOC);
+					$mysql_version = $dbv['mysql_version'];
+					
+					if (substr($mysql_version,0,1) == 5) {
+						$sql = "SELECT getBrowserInfo(detail3) as browser,count(*) as count from cr_statistics where detail1 like 'login%' and detail3!='' group by getBrowserInfo(detail3) order by count desc ".$browserLimit;
+					}else{
+						$sql = "SELECT detail3 as browser,count(*) as count from cr_statistics where detail1 like 'login%' and detail3!='' group by detail3 order by count desc ".$browserLimit;
+					}
 
 					$result = mysql_query($sql) or die(mysql_error());
 					while($row = mysql_fetch_array($result, MYSQL_ASSOC)) { 

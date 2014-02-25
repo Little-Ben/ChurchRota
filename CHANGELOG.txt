@@ -8,7 +8,23 @@ Changelog of Church Rota
    http://sourceforge.net/p/churchrota/code/HEAD/tree/trunk
    
    twitter: @ChurchRota  and  @ChurchRota_Dev
+   
+   About versioning:
+   - X.Y.0   ->   File release; and SVN (less often)
+   - X.Y.Z   ->   SVN only release (less tested)
+   
 
+---------------------------------------------------------------------------
+V2.3.5 - SVN - Revision 34 - Benjamin Schmitt - 2014-02-24
+- overview mail: more small-device friendly format (shorter lines) 
+- new user mail: set charset and linebreaks (in analogy to overview mail)
+
+internal:
+- new user mail: preview possibility (currently only for testing)
+- addUser: some SQLs rewritten; 'checked' flag now with proper apostrophs
+- statistics: only use function getBrowserInfo if MySQL >= 5.0, 
+             fallback: complete user-agent string (V2.3.4 code fixed)
+			 
 ---------------------------------------------------------------------------
 V2.3.4 - SVN only - Revision 32 - Benjamin Schmitt - 2014-01-30
 - database: new MySQL function "getBrowserInfo" for browser identification
