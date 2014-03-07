@@ -15,6 +15,15 @@ Changelog of Church Rota
    
 
 ---------------------------------------------------------------------------
+V2.4.1 - SVN - Revision 37 - Benjamin Schmitt - 2014-03-07
+- settings: external links for further documentation of locale and timezone
+- styles: underline for links on 
+  + in div welcome (added on index.php)
+  + in div elementContent (e.g. on settings page)
+- skills: adapt layout from other editing possibilities
+- version number
+
+---------------------------------------------------------------------------
 V2.4.0 - SVN + FILE - Revision 34 - Benjamin Schmitt - 2014-02-26
 - File release (V2.4.0) and SVN tag (2014-02-26_v2_4_0) 
 - Rev. 33 - Changelog
