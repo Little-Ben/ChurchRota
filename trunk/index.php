@@ -367,11 +367,12 @@ if(isLoggedIn()) {
 } else {
 ?>
 <div class="elementBackground">
+<div class="welcome">
 <h2>Welcome to <?php echo $owner; ?> Rota</h2>
 <p>For privacy reasons, the rota is not available publically. If you attend <?php echo $owner; ?>, please login using your user details. 
 
 If you are unsure of your user details, please email <a href="mailto:<?php echo $owneremail; ?>">the office</a> to request a reminder.</p>
-
+</div>
 </div>
 
 <?php } ?>

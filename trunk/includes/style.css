@@ -161,6 +161,14 @@ strong {
 	border-radius: 10px; 
 }
 
+.elementContent a { 
+	text-decoration: underline;
+}
+
+.welcome a { 
+	text-decoration: underline;
+}
+
 .filterby {
 	width: 616px;
 	margin-left: 10px;

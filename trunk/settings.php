@@ -227,21 +227,21 @@ include('includes/header.php');
 				<h2><a name="locale_timezone">Locale and Timezone</a></h2>
 			</div>
 			<div class="elementContent" >
-				
-				<label class="settings" for="lang_locale">Language locale (e.g. en_GB):</label>
+			
+				<label class="settings" for="lang_locale">Language locale (e.g. en_GB, see <a href="http://www.php.net/manual/en/function.setlocale.php" target="_blank">php setlocale</a>) and host system's locals:</label>
 				<input class="settings" name="lang_locale" id="lang_locale" type="text" value="<?php echo $row['lang_locale'];?>"  />
 				<label class="settings"><?php //echo setlocale(LC_ALL,null); ?></label>
 
-				<label class="settings" for="time_format_long">Long time format (pattern see php strftime):</label>
+				<label class="settings" for="time_format_long">Long time format (pattern see <a href="http://www.php.net/manual/en/function.strftime.php#refsect1-function.strftime-parameters" target="_blank">php strftime</a>):</label>
 				<input class="settings" name="time_format_long" id="time_format_long" type="text" value="<?php echo $row['time_format_long'];?>"  />
 
-				<label class="settings" for="time_format_normal">Standard time format (pattern see php  strftime):</label>
+				<label class="settings" for="time_format_normal">Standard time format (pattern see <a href="http://www.php.net/manual/en/function.strftime.php#refsect1-function.strftime-parameters" target="_blank">php strftime</a>):</label>
 				<input class="settings" name="time_format_normal" id="time_format_normal" type="text" value="<?php echo $row['time_format_normal'];?>"  />
 
-				<label class="settings" for="time_format_short">Short time format (pattern see php strftime):</label>
+				<label class="settings" for="time_format_short">Short time format (pattern see <a href="http://www.php.net/manual/en/function.strftime.php#refsect1-function.strftime-parameters" target="_blank">php strftime</a>):</label>
 				<input class="settings" name="time_format_short" id="time_format_short" type="text" value="<?php echo $row['time_format_short'];?>"  />
 
-				<label class="settings" for="time_zone">Time Zone (see php "List of Supported Timezones", e.g. Europe/London):</label>
+				<label class="settings" for="time_zone">Time Zone (see <a href="http://www.php.net/manual/en/timezones.php" target="_blank">php "List of Supported Timezones"</a>, e.g. Europe/London):</label>
 				<input class="settings" name="time_zone" id="time_zone" type="text" value="<?php echo $row['time_zone'];?>"  />
 			</div>
 		</div>

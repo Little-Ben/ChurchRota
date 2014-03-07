@@ -70,23 +70,8 @@ include('includes/header.php');
 ?>
 
 <div class="elementBackground">
-		<h2>Add a new skill:</h2>
-		<p><form action="editSkills.php?method=newskill" method="post" id="addSkill">
-		<fieldset>
-		<label for="newskill">New skill:</label>
-		<input id="newskill" name="newskill" type="text" placeholder="Enter skill name" />
-		
-			<label for="rehearsal">This skill group must attend rehearsals:</label>
-			<input name="rehearsal" id="rehearsal" type="checkbox" value="1"  />
-			
-<input type="submit" value="Add new skill" />
 
-		
-		</fieldset>
-	</form>	
-    </p>
-
-		<h2>Edit Groups</h2>
+		<h2>Edit Skills / Change Groups</h2>
 		<p>
         <form action="editSkills.php" method="post">
         <fieldset>
@@ -122,8 +107,25 @@ include('includes/header.php');
 		}
 	 } ?>
      </fieldset>
-     <input type="submit" value="Update groups" /></p>
+     <input type="submit" value="Update skills" /></p>
      </form>
+	 
+	 
+	 	<h2>Add a new skill:</h2>
+		<p><form action="editSkills.php?method=newskill" method="post" id="addSkill">
+		<fieldset>
+		<label for="newskill">New skill:</label>
+		<input id="newskill" name="newskill" type="text" placeholder="Enter skill name" />
+		
+			<label for="rehearsal">This skill group must attend rehearsals:</label>
+			<input name="rehearsal" id="rehearsal" type="checkbox" value="1"  />
+			
+<input type="submit" value="Add new skill" />
+
+		
+		</fieldset>
+	</form>	
+    </p>
 	 
 </div>
 <?php 
