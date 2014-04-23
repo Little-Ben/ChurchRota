@@ -18,6 +18,86 @@
     along with Church Rota.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+function sendMail($to, $subject, $message, $from, $bcc = "")  {
+
+		//mail debugging: send all mails to admin (overwrite TO-field)
+		//and move all BCCs from header to the end of the message 
+		$mail_dbg = false;		
+		
+		//--------------------------------------------------------------------------------
+		//line seperator for mails
+		//rfc sais \r\n, but this makes trouble in outlook. several spaces plus \n works fine in outlook and thunderbird.
+		//spaces to suppress automatic removal of "unnecessary linefeeds" in outlook 2003
+		$crlf="      \n";
+		$message = str_replace("\r\n",$crlf,$message);  //replace crlf's  
+		
+		//--------------------------------------------------------------------------------
+		$headers = 'From: ' .$from . $crlf .
+		'Reply-To: ' .$from . $crlf .
+		'Mime-Version: 1.0' . $crlf .
+		'Content-Type: text/plain; charset=ISO-8859-1' . $crlf .
+		'Content-Transfer-Encoding: quoted-printable' . $crlf;
+	
+		//--------------------------------------------------------------------------------
+		//replace all possible seperating semikolons with commas (for later explode)
+		$bcc = str_replace(";",",",$bcc);
+		$to = str_replace(";",",",$to);
+		
+		if ($mail_dbg) {
+			$subject = "[ChurchRota - Mail Debug] " . $subject;   //debug output
+			$message = $message . $crlf . 'To: ' . $to . $crlf;   //debug move to to end of message
+		}else{
+			$subject = "[ChurchRota] " . $subject;
+		}
+		
+		//--------------------------------------------------------------------------------
+		//break bcc string into single BCC header lines, ignoring all invalid email addresses
+		$teile = explode(",", $bcc);
+		$i=0;
+		$err=0;
+		$bcc_err="<br>";
+		foreach ( $teile as $adr )
+		{
+			if (preg_replace("/([a-zA-Z0-9._%+-]+)(@)([a-zA-Z0-9.-]+)(\.)([a-zA-Z]+)/i","# # #",trim($adr))=="# # #") {
+				if ($mail_dbg) {
+					$message = $message . 'Bcc: ' . trim($adr) . $crlf;
+				}else{
+					$headers = $headers . 'Bcc: ' . trim($adr) . $crlf;
+				}	
+				$i=$i+1;
+			} else {
+				$bcc_err = $bcc_err . $adr . $crlf;
+				$err = $err + 1;
+			}
+		}	
+		//echo str_replace($crlf,"<br>\r\n",$headers)."<br>\r\n";  //debug output
+		
+		//--------------------------------------------------------------------------------
+		//general mail footer 
+		$sqlSettings = "SELECT * FROM cr_settings";
+		$resultSettings = mysql_query($sqlSettings) or die(mysql_error());
+		$rowSettings = mysql_fetch_array($resultSettings, MYSQL_ASSOC);
+		$cr_version = $rowSettings[version];
+		$cr_owner = $rowSettings[owner];
+		
+		$message = $message . $crlf . $crlf;
+		$message = $message . "-- \r\n"; //needs exactly this syntax, only one space before linebreak
+		$message = $message . $cr_owner . $crlf;
+		$message = $message . "Mail generated with ChurchRota V." . $cr_version . $crlf;
+		$message = $message . "http://sourceforge.net/projects/churchrota" . $crlf;
+		
+		//--------------------------------------------------------------------------------
+		//send mail
+		$mailOk=false;
+		if ($mail_dbg) {
+			$mailOk = mail($from, $subject, $message, $headers);
+		}else{
+			$mailOk = mail($to, $subject, $message, $headers); 
+		}
+		
+		return $mailOk;
+}
+
 function notifySubscribers($id, $type, $userid) {
 	if($type == "category") {
 		$sql = "SELECT *, 
@@ -72,34 +152,22 @@ function mailNewUser($firstname, $lastname, $email, $username, $password) {
 		$siteadmin = $row['adminemailaddress'];
 	}
 	
-	
-		//line seperator for mails
-		//rfc sais \r\n, but this makes trouble in outlook. several spaces plus \n works fine in outlook and thunderbird.
-		//spaces to suppress automatic removal of "unnecessary linefeeds" in outlook 2003
-		$crlf="      \n"; 
-	
 		$name = $firstname . " " . $lastname;
 		$message = str_replace("[name]", $name, $message);
 		$message = str_replace("[username]", $username, $message);
 		$message = str_replace("[password]", $password, $message);
 		$message = str_replace("[siteurl]", $siteurl, $message);
+				
+		//$subject = "Important information: New user account created for " . $name;
 		
-		$headers = 'From: ' .$siteadmin . $crlf .
-		'Reply-To: ' .$siteadmin . $crlf .
-		'Mime-Version: 1.0' . $crlf .
-		'Content-Type: text/plain; charset=ISO-8859-1' . $crlf .
-		'Content-Transfer-Encoding: quoted-printable' . $crlf;
-		
-		$subject = "Important information: New user account created for " . $name;
+		$msgArray = splitSubjectMessage("Important information: New user account created for " . $name,$message);
+		$subject=$msgArray[0];
+		$message=$msgArray[1];
 		
 		if (($firstname != 'FirstName') && ($lastname != 'LastName'))
 		{
-			$message = str_replace("\r\n",$crlf,$message); 
-			mail($email, $subject, $message, $headers);
-			
-			$adminemail = $siteadmin;
-			$subject = "ADMIN COPY: " . $subject;
-			mail($adminemail, $subject, $message, $headers);
+			sendMail($email, $subject, $message, $siteadmin); 
+			sendMail($siteadmin, "ADMIN COPY: " . $subject, $message, $siteadmin);
 		}
 		else
 		{
@@ -110,7 +178,7 @@ function mailNewUser($firstname, $lastname, $email, $username, $password) {
 		}
 }
 
-function emailTemplate($message, $name, $date, $location, $rehearsal, $rotaoutput, $username, $siteurl) {
+function emailTemplate($message, $name, $date, $location, $rehearsal, $rotaoutput, $username, $siteurl, $type) {
 	$skillfinal = '';
 	$message = str_replace("[name]", $name, $message);
 	$message = str_replace("[date]", $date, $message);
@@ -127,6 +195,7 @@ function emailTemplate($message, $name, $date, $location, $rehearsal, $rotaoutpu
 	$message = str_replace("[rotaoutput]", $skillfinal, $message);
 	$message = str_replace("[siteurl]", $siteurl, $message);
 	$message = str_replace("[username]", $username, $message);
+	$message = str_replace("[type]", $type, $message);
 	// echo '<p>' . $message . '</p>';
 	return $message;
 }
@@ -212,6 +281,20 @@ function notifyIndividual($userID, $eventID, $skillID) {
 }
 
 function notifyEveryone($eventID) {
+
+	$sqlSettings = "SELECT * FROM cr_settings";
+	$resultSettings = mysql_query($sqlSettings) or die(mysql_error());
+	$rowSettings = mysql_fetch_array($resultSettings, MYSQL_ASSOC);
+	$lang_locale = $rowSettings[lang_locale];
+	$time_format_normal = $rowSettings[time_format_normal];
+	//$userTZ="Europe/Berlin";
+	$userTZ=$rowSettings[time_zone];
+	$google_group_calendar=$rowSettings[google_group_calendar];
+	$overviewemail = $rowSettings[overviewemail];
+	$siteadmin = $rowSettings[adminemailaddress];
+	$lang_locale = $rowSettings[lang_locale];
+	setlocale(LC_TIME, $lang_locale); //de_DE
+	
 	
 	$query = "SELECT *,
 	(SELECT CONCAT(`firstname`, ' ', `lastname`) FROM cr_users WHERE `cr_users`.id = `cr_skills`.`userID` ORDER BY `cr_users`.firstname) AS `name`, 
@@ -243,17 +326,22 @@ function notifyEveryone($eventID) {
 			if(in_array($thisId, $countarray)) {
 			
 			} else {
+						//DATE_FORMAT(date,'%W, %M %e') AS sundayDate,
+						//DATE_FORMAT(rehearsalDate,'%W, %M %e @ %h:%i %p') AS rehearsalDate
 			$eventsql = "SELECT *, 
-			DATE_FORMAT(date,'%W, %M %e') AS sundayDate, 
-			DATE_FORMAT(rehearsalDate,'%W, %M %e @ %h:%i %p') AS rehearsalDateFormatted 
+			DATE_FORMAT(date,'%m/%d/%Y %H:%i:%S') AS sundayDate, 
+			DATE_FORMAT(rehearsalDate,'%m/%d/%Y %H:%i:%S') AS rehearsalDateFormatted 
 			FROM cr_events 
 			WHERE id = $eventID  ORDER BY date";
 			$eventresult = mysql_query($eventsql) or die(mysql_error());
 			$location = $row['eventLocationFormatted'];
 			while($eventrow = mysql_fetch_array($eventresult, MYSQL_ASSOC)) {
-				$date = $eventrow['sundayDate'];
+				//$date = $eventrow['sundayDate'];
+				$date = strftime($time_format_normal,strtotime($eventrow['sundayDate']));
 				
-				$rehearsaldate = $eventrow['rehearsalDateFormatted'];
+				//$rehearsaldate = $eventrow['rehearsalDateFormatted'];
+				$rehearsaldate = strftime($time_format_normal,strtotime($eventrow['rehearsalDateFormatted']));
+				
 				$type = $row['eventTypeFormatted'];
 			}
 
@@ -271,7 +359,7 @@ function notifyEveryone($eventID) {
 
 
 			while($skillsrow = mysql_fetch_array($skillsresult, MYSQL_ASSOC)) {
-				if($skillsrow['skill'] == ''):
+				if(($skillsrow['skill'] == '') || ($skillsrow['skill'] == $skillsrow['description'])):
 					$skill[] = $skillsrow['description'];
 				else:
 					$skill[] = $skillsrow['description'] . ' - ' . $skillsrow['skill'];
@@ -289,25 +377,26 @@ function notifyEveryone($eventID) {
 						if(($row['eventRehearsal'] == "0") or ($row['eventRehearsalChange'] == "1")) { 
 							$rehearsal = $row['norehearsalemail'];
 						} else { 
-							$rehearsal = $row['yesrehearsal'] . " on " . $rehearsaldate . " at " . $location;
+							//$rehearsal = $row['yesrehearsal'] . " on " . $rehearsaldate . " at " . $location;
+							$rehearsal = str_replace("[rehearsaldate]", $rehearsaldate, $row['yesrehearsal']);
 						}
 					}
+		
 		$message = $row['notificationmessage'];
 		$siteurl = $row['siteurl'];
 		$username = $row['username'];
 		$name = $row['name'];
 		$location = $row['eventLocationFormatted'];
+		//$type = $row['eventTypeFormatted'];
 		$rotaoutput = $skill;
 		$to = $row['email'];
-		$subject = "Rota reminder: " . $date;
+		//$subject = "Rota reminder: " . $date;
+		$subject = $type . ": ". $date;
 		
-		
-		$message = emailTemplate($message, $name, $date, $location, $rehearsal, $rotaoutput, $username, $siteurl);
-		
-		$headers = 'From: ' .$row['siteadmin'] . "\r\n" .
-		'Reply-To: ' .$row['siteadmin'] . "\r\n";
-		
-		mail($to, $subject, $message, $headers);
+		$message = emailTemplate($message, $name, $date, $location, $rehearsal, $rotaoutput, $username, $siteurl, $type);
+
+		$mailOk = sendMail("", $subject, $message, $siteadmin, $to);
+
 		$countarray[] = $row['updateid'];
 		}
 	}
@@ -317,7 +406,7 @@ function notifyEveryone($eventID) {
 			
 	$sql = "UPDATE cr_events SET notified = '1' WHERE id = '$eventID'"; 
 	mysql_query($sql) or die(mysql_error()); 
-	header( 'Location: index.php' ) ;
+	//header( 'Location: index.php' ) ;
 }
 
 
@@ -411,55 +500,28 @@ function notifyOverview($subject,$message) {
 			}
 		}
 		
-		$message = str_replace("\r\n",$crlf,$message); 	
+		//$message = str_replace("\r\n",$crlf,$message); 	
 		$bcc = "";
-		$queryRcpt="select email from cr_users where isOverviewRecipient=1";
+		$bcc_names = "\r\n";
+		$queryRcpt="select firstName,lastName,email from cr_users where isOverviewRecipient=1 order by firstName,lastName";
 		$resultRcpt = mysql_query($queryRcpt) or die(mysql_error());
-		$i=0;
-		$err=0;
-		$bcc_err="<br>";
-		while($rowRcpt = mysql_fetch_array($resultRcpt, MYSQL_ASSOC)) {
 		
-			$teile = explode(",", $rowRcpt[email]);
-			foreach ( $teile as $adr )
-            {
-				if (preg_replace("/([a-zA-Z0-9._%+-]+)(@)([a-zA-Z0-9.-]+)(\.)([a-zA-Z]+)/i","# # #",trim($adr))=="# # #") {
-					$bcc = $bcc . 'Bcc: ' . trim($adr) . $crlf;
-					$i=$i+1;
-				} else {
-					$bcc_err = $bcc_err . $adr . $crlf;
-					$err = $err + 1;
-				}
-				
-			}
+		$i=0;
+		while($rowRcpt = mysql_fetch_array($resultRcpt, MYSQL_ASSOC)) {
+			$bcc = $bcc . "," . $rowRcpt[email];
+			$bcc_names = $bcc_names . "\r\n" . $rowRcpt[firstName] . " " . $rowRcpt[lastName];
+			$i=$i+1;
 		}
 		
-		//$to = '...';
-		$headers = 'From: ' .$siteadmin . $crlf .
-		'Reply-To: ' .$siteadmin . $crlf .
-		'Mime-Version: 1.0' . $crlf .
-		'Content-Type: text/plain; charset=ISO-8859-1' . $crlf .
-		'Content-Transfer-Encoding: quoted-printable' . $crlf;
-		
 		$mailOk = FALSE;
-		$mailOk = mail($siteadmin, $subject, $message, $headers.$bcc);
-		//$mailOk = mail($siteadmin, $subject, $message, $headers);
-		
-		if ($bcc_err=="<br>")
-			$bcc_err="none";
+		$mailOk = sendMail("", $subject, $message, $siteadmin, $bcc); 
 		
 		if ($mailOk == TRUE)
 		{
-			mail($siteadmin, "ADMIN COPY: " . $subject, $message.$crlf.$bcc,$headers);
-			if ($i==1)			
-				return $i." mail have been sent.<br><br>".str_replace($crlf,"<br>","Address errors: ".$bcc_err."<br><br>".$headers.$bcc);
-			else
-				return $i." mails has been sent.<br><br>".str_replace($crlf,"<br>","Address errors: ".$bcc_err."<br><br>".$headers.$bcc);
-			
-			
-		
+			sendMail($siteadmin, "ADMIN COPY: " . $subject, $message."\r\n".$bcc_names, $siteadmin); 
+			return "<br>" . $i." user/s notified:".str_replace("\r\n","<br>\r\n",$bcc_names);
 		} else {
-			return "Error: Error while sending mails! Please check addresses:<br><br>".str_replace($crlf,"<br>",$headers.$bcc);
+			return "<br>Error: Error while sending mails! Please check addresses:<br><br>".str_replace("\r\n","<br>\r\n",$bcc_names);
 		}
 }
 
@@ -481,12 +543,13 @@ function notifyAttack($fileName,$attackType,$attackerID) {
 					"Date:\t\t " . date("Y-m-d H:i:s") . "<br>\r\n" .
 					"Script:\t\t " . $fileName . "\r\n " . "<br>\r\n" ;
 		
-		$headers = 'From: ' . $row['siteadmin'] . "\r\n" .
-		'Reply-To: ' . $row['siteadmin'] . "\r\n";
+		//$headers = 'From: ' . $row['siteadmin'] . "\r\n" .
+		//'Reply-To: ' . $row['siteadmin'] . "\r\n";
 		
 		$to = $row['siteadmin'];
 		
-		mail($to, $subject, strip_tags($message), $headers);
+		//mail($to, $subject, strip_tags($message), $headers);
+		sendMail($to, $subject, strip_tags($message),$to);
 		
 		echo $subject . "<br><br>";
 		echo $message . "<br>";
@@ -507,18 +570,19 @@ function notifyInfo($fileName,$infoMsg,$userID) {
 	
 	while($row = mysql_fetch_array($userresult, MYSQL_ASSOC)) {
 
-		$subject = "[ChurchRota] Info - " . $infoMsg . " - " . $row[name] ;
+		$subject = "Info - " . $infoMsg . " - " . $row[name] ;
 		$message =  "Type:\t\t " . $infoMsg . "<br>\r\n" . 
 					"User:\t\t " . $row[name] . "<br>\r\n" .
 					"Date:\t\t " . date("Y-m-d H:i:s") . "<br>\r\n" .
 					"Script:\t\t " . $fileName . "\r\n " . "<br>\r\n" ;
 		
-		$headers = 'From: ' . $row['siteadmin'] . "\r\n" .
-		'Reply-To: ' . $row['siteadmin'] . "\r\n";
+		//$headers = 'From: ' . $row['siteadmin'] . "\r\n" .
+		//'Reply-To: ' . $row['siteadmin'] . "\r\n";
 		
 		$to = $row['siteadmin'];
 		
-		mail($to, $subject, strip_tags($message), $headers);
+		//mail($to, $subject, strip_tags($message), $headers);
+		sendMail($to, $subject, strip_tags($message),$to);
 		
 	}
 	//header( 'Location: index.php' );	

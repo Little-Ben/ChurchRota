@@ -118,7 +118,7 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 		</ul>
 	</div>
 <div class="filtersnapshot">
-	<h1>Snapshot view</h1>
+	<h1>Snapshot view - <?php echo $owner; ?></h1>
 		<h2>Filter events by:</h2>
 		<p>
 			<a class="eventTypeButton" href="snapshot.php">All</a>

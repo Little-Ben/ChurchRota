@@ -12,7 +12,25 @@ Changelog of Church Rota
    About versioning:
    - X.Y.0   ->   File release; and SVN     ->  less often
    - X.Y.Z   ->   SVN only release          ->  less tested
-   
+
+
+---------------------------------------------------------------------------
+V2.4.2 - SVN - Revision 38 - Benjamin Schmitt - 2014-04-24
+- mail: corrected headers & bcc for mails (new internal function sendMail)
+  + DONE: mailNewUser
+  + DONE: notifyEveryone
+  + DONE: notifyOverview
+  + DONE: notifyAttack
+  + DONE: notifyInfo
+  + TODO: notifyIndividual
+  + TODO: notifySubscribers
+- automatic mail reminders for events
+  + new settings: security token
+  + new settings: days_to_alert
+  -> daily run 'cr_daily.php', see comments in 'cr_daily.php' for details 
+- snapshot: added owner to title
+- folder for user-generated database dumps (e.g. via shell)
+- version number
 
 ---------------------------------------------------------------------------
 V2.4.1 - SVN - Revision 37 - Benjamin Schmitt - 2014-03-07
