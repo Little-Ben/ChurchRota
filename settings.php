@@ -140,7 +140,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			{
 	    		$group_sorting_name = '0';
 			}
-	
+	$days_to_alert = $_POST['days_to_alert'];
+	$days_to_alert = mysql_real_escape_string($days_to_alert);
+	$token = $_POST['token'];
+	$token = mysql_real_escape_string($token);	
 	
 		// Update the database rather than insert new values
 		$sql = "UPDATE cr_settings SET siteurl = '$siteurl', notificationemail = '$notificationemail', adminemailaddress = '$siteadminemail', norehearsalemail = '$norehearsalemail', yesrehearsal = '$yesrehearsal', newusermessage = '$newusermessage', owner = '$owner',
@@ -157,6 +160,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		google_group_calendar='$google_group_calendar',
 		overviewemail='$overviewemail',
 		debug_mode='$debug_mode',
+		token='$token',
+		days_to_alert='$days_to_alert',
 		group_sorting_name='$group_sorting_name'"
 		;
 	
@@ -284,7 +289,13 @@ include('includes/header.php');
 			
 				<label class="settings" for="google_group_calendar">Google Group Calendar ID (for admin snapshot, e.g.&nbsp;5vpkrij4fv8k011dcmt38rt7ik@group.calendar.google.com):</label>
 				<input class="settings" name="google_group_calendar" id="google_group_calendar" type="text" value="<?php echo $row['google_group_calendar'];?>"  />
-			
+
+				<label class="settings" for="token">Security Token (see comments in cr_daily.php for details):</label>
+				<input class="settings" name="token" id="token" type="text" value="<?php echo $row['token'];?>"  />
+				
+				<label class="settings" for="days_to_alert">Days to Alert (send mail reminders X days before event; <br>0 = disable; see comments in cr_daily.php for details):</label>
+				<input class="settings" name="days_to_alert" id="days_to_alert" type="text" value="<?php echo $row['days_to_alert'];?>"  />
+
 			</div>
 		</div>
 		

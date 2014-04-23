@@ -210,7 +210,18 @@ function updateDatabase() {
 			executeDbSql("update cr_settings set version = '2.4.1'");			
 			notifyInfo(__FILE__,"db-update=" . $version . "->2.4.1",$_SESSION['userid']);	
 			insertStatistics("system",__FILE__,"db-update","2.4.1",$version);				
+		case "2.4.1":
+			executeDbSql("alter table cr_settings add(days_to_alert int(2) DEFAULT 5) ");
+			executeDbSql("alter table cr_settings add(token varchar(100) DEFAULT '') ");
+			executeDbSql("update cr_settings set version = '2.4.2'");
+			notifyInfo(__FILE__,"db-update=" . $version . "->2.4.2",$_SESSION['userid']);	
+			insertStatistics("system",__FILE__,"db-update","2.4.2",$version);				
+
+			//todo in a later version:
+			//executeDbSql("alter table cr_settings CHANGE debug_mode verbose_statistics int(1) DEFAULT '0' "); 
 			break;			
+			
+
 			
 	}
 	
