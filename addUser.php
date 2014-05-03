@@ -111,9 +111,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			}	
 			
 	if($action == "edit") {
+		if(isAdmin()) {
+			$updFields = "firstName = '$firstname', lastName = '$lastname', username = '$username', isAdmin = '$isAdminLocal', email = '$email', mobile = '$mobile', isOverviewRecipient = '$userisOverviewRecipient', isBandAdmin = '$userisBandAdmin', isEventEditor = '$userisEventEditor'";
+		} else {
+			$updFields = "email = '$email', mobile = '$mobile'";
+		}
 		// Update the database rather than insert new values
-		$sql = "UPDATE cr_users SET firstName = '$firstname', lastName = '$lastname', username = '$username', isAdmin = '$isAdminLocal',
-		email = '$email', mobile = '$mobile', isOverviewRecipient = '$userisOverviewRecipient', isBandAdmin = '$userisBandAdmin', isEventEditor = '$userisEventEditor' WHERE id = '$userID'";
+		$sql = "UPDATE cr_users SET " . $updFields . " WHERE id = '$userID'";
 	} else {
 		// Create a new record
 		$password = RandomPassword(8, true, true, true);

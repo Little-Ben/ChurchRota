@@ -15,6 +15,12 @@ Changelog of Church Rota
 
 
 ---------------------------------------------------------------------------
+V2.4.3 - SVN - Revision 39 - Benjamin Schmitt - 2014-05-03
+- addUser: buxfix of mistakenly removed permission flags 
+           when updating details (email, mobile) as normal user 
+- version number and changelog
+
+---------------------------------------------------------------------------
 V2.4.2 - SVN - Revision 38 - Benjamin Schmitt - 2014-04-24
 - mail: corrected headers & bcc for mails (new internal function sendMail)
   + DONE: mailNewUser
