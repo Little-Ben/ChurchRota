@@ -122,8 +122,10 @@ if(isset($rehearsaldate)) {
 		
 		// First array:
 		$sql = "SELECT skillID FROM cr_eventPeople WHERE eventID = '$eventID'";
-		if ($userisBandAdmin) $sql = $sql . " and skillID in (select skillID from cr_skills where groupid=2)";
-		if ($userisEventEditor) $sql = $sql . " and skillID in (select skillID from cr_skills where groupid!=2)";
+		//if ($userisBandAdmin) $sql = $sql . " and skillID in (select skillID from cr_skills where groupid=2)";
+		//if ($userisEventEditor) $sql = $sql . " and skillID in (select skillID from cr_skills where groupid!=2)";
+		if ($userisBandAdmin) $sql = $sql . " and skillID in (select skillID from cr_skills where groupid in (2,3,4))";
+		if ($userisEventEditor) $sql = $sql . " and skillID in (select skillID from cr_skills where not (groupid in (2,3,4)))";
 		
 		$result = mysql_query($sql) or die(mysql_error());
 		
@@ -166,8 +168,10 @@ if(isset($rehearsaldate)) {
 	// Otherwise there was nothing in rehearsal date and we should just delete all people from the event
 	} else {
 		$delete_all_sql = "DELETE FROM cr_eventPeople WHERE eventID = '$eventID'";
-		if ($userisBandAdmin) $delete_all_sql = $delete_all_sql . " and skillID in (select skillID from cr_skills where groupid=2)";
-		if ($userisEventEditor) $delete_all_sql = $delete_all_sql . " and skillID in (select skillID from cr_skills where groupid!=2)";
+		//if ($userisBandAdmin) $delete_all_sql = $delete_all_sql . " and skillID in (select skillID from cr_skills where groupid=2)";
+		//if ($userisEventEditor) $delete_all_sql = $delete_all_sql . " and skillID in (select skillID from cr_skills where groupid!=2)";
+		if ($userisBandAdmin) $delete_all_sql = $delete_all_sql . " and skillID in (select skillID from cr_skills where groupid in (2,3,4))";
+		if ($userisEventEditor) $delete_all_sql = $delete_all_sql . " and skillID in (select skillID from cr_skills where not (groupid in (2,3,4)))";
 		mysql_query($delete_all_sql) or die(mysql_error());
 	}
 	header ( "Location: index.php#section" . $eventID);
@@ -263,16 +267,23 @@ include('includes/header.php');
 					{ $checked =  'checked="checked" '; }  else { $checked = "";  }
 					
 					if ($userisBandAdmin) {
-						if($viewPeople['groupID'] == '2') 
+						//if($viewPeople['groupID'] == '2')
+						if(($viewPeople['groupID'] == '2') || ($viewPeople['groupID'] == '3') || ($viewPeople['groupID'] == '4'))
 							{ $disabled =  ""; }  
 						else 
 							{ $disabled = 'disabled';  }
 					} else { 
 						if ($userisEventEditor) {
-							if($viewPeople['groupID'] != '2') 
-								{ $disabled =  ""; }  
-							else 
+							//if($viewPeople['groupID'] != '2') 
+							//	{ $disabled =  ""; }  
+							//else 
+							//	{ $disabled = 'disabled';  }
+								
+							if(($viewPeople['groupID'] == '2') || ($viewPeople['groupID'] == '3') || ($viewPeople['groupID'] == '4'))
 								{ $disabled = 'disabled';  }
+							else 
+								{ $disabled =  ""; }  
+							
 						} else {
 							$disabled =  "";
 						}
