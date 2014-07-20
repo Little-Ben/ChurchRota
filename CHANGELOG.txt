@@ -14,6 +14,33 @@ Changelog of Church Rota
    - X.Y.Z   ->   SVN only release          ->  less tested
 
 
+   
+---------------------------------------------------------------------------
+V2.4.5 - SVN - Revision 40 - Benjamin Schmitt - 2014-07-20
+- declared mysql function getBrowserInfo as DETERMINISTIC,
+  for use with mysql option binary logging enabled (see ticket #3)
+   
+---------------------------------------------------------------------------
+V2.4.4 - SVN - Revision 40 - Benjamin Schmitt - 2014-07-20
+- snapshot: improved presentation of users without firstname
+- snapshot: new filter button for all events including past ones,
+            (only when admin and deactive option "show only current month")
+- snapshot: Google Calendar export (as admin) now uses new function 
+  getEventDetails for:
+  + event subject - showing band, leader, preacher and event type
+  + event description - showing all involved persons with skillgroup 
+    and event comments 
+- mail: corrected headers & bcc for mails (new internal function sendMail)
+  + DONE: notifyIndividual (now uses modified function notifyEveryone)
+  + WON'T DO: notifySubscribers (unused, contact me if needed)
+- notification mail: new placeholder [rotadetails] lists skills and  
+                     persons of that event
+- edit Event: Band Admin now also has editing permissions for skill groups
+  + Event Tech 
+  + Rehearsal Tech
+- send error mail to admin when sending fails (php mail() returns false),
+  also showing errors checked against regexp for addresses
+  
 ---------------------------------------------------------------------------
 V2.4.3 - SVN - Revision 39 - Benjamin Schmitt - 2014-05-03
 - addUser: buxfix of mistakenly removed permission flags 

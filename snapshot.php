@@ -23,6 +23,7 @@ include('includes/dbConfig.php');
 include('includes/functions.php');
 
 $filter = $_GET['filter'];
+$show = $_GET['show'];
 
 // Start the session. This checks whether someone is logged in and if not redirects them
 session_start();
@@ -69,8 +70,10 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 		$whereTwoMonth = "Year(date) = Year(Now()) AND ((Month(date) = Month(Now())) OR ((Month(date) = Month(Now())+1) AND (Day(Now())>20)))";
 		$whereTwoMonth = $whereTwoMonth . " and cr_events.date >= DATE(NOW())";
 	}else{
-		//$whereTwoMonth = "1=1";
-		$whereTwoMonth = "cr_events.date >= DATE(NOW())";
+		if ($show=='all')
+			$whereTwoMonth = "1=1";
+		else
+			$whereTwoMonth = "cr_events.date >= DATE(NOW())";
 	}
 
 	if ($rowSettings['group_sorting_name']=='1') {
@@ -122,7 +125,12 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 		<h2>Filter events by:</h2>
 		<p>
 			<a class="eventTypeButton" href="snapshot.php">All</a>
+			<?php
+			if ((isAdmin()) && ($rowSettings['snapshot_show_two_month']=='0')) {
+			?>
+				<a class="eventTypeButton" href="snapshot.php?show=all">All (incl. past)</a>
 		<?php
+			}
 		$filter_sql = "SELECT * FROM cr_eventTypes where id in 
 			(select `cr_events`.`type` FROM cr_events 
 			WHERE ".$whereTwoMonth."
@@ -186,6 +194,7 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 	$result = mysql_query($sql) or die(mysql_error());
 	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 		$eventID = $row['id'];
+		$comment = $row['comment'];
 		$preacher="";
 		$leader="";
 		$band="";
@@ -197,7 +206,7 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 		//$row['sundayDate'] 
 		echo "<br /><em>&nbsp;&nbsp;&nbsp;" . $row['eventType'] . "<br /><em>&nbsp;&nbsp;&nbsp;" . $row['eventLocation']. "</td><td >"; 
 				$sqlPeople = "SELECT *,
-				(SELECT CONCAT(if(`firstname`='Team',`firstname`,concat(LEFT(`firstname`,1),'.')), ' ', `lastname`) FROM cr_users WHERE `cr_users`.id = `cr_skills`.`userID` ORDER BY `cr_users`.firstname) 
+				(SELECT TRIM(TRIM(LEADING '.' FROM CONCAT(if(`firstname`='Team',`firstname`,concat(LEFT(`firstname`,1),'.')), ' ', `lastname`))) FROM cr_users WHERE `cr_users`.id = `cr_skills`.`userID` ORDER BY `cr_users`.firstname) 
 				AS `name`, 
 				(SELECT `description` FROM cr_groups WHERE `cr_skills`.`groupID` = `cr_groups`.`groupID`) AS `category`,  
 				GROUP_CONCAT(skill) AS joinedskill
@@ -215,34 +224,12 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 							echo $viewPeople['name'];
 							echo "<br />";
 							//no break or continue, because there could be other viewPeople with same categoryID	
-						
-						
-							//variable to save name for google calendar subject
-							//neede if user is admin
-							//only append name, if not already in variable
-							$separator = ", ";
-							$currentName = substr($viewPeople['category'],0,1).": ".$viewPeople['name'];
-							if (($groupID == 10) && (strpos($preacher,$currentName)===false))  
-								$preacher = trim($preacher. $separator . $currentName, $separator);
-								
-							if (($groupID == 11) && (strpos($leader,$currentName)===false))  
-								$leader = trim($leader . $separator . $currentName,$separator);
-								
-							if (($groupID == 2) && (strpos($band,$currentName)===false))  
-								$band = trim($band . $separator . $currentName,$separator);
 						}
 					}
 					echo "</td><td>";
 				}
-
-				//create subject for google calendar
-				$separator = " / ";
-				$calSubject = ltrim($leader . $separator , $separator);
-				$calSubject = $calSubject . ltrim($preacher . $separator , $separator);
-				$calSubject = $calSubject . ltrim($band , $separator);
-				$calSubject = ltrim($calSubject . " ");
-				//echo $calSubject;
-								
+				
+				//generate google calendar urls
 				putenv("TZ=".$userTZ);
 				$eventDate = $row['sundayDate'];
 				$eventDateGMT = gmdate("Ymd\THis\Z",strtotime($eventDate." ".date("T",strtotime($eventDate))));
@@ -252,11 +239,17 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 				//echo $eventDateEndGMT;
 				
 				if (isAdmin()) {
-					echo "<a href=\"http://www.google.com/calendar/event?action=TEMPLATE&text=".urlencode(utf8_wrapper($calSubject."(".$row['eventType'].")"))."&dates=".$eventDateGMT."/".$eventDateEndGMT."&details=&location=".urlencode(utf8_wrapper($row['eventLocation']))."&trp=false&sprop=&sprop=name:&src=".$google_group_calendar."&ctz=".$userTZ."\" target=\"_blank\">";
+					if ($comment<>"")
+						$comment = "; " . $comment;
+					$comment = str_replace("\r\n","; ",$comment);
+					echo "<a href=\"http://www.google.com/calendar/event?action=TEMPLATE&text=".urlencode(utf8_wrapper(getEventDetails($eventID, " / ",1)." (".$row['eventType'].")"))."&dates=".$eventDateGMT."/".$eventDateEndGMT."&details=".urlencode(utf8_wrapper(ltrim(getEventDetails($eventID, "; ",0,false) . $comment,"; ")))."&location=".urlencode(utf8_wrapper($row['eventLocation']))."&trp=false&sprop=&sprop=name:&src=".$google_group_calendar."&ctz=".$userTZ."\" target=\"_blank\">";
+					echo "<img src=\"//www.google.com/calendar/images/ext/gc_button1.gif\" border=0></a><BR>";
+					//echo "iCal";
 				}else{	
 					echo "<a href=\"http://www.google.com/calendar/event?action=TEMPLATE&text=".urlencode(utf8_wrapper($row['eventType']))."&dates=".$eventDateGMT."/".$eventDateEndGMT."&details=&location=".urlencode(utf8_wrapper($row['eventLocation']))."&trp=false&sprop=&sprop=name:&ctz=".$userTZ."\" target=\"_blank\">";
+					echo "<img src=\"//www.google.com/calendar/images/ext/gc_button1.gif\" border=0></a>";
 				}
-				echo "<img src=\"//www.google.com/calendar/images/ext/gc_button1.gif\" border=0></a>";
+				
 				
 		echo "</td></tr>\r\n";
 	}

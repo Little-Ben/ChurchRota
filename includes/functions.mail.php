@@ -37,6 +37,7 @@ function sendMail($to, $subject, $message, $from, $bcc = "")  {
 		'Mime-Version: 1.0' . $crlf .
 		'Content-Type: text/plain; charset=ISO-8859-1' . $crlf .
 		'Content-Transfer-Encoding: quoted-printable' . $crlf;
+		$headerSimple = $headers;
 	
 		//--------------------------------------------------------------------------------
 		//replace all possible seperating semikolons with commas (for later explode)
@@ -71,7 +72,6 @@ function sendMail($to, $subject, $message, $from, $bcc = "")  {
 			}
 		}	
 		//echo str_replace($crlf,"<br>\r\n",$headers)."<br>\r\n";  //debug output
-		
 		//--------------------------------------------------------------------------------
 		//general mail footer 
 		$sqlSettings = "SELECT * FROM cr_settings";
@@ -93,6 +93,10 @@ function sendMail($to, $subject, $message, $from, $bcc = "")  {
 			$mailOk = mail($from, $subject, $message, $headers);
 		}else{
 			$mailOk = mail($to, $subject, $message, $headers); 
+			if ($mailOk) {
+				//mail($from, "[ChurchRota] Mail status - OK", "address ok: " . $i, $headerSimple);
+			}else
+				mail($from, "[ChurchRota] Mail status - ERROR", "address ok: " . $i . $crlf . "address errors: " . $err . $crlf . $bcc_err, $headerSimple);
 		}
 		
 		return $mailOk;
@@ -178,7 +182,7 @@ function mailNewUser($firstname, $lastname, $email, $username, $password) {
 		}
 }
 
-function emailTemplate($message, $name, $date, $location, $rehearsal, $rotaoutput, $username, $siteurl, $type) {
+function emailTemplate($message, $name, $date, $location, $rehearsal, $rotaoutput, $username, $siteurl, $type="", $rotadetails="") {
 	$skillfinal = '';
 	$message = str_replace("[name]", $name, $message);
 	$message = str_replace("[date]", $date, $message);
@@ -186,8 +190,7 @@ function emailTemplate($message, $name, $date, $location, $rehearsal, $rotaoutpu
 	$message = str_replace("[rehearsal]", $rehearsal, $message);
 	if(is_array($rotaoutput)):
 		foreach ($rotaoutput as $key => $skill):
-			$skillfinal = $skillfinal . $skill . '
-		';
+			$skillfinal = $skillfinal . $skill . ' ';
 		endforeach;
 	else:
 		$skillfinal = $rotaoutput;
@@ -196,11 +199,14 @@ function emailTemplate($message, $name, $date, $location, $rehearsal, $rotaoutpu
 	$message = str_replace("[siteurl]", $siteurl, $message);
 	$message = str_replace("[username]", $username, $message);
 	$message = str_replace("[type]", $type, $message);
+	$message = str_replace("[rotadetails]", $rotadetails, $message);
 	// echo '<p>' . $message . '</p>';
 	return $message;
 }
 
 function notifyIndividual($userID, $eventID, $skillID) {
+	notifyEveryone($eventID, $skillID, $userID);
+	$eventID=0;  //disables following code through empty sql result
 	
 	$query = "SELECT *,
 	(SELECT CONCAT(`firstname`, ' ', `lastname`) FROM cr_users WHERE `cr_users`.id = `cr_skills`.`userID` ORDER BY `cr_users`.firstname) AS `name`,
@@ -280,7 +286,7 @@ function notifyIndividual($userID, $eventID, $skillID) {
 
 }
 
-function notifyEveryone($eventID) {
+function notifyEveryone($eventID, $skillID = -1, $userID = -1) {
 
 	$sqlSettings = "SELECT * FROM cr_settings";
 	$resultSettings = mysql_query($sqlSettings) or die(mysql_error());
@@ -315,8 +321,22 @@ function notifyEveryone($eventID) {
 	(SELECT `adminemailaddress` FROM cr_settings) AS `siteadmin`,
 	(SELECT `rehearsal` FROM cr_groups WHERE `cr_skills`.`groupID` = `cr_groups`.`groupID`) AS `rehearsal`, 
 	GROUP_CONCAT(skill) AS joinedskill 
-	FROM cr_skills WHERE skillID IN (SELECT skillID FROM cr_eventPeople WHERE eventID = '$eventID') 
-	GROUP BY userID, groupID ORDER BY groupID";
+	FROM cr_skills WHERE skillID IN (SELECT skillID FROM cr_eventPeople WHERE eventID = '$eventID') ";
+	
+	if ($userID >= 0)	
+		$queryUserFilter = $queryUserID . "AND userID='$userID' ";
+	else
+		$queryUserFilter = "";
+		
+	if ($skillID >= 0)	
+		$querySkillFilter = "AND skillID='$skillID' ";
+	else
+		$querySkillFilter = "";
+		
+	//$query = $query  . $queryUserFilter;
+	$query = $query  . $querySkillFilter;
+	
+	$query = $query . "GROUP BY userID, groupID ORDER BY groupID";
 	$userresult = mysql_query($query) or die(mysql_error());
 	$countarray = array();
 	
@@ -326,86 +346,97 @@ function notifyEveryone($eventID) {
 			if(in_array($thisId, $countarray)) {
 			
 			} else {
-						//DATE_FORMAT(date,'%W, %M %e') AS sundayDate,
-						//DATE_FORMAT(rehearsalDate,'%W, %M %e @ %h:%i %p') AS rehearsalDate
-			$eventsql = "SELECT *, 
-			DATE_FORMAT(date,'%m/%d/%Y %H:%i:%S') AS sundayDate, 
-			DATE_FORMAT(rehearsalDate,'%m/%d/%Y %H:%i:%S') AS rehearsalDateFormatted 
-			FROM cr_events 
-			WHERE id = $eventID  ORDER BY date";
-			$eventresult = mysql_query($eventsql) or die(mysql_error());
-			$location = $row['eventLocationFormatted'];
-			while($eventrow = mysql_fetch_array($eventresult, MYSQL_ASSOC)) {
-				//$date = $eventrow['sundayDate'];
-				$date = strftime($time_format_normal,strtotime($eventrow['sundayDate']));
-				
-				//$rehearsaldate = $eventrow['rehearsalDateFormatted'];
-				$rehearsaldate = strftime($time_format_normal,strtotime($eventrow['rehearsalDateFormatted']));
-				
-				$type = $row['eventTypeFormatted'];
-			}
-
-			$temp_user_id = $row['updateid']; 
-
-			$skillssql = "SELECT *
-			FROM cr_skills
-			LEFT JOIN cr_eventPeople
-			ON cr_skills.skillID = cr_eventPeople.skillID
-			LEFT JOIN cr_groups
-			ON cr_skills.groupID = cr_groups.groupID
-			WHERE cr_skills.userID = '$temp_user_id' AND cr_eventPeople.eventID = '$eventID'";
-
-			$skillsresult = mysql_query($skillssql) or die(mysql_error());
-
-
-			while($skillsrow = mysql_fetch_array($skillsresult, MYSQL_ASSOC)) {
-				if(($skillsrow['skill'] == '') || ($skillsrow['skill'] == $skillsrow['description'])):
-					$skill[] = $skillsrow['description'];
-				else:
-					$skill[] = $skillsrow['description'] . ' - ' . $skillsrow['skill'];
-				endif;
-				
-
-			}
-			
-
-			$updateID = $row['updateid'];
-			
+							//DATE_FORMAT(date,'%W, %M %e') AS sundayDate,
+							//DATE_FORMAT(rehearsalDate,'%W, %M %e @ %h:%i %p') AS rehearsalDate
+				$eventsql = "SELECT *, 
+				DATE_FORMAT(date,'%m/%d/%Y %H:%i:%S') AS sundayDate, 
+				DATE_FORMAT(rehearsalDate,'%m/%d/%Y %H:%i:%S') AS rehearsalDateFormatted 
+				FROM cr_events 
+				WHERE id = $eventID  ORDER BY date";
+				$eventresult = mysql_query($eventsql) or die(mysql_error());
+				$location = $row['eventLocationFormatted'];
+				while($eventrow = mysql_fetch_array($eventresult, MYSQL_ASSOC)) {
+					//$date = $eventrow['sundayDate'];
+					$date = strftime($time_format_normal,strtotime($eventrow['sundayDate']));
 					
-			$rehearsal = "";
-					if($row['rehearsal'] == "1") {
-						if(($row['eventRehearsal'] == "0") or ($row['eventRehearsalChange'] == "1")) { 
-							$rehearsal = $row['norehearsalemail'];
-						} else { 
-							//$rehearsal = $row['yesrehearsal'] . " on " . $rehearsaldate . " at " . $location;
-							$rehearsal = str_replace("[rehearsaldate]", $rehearsaldate, $row['yesrehearsal']);
+					//$rehearsaldate = $eventrow['rehearsalDateFormatted'];
+					$rehearsaldate = strftime($time_format_normal,strtotime($eventrow['rehearsalDateFormatted']));
+					
+					$type = $row['eventTypeFormatted'];
+				}
+
+				$temp_user_id = $row['updateid']; 
+
+				$skillssql = "SELECT *
+				FROM cr_skills
+				LEFT JOIN cr_eventPeople
+				ON cr_skills.skillID = cr_eventPeople.skillID
+				LEFT JOIN cr_groups
+				ON cr_skills.groupID = cr_groups.groupID
+				WHERE cr_skills.userID = '$temp_user_id' AND cr_eventPeople.eventID = '$eventID'";
+
+				$skillsresult = mysql_query($skillssql) or die(mysql_error());
+
+
+				while($skillsrow = mysql_fetch_array($skillsresult, MYSQL_ASSOC)) {
+					if(($skillsrow['skill'] == '') || ($skillsrow['skill'] == $skillsrow['description'])):
+						$skill[] = $skillsrow['description'];
+					else:
+						$skill[] = $skillsrow['description'] . ' - ' . $skillsrow['skill'];
+					endif;
+					
+
+				}
+				
+
+				$updateID = $row['updateid'];
+				
+						
+				$rehearsal = "";
+						if($row['rehearsal'] == "1") {
+							if(($row['eventRehearsal'] == "0") or ($row['eventRehearsalChange'] == "1")) { 
+								$rehearsal = $row['norehearsalemail'];
+							} else { 
+								//$rehearsal = $row['yesrehearsal'] . " on " . $rehearsaldate . " at " . $location;
+								$rehearsal = str_replace("[rehearsaldate]", $rehearsaldate, $row['yesrehearsal']);
+							}
 						}
-					}
+			
+			$message = $row['notificationmessage'];
+			$siteurl = $row['siteurl'];
+			$username = $row['username'];
+			$name = $row['name'];
+			$location = $row['eventLocationFormatted'];
+			//$type = $row['eventTypeFormatted'];
+			$rotaoutput = $skill;
+			$to = $row['email'];
+			//echo $to;
+			
+			//$subject = "Rota reminder: " . $date;
+			$subject = $type . " " . $rotaoutput[0] . ": ". $date;
+			
+			$rotadetails = getEventDetails($eventID, "\r\n",0,false);
+			
+			$message = emailTemplate($message, $name, $date, $location, $rehearsal, $rotaoutput, $username, $siteurl, $type, $rotadetails);
 		
-		$message = $row['notificationmessage'];
-		$siteurl = $row['siteurl'];
-		$username = $row['username'];
-		$name = $row['name'];
-		$location = $row['eventLocationFormatted'];
-		//$type = $row['eventTypeFormatted'];
-		$rotaoutput = $skill;
-		$to = $row['email'];
-		//$subject = "Rota reminder: " . $date;
-		$subject = $type . ": ". $date;
+			$mailOk = sendMail("", $subject, $message, $siteadmin, $to);
+
+			$countarray[] = $row['updateid'];
 		
-		$message = emailTemplate($message, $name, $date, $location, $rehearsal, $rotaoutput, $username, $siteurl, $type);
-
-		$mailOk = sendMail("", $subject, $message, $siteadmin, $to);
-
-		$countarray[] = $row['updateid'];
 		}
 	}
 	
-	$sql = "UPDATE cr_eventPeople SET notified = '1' WHERE eventID = '$eventID'"; 
+	$sql = "UPDATE cr_eventPeople SET notified = '1' WHERE eventID = '$eventID' ";
+	//$sql = $sql . $queryUserFilter;
+	$sql = $sql . $querySkillFilter;
 	mysql_query($sql) or die(mysql_error());
-			
-	$sql = "UPDATE cr_events SET notified = '1' WHERE id = '$eventID'"; 
+	//echo "<script language=javascript>alert('update cr_eventPeople: ".mysql_affected_rows()."')</script>";
+	
+	//$sql = "UPDATE cr_events SET notified = '1' WHERE id = '$eventID'"; 
+	$sql = "UPDATE cr_events SET cr_events.notified = '1' WHERE cr_events.id = '$eventID' and cr_events.id not in (select cr_eventPeople.eventID from cr_eventPeople where cr_eventPeople.notified=0 and cr_eventPeople.eventID = cr_events.id)";
 	mysql_query($sql) or die(mysql_error()); 
+	//echo "<script language=javascript>alert('update cr_events: ".mysql_affected_rows()."')</script>";
+	
 	//header( 'Location: index.php' ) ;
 }
 
