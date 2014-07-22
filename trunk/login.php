@@ -33,7 +33,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 	  $_SESSION['isEventEditor'] = $row['isEventEditor']; // Set the event editor status to be carried across this session
 			
 	//statistic 
-	  if (($debug) && ($rowSettings['version']=='2.4.5')) insertStatistics("user",__FILE__,"login",null,$_SERVER['HTTP_USER_AGENT']);
+	  if (($debug) && ($rowSettings['version']=='2.5.0')) insertStatistics("user",__FILE__,"login",null,$_SERVER['HTTP_USER_AGENT']);
 
 	
    	// after login we move to the main page
