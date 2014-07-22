@@ -14,11 +14,19 @@ $host = 'localhost';
 
 // CONFIGURATION COMPLETE. Please upload files and navigate to install.php
 
+//generate masked password
+$pwdMasked = "";
+$len = strlen($password);
+for ($i = 0; $i < $len; $i++) 
+{
+	$pwdMasked .= "*";
+}
+
 // Connect to the database server
-$dbh = @mysql_connect($host,$username,$password) or die ("Connection to $host with login '$username'/'$password' failed.");
+$dbh = @mysql_connect($host,$username,$password) or die ("Connection to $host with login '$username'/'$pwdMasked' failed.");
 
 // Choose the right database 
-$db = @mysql_select_db($dbname, $dbh) or die ("Connection made. But database '$dbname' was not found.");
+$db = @mysql_select_db($dbname, $dbh) or die ("Connection made, but database '$dbname' was not found.");
 
 
 
