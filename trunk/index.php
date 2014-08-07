@@ -37,6 +37,7 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 $removeEventID = $_GET['eventID'];
 $removeWholeEvent = $_GET['wholeEventID'];
 $showmyevents = $_GET['showmyevents'];
+$switchEvents = $_GET['switchEvents'];
 $removeSkillID = $_GET['skillID'];
 $notifyIndividual = $_GET['notifyIndividual'];
 $notifyEveryone = $_GET['notifyEveryone'];
@@ -44,6 +45,19 @@ $skillremove = $_GET['skillremove'];
 $eventremove = $_GET['eventremove'];
 $notifyOverview = $_GET['notifyOverview'];
 $filter = $_GET['filter'];
+
+switch ($switchEvents) {
+	case "user":
+		$_SESSION['onlyShowUserEvents'] = '1';
+		break;
+	case "all":		
+		$_SESSION['onlyShowUserEvents'] = '0';
+		break;
+}
+
+if (($_SESSION['onlyShowUserEvents'] == '1') && ($showmyevents==""))
+		header ( "Location: index.php?showmyevents=".$_SESSION['userid'] );
+
 
 if (isAdmin()) {
 
@@ -161,9 +175,9 @@ if(isLoggedIn()) {
 	</p>
 	</div>
 	<?php
-
-	if($showmyevents == "" && $filter == "") {
 		
+	if($_SESSION['onlyShowUserEvents'] == '0' && $filter == "") {
+	
 		$sql = "SELECT *, 
 			(SELECT `description` FROM cr_eventTypes WHERE cr_eventTypes.id = `cr_events`.`type`) AS eventType,
 			(SELECT `description` FROM cr_locations WHERE cr_locations.id = `cr_events`.`location`) AS eventLocation,
@@ -173,7 +187,7 @@ if(isLoggedIn()) {
 			AND cr_events.deleted = 0
 			ORDER BY " . $dateOrderBy;
 	} else if($filter != "") {
-
+		
 		$sql = "SELECT *, 
 			(SELECT `description` FROM cr_eventTypes WHERE cr_eventTypes.id = `cr_events`.`type`) AS eventType,
 			(SELECT `description` FROM cr_locations WHERE cr_locations.id = `cr_events`.`location`) AS eventLocation,
@@ -184,7 +198,7 @@ if(isLoggedIn()) {
 			AND cr_events.deleted = 0
 			ORDER BY " . $dateOrderBy;
 	} else {
-
+		
 		$sql = "SELECT *,
 			(SELECT userID FROM cr_skills WHERE skillID = cr_eventPeople.skillID AND cr_skills.userID = '$showmyevents') AS skilluserID,
 			(SELECT groupID FROM cr_skills WHERE skillID = cr_eventPeople.skillID AND cr_skills.userID = '$showmyevents' AND cr_skills.userID) AS skillgroupID, 
@@ -389,9 +403,9 @@ If you are unsure of your user details, please email <a href="mailto:<?php echo 
 		<?php } ?>
 		<?php if(isLoggedIn()) {
 			if($showmyevents == "") { ?>
-			<div class="item"><a href="index.php?showmyevents=<?php echo $_SESSION['userid']; ?>">Show only my events</a></div>
+			<div class="item"><a href="index.php?switchEvents=user">Show only my events</a></div>
 			<?php } else { ?>
-			<div class="item"><a href="index.php">Show all events</a></div>
+			<div class="item"><a href="index.php?switchEvents=all">Show all events</a></div>
 			<?php } ?>
 		<div class="item"><a href="logout.php">Logout</a></div>
 		<?php } ?>

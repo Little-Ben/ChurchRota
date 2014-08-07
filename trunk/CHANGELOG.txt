@@ -13,6 +13,9 @@ Changelog of Church Rota
    - X.Y.0   ->   File release; and SVN     ->  less often
    - X.Y.Z   ->   SVN only release          ->  less tested
 
+---------------------------------------------------------------------------
+V2.5.1 - SVN - Revision 43 - Benjamin Schmitt - 2014-08-08
+- remember filter "Show all/my events" during session (ticket #5)
 
 ---------------------------------------------------------------------------
 V2.5.0 - SVN + FILE - Revision 41/42 - Benjamin Schmitt - 2014-07-23

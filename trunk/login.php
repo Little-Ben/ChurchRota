@@ -31,23 +31,20 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
       $_SESSION['name'] = $row['firstName'] . " " . $row['lastName'];
 	  $_SESSION['isBandAdmin'] = $row['isBandAdmin']; // Set the band admin status to be carried across this session
 	  $_SESSION['isEventEditor'] = $row['isEventEditor']; // Set the event editor status to be carried across this session
+	  $_SESSION['onlyShowUserEvents'] = $users_start_with_myevents; // 1 if users_start_with_myevents is set in settings, can be changed by user during session
 			
 	//statistic 
-	  if (($debug) && ($rowSettings['version']=='2.5.0')) insertStatistics("user",__FILE__,"login",null,$_SERVER['HTTP_USER_AGENT']);
+	  if (($debug) && ($rowSettings['version']=='2.5.1')) insertStatistics("user",__FILE__,"login",null,$_SERVER['HTTP_USER_AGENT']);
 
 	
-   	// after login we move to the main page
+   	// admin section
       if ($_SESSION['isAdmin']==1) {
-		updateDatabase();	  
-		header('Location: index.php'); // Move to the home page of the admin section
-	  }else{
-		//if ($debug) notifyInfo(__FILE__,"login",$row['id']); //only_for_testing//
-	    if ($users_start_with_myevents=='1') {
-			header('Location: index.php?showmyevents=' . $_SESSION['userid']); // Move to the home page of the admin section
-		}else{
-			header('Location: index.php');
-		}
+		updateDatabase();   						//check for db updates
+		$_SESSION['onlyShowUserEvents'] = '0';		//show all events for admin, regardless what settings say
 	  }
+	  
+	  // after login we move to the main page
+	  header('Location: index.php');
       exit;
       
    }
