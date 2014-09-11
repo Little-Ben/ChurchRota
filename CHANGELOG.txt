@@ -14,6 +14,10 @@ Changelog of Church Rota
    - X.Y.Z   ->   SVN only release          ->  less tested
 
 ---------------------------------------------------------------------------
+V2.5.2 - SVN - Revision 44 - Benjamin Schmitt - 2014-09-11
+- provide username after first install, hint on login page (ticket #7)
+
+---------------------------------------------------------------------------
 V2.5.1 - SVN - Revision 43 - Benjamin Schmitt - 2014-08-08
 - remember filter "Show all/my events" during session (ticket #5)
 
