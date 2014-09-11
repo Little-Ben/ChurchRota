@@ -34,7 +34,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 	  $_SESSION['onlyShowUserEvents'] = $users_start_with_myevents; // 1 if users_start_with_myevents is set in settings, can be changed by user during session
 			
 	//statistic 
-	  if (($debug) && ($rowSettings['version']=='2.5.1')) insertStatistics("user",__FILE__,"login",null,$_SERVER['HTTP_USER_AGENT']);
+	  if (($debug) && ($rowSettings['version']=='2.5.2')) insertStatistics("user",__FILE__,"login",null,$_SERVER['HTTP_USER_AGENT']);
 
 	
    	// admin section
@@ -49,14 +49,21 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
       
    }
 }
-include('includes/header.php'); ?>
+include('includes/header.php'); 
+
+if (isset($_GET['loginname']))
+	$loginname=$_GET['loginname'];
+else
+	$loginname="";
+
+?>
 <div class="elementBackground">
 <h2>Login</h2>
-<p>Please enter your username and password</p>
+<p>Please enter your username and password<br>&nbsp;<br> Username:<br>first- and lastname without spaces in small letters, <br>e.g. John Doe -> johndoe</p>
 <form action="login.php" method="post" >
 		<fieldset>
 			<label for="username">Username:</label>
-			<input name="username" id="username" type="text" placeholder="Enter your username" />
+			<input name="username" id="username" type="text" value="<?php echo $loginname; ?>" placeholder="Enter your username"/>
 			
 			<label for="password">Password:</label>
 			<input name="password" id="password" type="password" placeholder="Enter your password" />

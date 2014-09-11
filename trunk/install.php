@@ -304,7 +304,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		
 	
 	// after login we move to the main page
-    header('Location: login.php'); // Move to the home page of the admin section
+    header('Location: login.php?loginname='.$username); // Move to the home page of the admin section
     exit;
 	
 }
