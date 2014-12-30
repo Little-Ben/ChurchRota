@@ -14,12 +14,20 @@ Changelog of Church Rota
    - X.Y.Z   ->   SVN only release          ->  less tested
 
 ---------------------------------------------------------------------------
+V2.5.3 - SVN - Revision 45 - Benjamin Schmitt - 2014-12-30
+- fix: Overview sending in end of December, 
+       retrieve events of next years January
+- changelog and version number
+
+---------------------------------------------------------------------------
 V2.5.2 - SVN - Revision 44 - Benjamin Schmitt - 2014-09-11
 - provide username after first install, hint on login page (ticket #7)
+- changelog and version number
 
 ---------------------------------------------------------------------------
 V2.5.1 - SVN - Revision 43 - Benjamin Schmitt - 2014-08-08
 - remember filter "Show all/my events" during session (ticket #5)
+- changelog and version number
 
 ---------------------------------------------------------------------------
 V2.5.0 - SVN + FILE - Revision 41/42 - Benjamin Schmitt - 2014-07-23

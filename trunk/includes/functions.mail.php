@@ -484,8 +484,13 @@ function notifyOverview($subject,$message) {
 				and l.id=e.location
 				and t.id=e.type
 				and ((g.groupid in (10,11)) or (g.groupid=2 and u.firstname='Team'))
-				AND Year(e.date) = Year(Now())
-				AND (((Month(e.date) = Month(Now())) AND (Day(Now())<=20)) OR ((Month(e.date) = Month(Now())+1) AND (Day(Now())>20)))
+				AND (
+						((Year(e.date) = Year(Now())) AND (Month(e.date) = Month(Now())) AND (Day(Now())<=20)) 
+						OR 
+						((Year(e.date) = Year(Now())) AND (Month(e.date) = Month(Now())+1) AND (Day(Now())>20))
+						OR
+						((Year(e.date) = Year(Now())+1) AND (Month(e.date) = 1) AND (Month(Now()) = 12) AND (Day(Now())>20))
+					)
 				order by date asc, groupID desc
 				) sub
 				group by date,id,location,type,comment";
