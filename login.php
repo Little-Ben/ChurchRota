@@ -34,7 +34,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 	  $_SESSION['onlyShowUserEvents'] = $users_start_with_myevents; // 1 if users_start_with_myevents is set in settings, can be changed by user during session
 			
 	//statistic 
-	  if (($debug) && ($rowSettings['version']=='2.5.3')) insertStatistics("user",__FILE__,"login",null,$_SERVER['HTTP_USER_AGENT']);
+	  if (($debug) && ($rowSettings['version']=='2.6.0')) insertStatistics("user",__FILE__,"login",null,$_SERVER['HTTP_USER_AGENT']);
 
 	
    	// admin section

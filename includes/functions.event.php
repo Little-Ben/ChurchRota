@@ -28,7 +28,7 @@ function addPeopleBand($bandid, $skillid) {
 
 }
 
-function getEventDetails($eventID, $separator, $type, $apprev_description = true) {
+function getEventDetails($eventID, $separator, $type, $apprev_description = true, $prefix="") {
 
 	//type=0 -> all details
 	//type=1 -> only groupID in 10,11,2
@@ -83,7 +83,7 @@ function getEventDetails($eventID, $separator, $type, $apprev_description = true
 				//break;    ->  no special handling, fallthrough to case 1
 			case 1:
 				//only persons with groupID in 10,11,2  ->  handled in sql query
-				$returnValue = $returnValue . ltrim($description . ": "); 
+				$returnValue = $returnValue . $prefix . ltrim($description . ": "); 
 				$returnValue = $returnValue . trim( $firstname . " " . $lastname);
 				break;
 			case 2:
