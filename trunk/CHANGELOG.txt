@@ -14,6 +14,13 @@ Changelog of Church Rota
    - X.Y.Z   ->   SVN only release          ->  less tested
 
 ---------------------------------------------------------------------------
+V2.6.0 - SVN + FILE - Revision 46 - Benjamin Schmitt - 2015-07-30
+- overview mail: add event comment to overview notification
+- notification mail: introducing new placeholder [comment] 
+- notification mail: identing placeholder [rotadetails]
+- changelog and version number
+
+---------------------------------------------------------------------------
 V2.5.3 - SVN - Revision 45 - Benjamin Schmitt - 2014-12-30
 - fix: Overview sending in end of December, 
        retrieve events of next years January

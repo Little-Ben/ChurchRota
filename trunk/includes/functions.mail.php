@@ -182,9 +182,9 @@ function mailNewUser($firstname, $lastname, $email, $username, $password) {
 		}
 }
 
-function emailTemplate($message, $name, $date, $location, $rehearsal, $rotaoutput, $username, $siteurl, $type="", $rotadetails="") {
+function emailTemplate($message, $name, $date, $location, $rehearsal, $rotaoutput, $username, $siteurl, $type="", $rotadetails="", $comment="") {
 	$skillfinal = '';
-	$message = str_replace("[name]", $name, $message);
+	$message = trim(str_replace("[name]", $name, $message));
 	$message = str_replace("[date]", $date, $message);
 	$message = str_replace("[location]", $location, $message);
 	$message = str_replace("[rehearsal]", $rehearsal, $message);
@@ -200,6 +200,7 @@ function emailTemplate($message, $name, $date, $location, $rehearsal, $rotaoutpu
 	$message = str_replace("[username]", $username, $message);
 	$message = str_replace("[type]", $type, $message);
 	$message = str_replace("[rotadetails]", $rotadetails, $message);
+	$message = str_replace("[comment]", $comment, $message);
 	// echo '<p>' . $message . '</p>';
 	return $message;
 }
@@ -363,6 +364,10 @@ function notifyEveryone($eventID, $skillID = -1, $userID = -1) {
 					$rehearsaldate = strftime($time_format_normal,strtotime($eventrow['rehearsalDateFormatted']));
 					
 					$type = $row['eventTypeFormatted'];
+					$comment = $eventrow['comment'];
+					if ($comment == ''):
+						$comment = '-';
+					endif;
 				}
 
 				$temp_user_id = $row['updateid']; 
@@ -415,9 +420,9 @@ function notifyEveryone($eventID, $skillID = -1, $userID = -1) {
 			//$subject = "Rota reminder: " . $date;
 			$subject = $type . " " . $rotaoutput[0] . ": ". $date;
 			
-			$rotadetails = getEventDetails($eventID, "\r\n",0,false);
+			$rotadetails = getEventDetails($eventID, "\r\n",0,false,"\t");
 			
-			$message = emailTemplate($message, $name, $date, $location, $rehearsal, $rotaoutput, $username, $siteurl, $type, $rotadetails);
+			$message = emailTemplate($message, $name, $date, $location, $rehearsal, $rotaoutput, $username, $siteurl, $type, $rotadetails, $comment);
 		
 			$mailOk = sendMail("", $subject, $message, $siteadmin, $to);
 
@@ -511,6 +516,8 @@ function notifyOverview($subject,$message) {
 					$overview = $overview . "\r\n";
 					
 					$overview = $overview . $row['joinedskills'];
+					$overview = $overview . "\r\n";
+					$overview = $overview . $row['comment'];
 					$overview = $overview . "\r\n";
 					$overview = $overview . "\r\n";
 				
