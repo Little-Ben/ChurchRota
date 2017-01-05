@@ -1,11 +1,26 @@
-Installing Church Rota
-======================
 
-0) Check sourceforge for updates
-   http://sourceforge.net/projects/churchrota/
+Installing ChurchRota
+=====================
+
+0) Check for updates
+
+   Project: http://sourceforge.net/projects/churchrota/
+
+   Stable Releases:
+     Files: https://sourceforge.net/projects/churchrota/files/
+
+   Source Code Management (latest but less tested code):
+     We have moved our code base to GitHub.
+     Please make sure to contribute only at that platform!
+
+     GitHub (main place for code, issue tracking, pull requests, etc.):    
+     https://github.com/Little-Ben/ChurchRota
    
-   Code SVN Repository (LATEST = TRUNK)
-   http://sourceforge.net/p/churchrota/code/
+     SF's Code GIT Repository (mirroring GitHub, no pull requests here please)
+     https://sourceforge.net/p/churchrota/git/ci/master/tree/
+
+     SF's SVN Repository (legacy, only for historic reasons, may be delete)
+     http://sourceforge.net/p/churchrota/code/
    
 1) Setup a mysql database
 
@@ -29,8 +44,8 @@ Installing Church Rota
 
 
 
-Updating Church Rota
-====================
+Updating ChurchRota
+===================
 
 IMPORTANT: 
 Before updating a running installation,
@@ -46,11 +61,33 @@ If there are database updates, they will be executed when an admin
 user logs in. So this should be your first step after installing new updates.
 
 
-
 Issue tracking
 ==============
-Please use sourceforge's tracking system, if you encounter any issues 
-(bugs, feature requests, etc.) related to Church Rota.
+Please use GitHub's issue tracking system, if you encounter any issues 
+(bugs, feature requests, etc.) related to ChurchRota.
 
-see https://sourceforge.net/p/churchrota/tickets
+see https://github.com/Little-Ben/ChurchRota/issues
+
+
+For historic reasons our old ticket system is reachable here:
+https://sourceforge.net/p/churchrota/tickets
+
+
+Contributing
+============
+We are happy about new or improved features and encourage you to contribute to 
+ChurchRota. Since development moved to GitHub, please make sure to contribute 
+there (pull request, issues): 
+
+https://github.com/Little-Ben/ChurchRota
+
+
+Contact
+=======
+Please see Twitter user @ChurchRota_Dev for updates on ChurchRota.
+
+
+Changelog
+=========
+see ./CHANGELOG.txt
 

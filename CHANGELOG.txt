@@ -1,27 +1,39 @@
 Changelog of Church Rota
 ========================
 
-   Please check sourceforge for updates
-   http://sourceforge.net/projects/churchrota/
+   Project: http://sourceforge.net/projects/churchrota/
+
+   Stable Releases:
+     Files: https://sourceforge.net/projects/churchrota/files/
+
+   SCM (Source Code Management, latest but less tested code):
+     We have moved our code base to GitHub.
+     Please make sure to contribute only at that platform!
+
+     GitHub (main place for code, issue tracking, pull requests, etc.):    
+     https://github.com/Little-Ben/ChurchRota
    
-   Code SVN Repository (LATEST = TRUNK)
-   http://sourceforge.net/p/churchrota/code/HEAD/tree/trunk
+     SF's GIT Repository (mirroring GitHub, no pull requests here please)
+     https://sourceforge.net/p/churchrota/git/ci/master/tree/
+
+     SF's SVN Repository (legacy, only for historic reasons, may be delete)
+     http://sourceforge.net/p/churchrota/code/
    
-   twitter: @ChurchRota  and  @ChurchRota_Dev
+   twitter: @ChurchRota_Dev
    
    About versioning:
-   - X.Y.0   ->   File release; and SVN     ->  less often
-   - X.Y.Z   ->   SVN only release          ->  less tested
+   - X.Y.0   ->   File release; and SCM     ->  less often
+   - X.Y.Z   ->   SCM only release          ->  less tested
 
 ---------------------------------------------------------------------------
-V2.6.2 - SVN only - Revision 48+49 - Benjamin Schmitt - 2017-01-05
+V2.6.2 - SCM only - Revision 48+49 - Benjamin Schmitt - 2017-01-05
 - settings: save trimmed and non-html (html_entity_decode) to db 
 - changelog and version number
 
 ---------------------------------------------------------------------------
-V2.6.1 - SVN only - Revision 47 - Benjamin Schmitt - 2017-01-05
+V2.6.1 - SCM only - Revision 47 - Benjamin Schmitt - 2017-01-05
 - snapshot: add time filter button: current year
-- snapshot: rename time filter buttons: all -> open, all (incl. past) -> all
+- snapshot: rename time filter buttons: all > open, all (incl. past) > all
 - snapshot: highlight chosen time filters
 - snapshot: combined time and type filtering (first choose time then type)
 - index: add time filter buttons: open, current_year, all
@@ -35,31 +47,31 @@ V2.6.1 - SVN only - Revision 47 - Benjamin Schmitt - 2017-01-05
 - changelog and version number
 
 ---------------------------------------------------------------------------
-V2.6.0 - SVN + FILE - Revision 46 - Benjamin Schmitt - 2015-07-30
+V2.6.0 - SCM + FILE - Revision 46 - Benjamin Schmitt - 2015-07-30
 - overview mail: add event comment to overview notification
 - notification mail: introducing new placeholder [comment] 
 - notification mail: identing placeholder [rotadetails]
 - changelog and version number
 
 ---------------------------------------------------------------------------
-V2.5.3 - SVN - Revision 45 - Benjamin Schmitt - 2014-12-30
+V2.5.3 - SCM - Revision 45 - Benjamin Schmitt - 2014-12-30
 - fix: Overview sending in end of December, 
        retrieve events of next years January
 - changelog and version number
 
 ---------------------------------------------------------------------------
-V2.5.2 - SVN - Revision 44 - Benjamin Schmitt - 2014-09-11
+V2.5.2 - SCM - Revision 44 - Benjamin Schmitt - 2014-09-11
 - provide username after first install, hint on login page (ticket #7)
 - changelog and version number
 
 ---------------------------------------------------------------------------
-V2.5.1 - SVN - Revision 43 - Benjamin Schmitt - 2014-08-08
+V2.5.1 - SCM - Revision 43 - Benjamin Schmitt - 2014-08-08
 - remember filter "Show all/my events" during session (ticket #5)
 - changelog and version number
 
 ---------------------------------------------------------------------------
-V2.5.0 - SVN + FILE - Revision 41/42 - Benjamin Schmitt - 2014-07-23
-- File release (V2.5.0) and SVN tag (2014-07-23_v2_5_0) 
+V2.5.0 - SCM + FILE - Revision 41/42 - Benjamin Schmitt - 2014-07-23
+- File release (V2.5.0) and SCM tag (2014-07-23_v2_5_0) 
 - only show password length instead of clear text password 
   on error page when no db connection
   (see ticket #4)
@@ -67,12 +79,12 @@ V2.5.0 - SVN + FILE - Revision 41/42 - Benjamin Schmitt - 2014-07-23
 - version number 2.5.0 changes
    
 ---------------------------------------------------------------------------
-V2.4.5 - SVN - Revision 40 - Benjamin Schmitt - 2014-07-20
+V2.4.5 - SCM - Revision 40 - Benjamin Schmitt - 2014-07-20
 - declared mysql function getBrowserInfo as DETERMINISTIC,
   for use with mysql option binary logging enabled (see ticket #3)
    
 ---------------------------------------------------------------------------
-V2.4.4 - SVN - Revision 40 - Benjamin Schmitt - 2014-07-20
+V2.4.4 - SCM - Revision 40 - Benjamin Schmitt - 2014-07-20
 - snapshot: improved presentation of users without firstname
 - snapshot: new filter button for all events including past ones,
             (only when admin and deactive option "show only current month")
@@ -93,13 +105,13 @@ V2.4.4 - SVN - Revision 40 - Benjamin Schmitt - 2014-07-20
   also showing errors checked against regexp for addresses
   
 ---------------------------------------------------------------------------
-V2.4.3 - SVN - Revision 39 - Benjamin Schmitt - 2014-05-03
+V2.4.3 - SCM - Revision 39 - Benjamin Schmitt - 2014-05-03
 - addUser: buxfix of mistakenly removed permission flags 
            when updating details (email, mobile) as normal user 
 - version number and changelog
 
 ---------------------------------------------------------------------------
-V2.4.2 - SVN - Revision 38 - Benjamin Schmitt - 2014-04-24
+V2.4.2 - SCM - Revision 38 - Benjamin Schmitt - 2014-04-24
 - mail: corrected headers & bcc for mails (new internal function sendMail)
   + DONE: mailNewUser
   + DONE: notifyEveryone
@@ -117,7 +129,7 @@ V2.4.2 - SVN - Revision 38 - Benjamin Schmitt - 2014-04-24
 - version number
 
 ---------------------------------------------------------------------------
-V2.4.1 - SVN - Revision 37 - Benjamin Schmitt - 2014-03-07
+V2.4.1 - SCM - Revision 37 - Benjamin Schmitt - 2014-03-07
 - settings: external links for further documentation of locale and timezone
 - styles: underline for links on 
   + in div welcome (added on index.php)
@@ -126,13 +138,13 @@ V2.4.1 - SVN - Revision 37 - Benjamin Schmitt - 2014-03-07
 - version number
 
 ---------------------------------------------------------------------------
-V2.4.0 - SVN + FILE - Revision 34 - Benjamin Schmitt - 2014-02-26
-- File release (V2.4.0) and SVN tag (2014-02-26_v2_4_0) 
+V2.4.0 - SCM + FILE - Revision 34 - Benjamin Schmitt - 2014-02-26
+- File release (V2.4.0) and SCM tag (2014-02-26_v2_4_0) 
 - Rev. 33 - Changelog
 - Rev. 35 - version number 2.4.0 changes
 
 ---------------------------------------------------------------------------
-V2.3.5 - SVN - Revision 33 - Benjamin Schmitt - 2014-02-25
+V2.3.5 - SCM - Revision 33 - Benjamin Schmitt - 2014-02-25
 - overview mail: more small-device friendly format (shorter lines) 
 - new user mail: set charset and linebreaks (in analogy to overview mail)
 
@@ -143,14 +155,14 @@ internal:
              fallback: complete user-agent string (V2.3.4 code fixed)
 			 
 ---------------------------------------------------------------------------
-V2.3.4 - SVN only - Revision 32 - Benjamin Schmitt - 2014-01-30
+V2.3.4 - SCM only - Revision 32 - Benjamin Schmitt - 2014-01-30
 - database: new MySQL function "getBrowserInfo" for browser identification
 - statistics: now uses getBrowserInfo
 - footer: change of copyright year 
 - login: current version number for login
 
 ---------------------------------------------------------------------------
-V2.3.3 - SVN only - Revision 30 and 31 - Benjamin Schmitt
+V2.3.3 - SCM only - Revision 30 and 31 - Benjamin Schmitt
 - code corrections - replaced all "<?" with "<?php",
   WAMP users may use "error_reporting = E_ERROR" in php.ini 
   
@@ -159,14 +171,14 @@ V2.3.3 - SVN only - Revision 30 and 31 - Benjamin Schmitt
   ChurchRota now only uses "<?php", so both values (on/off) will work
   
 ---------------------------------------------------------------------------
-V2.3.2 - SVN only - Revision 29 - Benjamin Schmitt
+V2.3.2 - SCM only - Revision 29 - Benjamin Schmitt
 - includes/functions.php: 
   check if variable "holdQuery" exists during installation, then set 
   variables to default value instead of db query (because db not ready);
   otherwise -> query real values from db
 
 ---------------------------------------------------------------------------
-V2.3.1 - SVN only - Revision 28 - Benjamin Schmitt
+V2.3.1 - SCM only - Revision 28 - Benjamin Schmitt
 - statistics: interpretation of browser info (more readable)
 - statistics: only list browser info, if it is not empty (!='')
 - statistics: fixed deletion of user statistics 
@@ -192,7 +204,7 @@ V2.3.0 - Revision 27 - Benjamin Schmitt
          - manually update database: update cr_settings set debug_mode=0;
 
 ---------------------------------------------------------------------------
-File release (V2.3.0) and SVN tag (2013-09-13_v2_3_0) - Revision 26   
+File release (V2.3.0) and SCM tag (2013-09-13_v2_3_0) - Revision 26   
 
 ---------------------------------------------------------------------------
 V2.3.0 - Revision 25 - Benjamin Schmitt
@@ -258,7 +270,7 @@ internal stuff:
 - new remove-function: removeBandSkill (except skill-id 2, see above)
 
 ---------------------------------------------------------------------------   
-V2.2.0 - SVN tag 2013-09-02_v2_2_0 - Revision 21 - Benjamin Schmitt 
+V2.2.0 - SCM tag 2013-09-02_v2_2_0 - Revision 21 - Benjamin Schmitt 
 - validate email addresses before sending Rota Overview Mail, error output
 - workaround for displaying error in snapshot 
   (disabled new sorting feature (v2.1.1), need to find a bug)
@@ -276,7 +288,7 @@ V2.1.1 - Revision 19 - Benjamin Schmitt
 - Snapshot - sort columns by skill group and skill name (new option)
    
 ---------------------------------------------------------------------------   
-V2.1.0 - SVN tag 2013-08_01_V2_1_0 - Benjamin Schmitt 
+V2.1.0 - SCM tag 2013-08_01_V2_1_0 - Benjamin Schmitt 
 
 security fixes:
 - prevent user impersonating in "My Account" and in "Change password"
@@ -329,7 +341,7 @@ changes "behind the scenes":
 - repaired link for deleting a skill (editSkills.php)
 - removed file \graphics\design\maindesign.psd,
   it was propably a design study and is not needed in running system,
-  deleted because of size (can be found in rev 7-15 of svn trunk)
+  deleted because of size (can be found in rev 7-15 of SCM trunk)
 - removing admin flag of an user, does not remove own admin rights
 - subject of "New user mail" now includes new user's name
 
@@ -340,15 +352,15 @@ ui changes:
 - only show initial letter of first name in snapshot 
 - first column of snapshot renamed "Date" ->  "Event"
 ---------------------------------------------------------------------------
-V2.0.2 - SVN tag 2013-05-28_V2_0_2 - Benjamin Schmitt
+V2.0.2 - SCM tag 2013-05-28_V2_0_2 - Benjamin Schmitt
 - bugfix install script (includes/functions.php)
 - update INSTALL.txt and rename to README.txt
 ---------------------------------------------------------------------------
-V2.0.1 - SVN tag 2013-05-26_V2_0_1 - Benjamin Schmitt
+V2.0.1 - SCM tag 2013-05-26_V2_0_1 - Benjamin Schmitt
 - bugfix: sending email for new users was broken (includes/functions.mail.php)
 - update: version string (includes/functions.database.php)
 ---------------------------------------------------------------------------
-V2.0.0 - SVN tag 2013-05-22_V2_0_0
+V2.0.0 - SCM tag 2013-05-22_V2_0_0
 
 latest version by David Bunce (as a copy of a current installation)
   - General view/functionality
@@ -402,5 +414,5 @@ modifications by Benjamin Schmitt (on top of David's work)
   - added INSTALL.txt - instruction steps for installation
   
 ---------------------------------------------------------------------------
-V1.0.0 - SVN tag 2011-06-14_V1_0_0
+V1.0.0 - SCM tag 2011-06-14_V1_0_0
 this is the initial version (churchrota.zip)
