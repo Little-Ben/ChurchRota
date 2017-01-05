@@ -43,11 +43,11 @@ $userID = $_GET['id'];
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	$owner = $_POST['owner'];
-	$owner = mysql_real_escape_string($owner);
+	$owner = mysql_real_escape_string(html_entity_decode(trim($owner)));
 	$siteurl = $_POST['siteurl'];
-	$siteurl = mysql_real_escape_string($siteurl);
+	$siteurl = mysql_real_escape_string(html_entity_decode(trim($siteurl)));
 	$siteadminemail = $_POST['siteadminemail'];
-	$siteadminemail = mysql_real_escape_string($siteadminemail);
+	$siteadminemail = mysql_real_escape_string(html_entity_decode(trim($siteadminemail)));
 	
 	$notificationemail = $_POST['notificationemail'];
 	$notificationemail = mysql_real_escape_string($notificationemail);
@@ -61,15 +61,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$overviewemail = mysql_real_escape_string($overviewemail);
 	
 	$lang_locale = $_POST['lang_locale'];
-	$lang_locale = mysql_real_escape_string($lang_locale);
+	$lang_locale = mysql_real_escape_string(html_entity_decode(trim($lang_locale)));
 	$time_format_long = $_POST['time_format_long'];
-	$time_format_long = mysql_real_escape_string($time_format_long);
+	$time_format_long = mysql_real_escape_string(html_entity_decode(trim($time_format_long)));
 	$time_format_normal = $_POST['time_format_normal'];
-	$time_format_normal = mysql_real_escape_string($time_format_normal);
+	$time_format_normal = mysql_real_escape_string(html_entity_decode(trim($time_format_normal)));
 	$time_format_short = $_POST['time_format_short'];	
-	$time_format_short = mysql_real_escape_string($time_format_short);
+	$time_format_short = mysql_real_escape_string(html_entity_decode(trim($time_format_short)));
 	$time_zone = $_POST['time_zone'];
-	$time_zone = mysql_real_escape_string($time_zone);
+	$time_zone = mysql_real_escape_string(html_entity_decode(trim($time_zone)));
 	
 	//$event_sorting_latest = $_POST['event_sorting_latest'];
 	//$event_sorting_latest = mysql_real_escape_string($event_sorting_latest);
@@ -144,11 +144,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			
 
 	$google_group_calendar = $_POST['google_group_calendar'];
-	$google_group_calendar = mysql_real_escape_string($google_group_calendar);
+	$google_group_calendar = mysql_real_escape_string(html_entity_decode(trim($google_group_calendar)));
 	$token = $_POST['token'];
-	$token = mysql_real_escape_string($token);	
+	$token = mysql_real_escape_string(html_entity_decode(trim($token)));	
 	$days_to_alert = $_POST['days_to_alert'];
-	$days_to_alert = mysql_real_escape_string($days_to_alert);
+	$days_to_alert = mysql_real_escape_string(html_entity_decode(trim($days_to_alert)));
 	
 		// Update the database rather than insert new values
 		$sql = "UPDATE cr_settings SET siteurl = '$siteurl', notificationemail = '$notificationemail', adminemailaddress = '$siteadminemail', norehearsalemail = '$norehearsalemail', yesrehearsal = '$yesrehearsal', newusermessage = '$newusermessage', owner = '$owner',
@@ -197,13 +197,13 @@ include('includes/header.php');
 			</div>
 			<div class="elementContent" >
 				<label class="owner" for="siteurl">Enter your organisation name:</label>
-				<input class="owner" name="owner" id="owner" type="text" value="<?php echo stripslashes($row['owner']);?>"  />
+				<input class="owner" name="owner" id="owner" type="text" value="<?php echo htmlentities(stripslashes($row['owner']));?>"  />
 				
 				<label class="settings" for="siteurl">Enter URL of your website:</label>
-				<input class="settings" name="siteurl" id="siteurl" type="text" value="<?php echo stripslashes($row['siteurl']);?>"  />
+				<input class="settings" name="siteurl" id="siteurl" type="text" value="<?php echo htmlentities(stripslashes($row['siteurl']));?>"  />
 				
 				<label class="settings" for="siteadminemail">Enter your admin email address:</label>
-				<input class="settings" name="siteadminemail" id="siteadminemail" type="text" value="<?php echo stripslashes($row['adminemailaddress']);?>"  />
+				<input class="settings" name="siteadminemail" id="siteadminemail" type="text" value="<?php echo htmlentities(stripslashes($row['adminemailaddress']));?>"  />
 			</div>
 		</div>
 		
@@ -239,20 +239,20 @@ include('includes/header.php');
 			<div class="elementContent" >
 			
 				<label class="settings" for="lang_locale">Language locale (e.g. en_GB, see <a href="http://www.php.net/manual/en/function.setlocale.php" target="_blank">php setlocale</a>) and host system's locals:</label>
-				<input class="settings" name="lang_locale" id="lang_locale" type="text" value="<?php echo stripslashes($row['lang_locale']);?>"  />
+				<input class="settings" name="lang_locale" id="lang_locale" type="text" value="<?php echo htmlentities(stripslashes($row['lang_locale']));?>"  />
 				<label class="settings"><?php //echo setlocale(LC_ALL,null); ?></label>
 
 				<label class="settings" for="time_format_long">Long time format (pattern see <a href="http://www.php.net/manual/en/function.strftime.php#refsect1-function.strftime-parameters" target="_blank">php strftime</a>):</label>
-				<input class="settings" name="time_format_long" id="time_format_long" type="text" value="<?php echo stripslashes($row['time_format_long']);?>"  />
+				<input class="settings" name="time_format_long" id="time_format_long" type="text" value="<?php echo htmlentities(stripslashes($row['time_format_long']));?>"  />
 
 				<label class="settings" for="time_format_normal">Standard time format (pattern see <a href="http://www.php.net/manual/en/function.strftime.php#refsect1-function.strftime-parameters" target="_blank">php strftime</a>):</label>
-				<input class="settings" name="time_format_normal" id="time_format_normal" type="text" value="<?php echo stripslashes($row['time_format_normal']);?>"  />
+				<input class="settings" name="time_format_normal" id="time_format_normal" type="text" value="<?php echo htmlentities(stripslashes($row['time_format_normal']));?>"  />
 
 				<label class="settings" for="time_format_short">Short time format (pattern see <a href="http://www.php.net/manual/en/function.strftime.php#refsect1-function.strftime-parameters" target="_blank">php strftime</a>):</label>
-				<input class="settings" name="time_format_short" id="time_format_short" type="text" value="<?php echo stripslashes($row['time_format_short']);?>"  />
+				<input class="settings" name="time_format_short" id="time_format_short" type="text" value="<?php echo htmlentities(stripslashes($row['time_format_short']));?>"  />
 
 				<label class="settings" for="time_zone">Time Zone (see <a href="http://www.php.net/manual/en/timezones.php" target="_blank">php "List of Supported Timezones"</a>, e.g. Europe/London):</label>
-				<input class="settings" name="time_zone" id="time_zone" type="text" value="<?php echo stripslashes($row['time_zone']);?>"  />
+				<input class="settings" name="time_zone" id="time_zone" type="text" value="<?php echo htmlentities(stripslashes($row['time_zone']));?>"  />
 			</div>
 		</div>
 		
@@ -293,13 +293,13 @@ include('includes/header.php');
 			<div class="elementContent" >
 			
 				<label class="settings" for="google_group_calendar">Google Group Calendar ID (for admin snapshot, e.g.&nbsp;5vpkrij4fv8k011dcmt38rt7ik@group.calendar.google.com):</label>
-				<input class="settings" name="google_group_calendar" id="google_group_calendar" type="text" value="<?php echo stripslashes($row['google_group_calendar']);?>"  />
+				<input class="settings" name="google_group_calendar" id="google_group_calendar" type="text" value="<?php echo htmlentities(stripslashes($row['google_group_calendar']));?>"  />
 
 				<label class="settings" for="token">Security Token (see comments in cr_daily.php for details):</label>
-				<input class="settings" name="token" id="token" type="text" value="<?php echo stripslashes($row['token']);?>"  />
+				<input class="settings" name="token" id="token" type="text" value="<?php echo htmlentities(stripslashes($row['token']));?>"  />
 				
 				<label class="settings" for="days_to_alert">Days to Alert (send mail reminders X days before event; <br>0 = disable; see comments in cr_daily.php for details):</label>
-				<input class="settings" name="days_to_alert" id="days_to_alert" type="text" value="<?php echo stripslashes($row['days_to_alert']);?>"  />
+				<input class="settings" name="days_to_alert" id="days_to_alert" type="text" value="<?php echo htmlentities(stripslashes($row['days_to_alert']));?>"  />
 
 			</div>
 		</div>
