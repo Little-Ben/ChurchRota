@@ -293,6 +293,10 @@ function updateDatabase() {
 			executeDbSql("update cr_settings set version = '2.6.0'");
 			notifyInfo(__FILE__,"db-update=" . $version . "->2.6.0",$_SESSION['userid']);	
 			insertStatistics("system",__FILE__,"db-update","2.6.0",$version);	
+		case "2.6.0":
+			executeDbSql("update cr_settings set version = '2.6.1'");
+			notifyInfo(__FILE__,"db-update=" . $version . "->2.6.1",$_SESSION['userid']);	
+			insertStatistics("system",__FILE__,"db-update","2.6.1",$version);	
 			
 			//todo in a later version:
 			//executeDbSql("alter table cr_settings CHANGE debug_mode verbose_statistics int(1) DEFAULT '0' "); 
