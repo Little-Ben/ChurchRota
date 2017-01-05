@@ -45,6 +45,7 @@ $skillremove = $_GET['skillremove'];
 $eventremove = $_GET['eventremove'];
 $notifyOverview = $_GET['notifyOverview'];
 $filter = $_GET['filter'];
+$show = $_GET['show'];
 
 switch ($switchEvents) {
 	case "user":
@@ -148,19 +149,53 @@ if(isLoggedIn()) {
 	}else{
 		$logged_in_show_snapshot_button = "0";
 	}
+	
+	if ($show == "") {
+		$dateFilter = "cr_events.date >= DATE(NOW())";
+	}else if ($show == "current_year") {
+		$dateFilter = "Year(cr_events.date) = Year(Now())";
+	}else if ($show == "all") {
+		$dateFilter = "1=1";
+	}		
+
+	if($_SESSION['onlyShowUserEvents'] == '0') {
 	?>
 
 	<div class="filterby">
 		<h2>Filter events by:</h2>
 		<p>
+		<a class="eventTypeButton
+			<?php
+				if($show == "" and $filter == "") {
+					echo "activefilter"; 
+				}
+			?>" href="index.php">All:open</a>
+		<a class="eventTypeButton
+			<?php
+				if($show == "current_year") {
+					echo "activefilter"; 
+				}
+			?>" href="index.php?show=current_year">All:<?php echo date("Y"); ?></a>
 		<?php
+		if (isAdmin()) {
+		?>
+			<a class="eventTypeButton
+			<?php
+				if($show == "all") {
+					echo "activefilter"; 
+				}
+			?>" href="index.php?show=all">All</a>
+		<?php
+		}
 		$filter_sql = "SELECT * FROM cr_eventTypes where id in 
 			(select `cr_events`.`type` FROM cr_events 
-			WHERE date >= DATE(NOW())
+			WHERE " . $dateFilter . "
 			AND cr_events.deleted = 0)
 			ORDER BY description";
 		$result = mysql_query($filter_sql) or die(mysql_error());
-	
+		?>
+		<br>
+		<?php	
 		while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 			?>
 			<a class="eventTypeButton
@@ -168,14 +203,15 @@ if(isLoggedIn()) {
 					if($filter == $row['id']) {
 						echo "activefilter"; 
 					}
-				?>" href="index.php?filter=<?php echo $row['id']; ?>"><?php echo $row['description']; ?></a>
+				?>" href="index.php?filter=<?php echo $row['id']; ?>&show=<?php echo $show; ?>"><?php echo $row['description']; ?></a>
 			<?php
 		} 
 		?>
 	</p>
 	</div>
 	<?php
-		
+	}
+	
 	if($_SESSION['onlyShowUserEvents'] == '0' && $filter == "") {
 	
 		$sql = "SELECT *, 
@@ -183,7 +219,7 @@ if(isLoggedIn()) {
 			(SELECT `description` FROM cr_locations WHERE cr_locations.id = `cr_events`.`location`) AS eventLocation,
 			DATE_FORMAT(date,'%m/%d/%Y %H:%i:%S') AS sundayDate, DATE_FORMAT(rehearsalDate,'%m/%d/%Y %H:%i:%S') AS rehearsalDateFormatted 
 			FROM cr_events 
-			WHERE date >= DATE(NOW())
+			WHERE " . $dateFilter . "
 			AND cr_events.deleted = 0
 			ORDER BY " . $dateOrderBy;
 	} else if($filter != "") {
@@ -194,7 +230,7 @@ if(isLoggedIn()) {
 			DATE_FORMAT(date,'%m/%d/%Y %H:%i:%S') AS sundayDate, DATE_FORMAT(rehearsalDate,'%m/%d/%Y %H:%i:%S') AS rehearsalDateFormatted 
 			FROM cr_events 
 			WHERE `cr_events`.`type` = '$filter'
-			AND date >= DATE(NOW())
+			AND " . $dateFilter . "
 			AND cr_events.deleted = 0
 			ORDER BY " . $dateOrderBy;
 	} else {
@@ -219,7 +255,7 @@ if(isLoggedIn()) {
 			ON cr_eventPeople.eventID = cr_events.id 
 			WHERE EXISTS (SELECT userID FROM cr_skills WHERE skillID = cr_eventPeople.skillID AND cr_skills.userID = '$showmyevents' AND cr_skills.userID)
 			AND EXISTS (SELECT DATE_FORMAT(date,'%W, %M %e @ %h:%i %p') FROM cr_events WHERE cr_events.id = cr_eventPeople.eventID)
-			AND cr_events.date >= DATE(NOW())
+			AND " . $dateFilter . "
 			AND cr_events.deleted = 0
 			GROUP BY eventID
 			ORDER BY " . $dateOrderBy;

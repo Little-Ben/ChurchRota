@@ -75,7 +75,9 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 		else
 			$whereTwoMonth = "cr_events.date >= DATE(NOW())";
 	}
-
+	if ($show=='current_year')
+			$whereTwoMonth = "Year(date) = Year(Now())";
+	
 	if ($rowSettings['group_sorting_name']=='1') {
 		$group_sorting_name = "formatgroup,description";
 	}else{
@@ -124,11 +126,27 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 	<h1>Snapshot view - <?php echo $owner; ?></h1>
 		<h2>Filter events by:</h2>
 		<p>
-			<a class="eventTypeButton" href="snapshot.php">All</a>
+			<a class="eventTypeButton
+				<?php
+					if($show == "" and $filter == "") {
+						echo "activefilter"; 
+					}
+				?>" href="snapshot.php">All:open</a>
+			<a class="eventTypeButton
+				<?php
+					if($show == "current_year") {
+						echo "activefilter"; 
+					}
+				?>" href="snapshot.php?show=current_year">All:<?php echo date("Y"); ?></a>
 			<?php
 			if ((isAdmin()) && ($rowSettings['snapshot_show_two_month']=='0')) {
 			?>
-				<a class="eventTypeButton" href="snapshot.php?show=all">All (incl. past)</a>
+				<a class="eventTypeButton
+				<?php
+					if($show == "all") {
+						echo "activefilter"; 
+					}
+				?>" href="snapshot.php?show=all">All</a>
 		<?php
 			}
 		$filter_sql = "SELECT * FROM cr_eventTypes where id in 
@@ -137,7 +155,9 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 			AND cr_events.deleted = 0)
 			ORDER BY description";
 		$result = mysql_query($filter_sql) or die(mysql_error());
-	
+		?>
+		<br>
+		<?php
 		while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
 			?>
 			<a class="eventTypeButton
@@ -145,7 +165,7 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 					if($filter == $row['id']) {
 						echo "activefilter"; 
 					}
-				?>" href="snapshot.php?filter=<?php echo $row['id']; ?>"><?php echo $row['description']; ?></a>
+				?>" href="snapshot.php?filter=<?php echo $row['id']; ?>&show=<?php echo $show; ?>"><?php echo $row['description']; ?></a>
 			<?php
 		} 
 		?>

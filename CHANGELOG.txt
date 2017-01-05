@@ -14,6 +14,22 @@ Changelog of Church Rota
    - X.Y.Z   ->   SVN only release          ->  less tested
 
 ---------------------------------------------------------------------------
+V2.6.1 - SVN only - Revision 47 - Benjamin Schmitt - 2017-01-05
+- snapshot: add time filter button: current year
+- snapshot: rename time filter buttons: all -> open, all (incl. past) -> all
+- snapshot: highlight chosen time filters
+- snapshot: combined time and type filtering (first choose time then type)
+- index: add time filter buttons: open, current_year, all
+- index: highlight chosen time filters
+- index: combined time and type filtering (first choose time then type)
+- index: remove complete filter section if "show only my events" is active
+         (workaround for not working filters, needs refacturing sqls)
+- css: change height of filter buttons, was incorrect after linebreak
+- setting: reorder variables, 
+           add stripslashes and mysql_real_escape_string (ticket#16)
+- changelog and version number
+
+---------------------------------------------------------------------------
 V2.6.0 - SVN + FILE - Revision 46 - Benjamin Schmitt - 2015-07-30
 - overview mail: add event comment to overview notification
 - notification mail: introducing new placeholder [comment] 
