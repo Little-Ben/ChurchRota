@@ -14,7 +14,7 @@ Changelog of Church Rota
    - X.Y.Z   ->   SVN only release          ->  less tested
 
 ---------------------------------------------------------------------------
-V2.6.2 - SVN only - Revision 48 - Benjamin Schmitt - 2017-01-05
+V2.6.2 - SVN only - Revision 48+49 - Benjamin Schmitt - 2017-01-05
 - settings: save trimmed and non-html (html_entity_decode) to db 
 - changelog and version number
 
