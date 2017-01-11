@@ -298,7 +298,7 @@ if(isLoggedIn()) {
 			<?php if($row['comment'] != "") {
 				echo "<div class='shaded'>";
 				echo "<strong>Comments:</strong><p>";
-				echo $row['comment'];
+				echo nl2br($row['comment']);
 				echo "</p></div>";
 				
 			} ?>
