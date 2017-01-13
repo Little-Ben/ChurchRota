@@ -31,7 +31,7 @@ if((isset($holdQuery)) || ($holdQuery == true)) {
 	$result = mysql_query($sql) or die(mysql_error());
 
 	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
-		$owner = $row['owner'];
+		$owner = stripslashes($row['owner']);
 		$owneremail = $row['adminemailaddress'];
 		$version = $row['version'];	
 		$debug = $row['debug_mode'];

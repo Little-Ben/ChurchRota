@@ -232,11 +232,12 @@ include('includes/header.php');
 			<legend><h2>Add people to the event:</h2></legend>
 			<?php
 				$sqlPeople = "SELECT *,
-				(SELECT CONCAT(`firstname`, ' ', `lastname`) FROM cr_users WHERE `cr_users`.id = `cr_skills`.`userID` ORDER BY `cr_users`.firstname) AS `name`, 
+				(SELECT CONCAT(`firstname`, ' ', `lastname`) FROM cr_users WHERE `cr_users`.id = `cr_skills`.`userID` ORDER BY `cr_users`.firstname) AS `name`,
+                                (SELECT `formatgroup` FROM cr_groups WHERE `cr_skills`.`groupID` = `cr_groups`.`groupID`) AS `formatgroup`,
 				(SELECT `description` FROM cr_groups WHERE `cr_skills`.`groupID` = `cr_groups`.`groupID`) AS `category`, 
 				(SELECT skillID FROM cr_eventPeople WHERE `cr_eventPeople`.`eventID` = '$eventID' AND `cr_eventPeople`.`skillID` = `cr_skills`.`skillID`
 				LIMIT 1) AS `inEvent` 
-				FROM cr_skills ORDER BY groupID, name";
+				FROM cr_skills ORDER BY formatgroup, category, name";
 				
 				$resultPeople = mysql_query($sqlPeople) or die(mysql_error());
 				$i = 1;
