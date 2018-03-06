@@ -52,19 +52,23 @@ if($action == "edit") {
 // If the form has been submitted, then we need to handle the data.
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	if(isAdmin()) {
-	$firstname = $_POST['firstname'];
-	$firstname = strip_tags($firstname);
-	$firstnameLower = strtolower($firstname);
-	$lastname = $_POST['lastname'];
-	$lastname = strip_tags($lastname);
-	$lastnameLower = strtolower($lastname);
+		$firstname = $_POST['firstname'];
+		$firstname = strip_tags($firstname);
+		$firstnameLower = strtolower($firstname);
+		$lastname = $_POST['lastname'];
+		$lastname = strip_tags($lastname);
+		$lastnameLower = strtolower($lastname);
 	
-	$username = $firstnameLower.$lastnameLower;
+		$username = $firstnameLower.$lastnameLower;
+		$username = str_replace(' ', '', $username); // Replaces all spaces in username 
+		$username = preg_replace('/[^A-Za-zäöüßÄÖÜ]/', '', $username); // Removes special chars
 	
 	} else {
 		$firstnameLower = strtolower($firstname);
 		$lastnameLower = strtolower($lastname);
 		$username = $firstnameLower.$lastnameLower;
+		$username = str_replace(' ', '', $username); // Replaces all spaces in username 
+		$username = preg_replace('/[^A-Za-zäöüßÄÖÜ]/', '', $username); // Removes special chars
 	}
 	$email = $_POST['email'];
 	$email = strip_tags($email);
