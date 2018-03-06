@@ -23,6 +23,7 @@ function sendMail($to, $subject, $message, $from, $bcc = "")  {
 		//mail debugging: send all mails to admin (overwrite TO-field)
 		//and move all BCCs from header to the end of the message 
 		$mail_dbg = false;		
+		//$mail_dbg = true;
 		
 		//--------------------------------------------------------------------------------
 		//line seperator for mails

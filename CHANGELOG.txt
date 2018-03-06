@@ -26,6 +26,20 @@ Changelog of Church Rota
    - X.Y.Z   ->   SCM only release          ->  less tested
 
 ---------------------------------------------------------------------------
+V2.6.3 - SCM only - Benjamin Schmitt - 2018-03-07
+- addUser: remove spaces and special chars from username (add/edit)
+- location: new possibility to deactivate location
+- createEvent: only show active locations in dropdown
+- internal: new function.activate.php
+- internal: new buttons "on" and "off"
+- changelog and version number
+
+merged (sgreenslade):
+- enable special chars in church name (6ba7050)
+- index: add linefeeds in event's comments (a88ff7e)
+- createEvent: order skill groups alphabetically (e41fcec)
+
+---------------------------------------------------------------------------
 V2.6.2 - SCM only - Revision 48+49 - Benjamin Schmitt - 2017-01-05
 - settings: save trimmed and non-html (html_entity_decode) to db 
 - changelog and version number

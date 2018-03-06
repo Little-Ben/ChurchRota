@@ -21,10 +21,19 @@ if (!isAdmin()) {
 $locationID = $_GET["locationID"];
 $editableaction = $_POST['editableaction'];
 $locationremove = $_GET['locationremove'];
+$locationactivate = $_GET['locationactivate'];
 
 if ($locationremove == "true") {
  removelocation($locationID);
- }
+}
+
+if ($locationactivate == "false") {
+ activateLocation($locationID,0);
+}
+
+if ($locationactivate == "true") {
+ activateLocation($locationID,1);
+}
 
 // If the form has been submitted, then we need to handle the data.
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -73,8 +82,18 @@ include('includes/header.php');
 	
 	while($row = mysql_fetch_array($result, MYSQL_ASSOC)) { 
 		$locationID = $row['id'];
-		echo "<span id='" . $locationID . "' class='edit'>" . $row['description'] . "</span> ";
-		echo " <a href='locations.php?locationremove=true&locationID=" . $locationID . "'><img src='graphics/close.png' /></a><br />"; 
+		$locationActive = $row['active'];
+		if ($locationActive == 1) {
+			echo "<span id='" . $locationID . "' class='edit'>" . $row['description'] . "</span> ";
+			echo " <a href='locations.php?locationremove=true&locationID=" . $locationID . "'><img src='graphics/close.png' /></a>"; 
+			echo " <a href='locations.php?locationactivate=false&locationID=" . $locationID . "'><img src='graphics/deactive.png' /></a><br />"; 
+		} 
+		else {
+			echo "<span id='" . $locationID . "' class='edit'><strike>" . $row['description'] . "</strike></span> ";
+			echo " <a href='locations.php?locationremove=true&locationID=" . $locationID . "'><img src='graphics/close.png' /></a>"; 
+			echo " <a href='locations.php?locationactivate=true&locationID=" . $locationID . "'><img src='graphics/active.png' /></a><br />"; 
+		}
+
 	 } ?>
 	 <h2>Add a new location:</h2>
 		<form action="#" method="post" id="addSkill">

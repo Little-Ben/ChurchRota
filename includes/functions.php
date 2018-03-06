@@ -16,6 +16,7 @@ include('includes/functions.event.php');
 include('includes/functions.password.php');
 include('includes/functions.users.php');
 include('includes/functions.database.php');
+include('includes/functions.activate.php');
 
 if((isset($holdQuery)) || ($holdQuery == true)) {
 		//set variables during installtion to default values

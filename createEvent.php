@@ -200,7 +200,7 @@ include('includes/header.php');
 			<select name="location" id="location" <?php if($hiddenForBandAdmin) echo "hidden"; ?>>
 				<option value="<?php if(isset($location)) echo $location; ?>"><?php if(isset($locationname)) echo $locationname; ?></option>
 				<?php 
-				$sql = "SELECT * FROM cr_locations order by description";
+				$sql = "SELECT * FROM cr_locations where active = 1 order by description";
 				$result = mysql_query($sql) or die(mysql_error());
 	
 				while($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
@@ -298,7 +298,7 @@ include('includes/header.php');
 					}
 					if($position == 2) {
 						echo "<div class='checkboxitem right'><label class='styled' for='rehearsaldate[" .  $viewPeople['skillID'] . "]'>" .
-						$viewPeople['name'] .  $skill . "</em></label><input class='styled' " . $disabled . " " . $checked . "type='checkbox' id='rehearsaldate[" . 
+						$viewPeople['name'] . $skill . "</em></label><input class='styled' " . $disabled . " " . $checked . "type='checkbox' id='rehearsaldate[" . 
 						$viewPeople['skillID'] . "]'	name='rehearsaldate[]' value='" .  
 						$viewPeople['skillID'] . "' /></div></div>\r\n";
 						
