@@ -95,8 +95,8 @@ include('includes/header.php');
 		echo '<input type="hidden" name="formindex[]" value="' . $row['groupID'] . '" />';
 		echo "<input name='description[]' value='" . $row['description'] . "' />";
 		
-		echo " <a class='smalllink' href='editSkills.php?skillmove=true&value=" . $down . "&skillID=" . $skillID . "'>Down</a> ";
-		echo "<a class='smalllink' href='editSkills.php?skillmove=true&value=" . $up . "&skillID=" . $skillID . "'>Up</a> ";
+		echo " <a class='smalllink' href='editSkills.php?skillmove=true&value=" . $down . "&skillID=" . $skillID . "'><img src='graphics/down.png' /> </a>";
+		echo "<a class='smalllink' href='editSkills.php?skillmove=true&value=" . $up . "&skillID=" . $skillID . "'><img src='graphics/up.png' /> </a>";
 		?>
 		<a href="editsingleskill.php?id=<?php echo $skillID; ?>">
 		<img src='graphics/tool.png' /></a> 
