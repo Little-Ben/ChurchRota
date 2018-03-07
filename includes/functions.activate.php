@@ -2,7 +2,7 @@
 /*
 	This file is part of Church Rota.
 	
-	Copyright (C) 2011 David Bunce
+	Copyright (C) 2018 Benjamin Schmitt
 
     Church Rota is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
