@@ -252,10 +252,10 @@ if (isset($_SESSION['is_logged_in']) || $_SESSION['db_is_logged_in'] == true) {
 				//generate google calendar urls
 				putenv("TZ=".$userTZ);
 				$eventDate = $row['sundayDate'];
-				$eventDateGMT = gmdate("Ymd\THis\Z",strtotime($eventDate." ".date("T",strtotime($eventDate))));
+				$eventDateGMT = gmdate("Ymd\THis",strtotime($eventDate." ".date("T",strtotime($eventDate))));
 				//echo $eventDateGMT."<br>";
 				$eventDate = $row['sundayEndDate'];
-				$eventDateEndGMT = gmdate("Ymd\THis\Z",strtotime($eventDate." ".date("T",strtotime($eventDate))));
+				$eventDateEndGMT = gmdate("Ymd\THis",strtotime($eventDate." ".date("T",strtotime($eventDate))));
 				//echo $eventDateEndGMT;
 				
 				if (isAdmin()) {
