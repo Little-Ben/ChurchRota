@@ -1,5 +1,5 @@
 <?php
-
+include_once('fix_mysql.inc.php');
 // Enter the name of your Database
 $dbname = '';
 
