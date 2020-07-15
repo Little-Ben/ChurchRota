@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   `userID` int(6) NOT NULL DEFAULT '0',
   `topic` text NOT NULL,
   `topicName` text NOT NULL,
-  `date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `date` datetime NOT NULL DEFAULT '1970-01-01 00:00:00',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=82";
 	if (!mysql_query($sql))
@@ -108,8 +108,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		
 	$sql = "CREATE TABLE IF NOT EXISTS `cr_events` (
   `id` int(6) NOT NULL AUTO_INCREMENT,
-  `date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `rehearsalDate` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `date` datetime NOT NULL DEFAULT '1970-01-01 00:00:00',
+  `rehearsalDate` datetime NOT NULL DEFAULT '1970-01-01 00:00:00',
   `type` varchar(30) NOT NULL DEFAULT '',
   `location` varchar(50) NOT NULL DEFAULT '',
   `notified` int(2) NOT NULL DEFAULT '0',

@@ -123,7 +123,7 @@ function updateDatabase() {
 				$sql = "CREATE TABLE IF NOT EXISTS `cr_statistics` (
 				  `id` int(11) NOT NULL AUTO_INCREMENT,
 				  `userid` int(6) NOT NULL DEFAULT '0',
-				  `date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+				  `date` datetime NOT NULL DEFAULT '1970-01-01 00:00:00',
 				  `type` text NOT NULL,
 				  `detail1` text NOT NULL,
 				  `detail2` text NOT NULL,
@@ -306,6 +306,11 @@ function updateDatabase() {
 			executeDbSql("update cr_settings set version = '2.6.3'");
 			notifyInfo(__FILE__,"db-update=" . $version . "->2.6.3",$_SESSION['userid']);
 			insertStatistics("system",__FILE__,"db-update","2.6.3",$version);
+		case "2.6.3":
+			executeDbSql("alter table cr_locations add(active int(1) default 1)"); 
+			executeDbSql("update cr_settings set version = '2.6.4'");
+			notifyInfo(__FILE__,"db-update=" . $version . "->2.6.4",$_SESSION['userid']);
+			insertStatistics("system",__FILE__,"db-update","2.6.4",$version);
 			
 			//todo in a later version:
 			//executeDbSql("alter table cr_settings CHANGE debug_mode verbose_statistics int(1) DEFAULT '0' "); 

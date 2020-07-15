@@ -15,7 +15,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 	$resultSettings = mysql_query($sqlSettings) or die(mysql_error());
 	$rowSettings = mysql_fetch_array($resultSettings, MYSQL_ASSOC);
 	
-	if ($rowSettings[users_start_with_myevents]==1) {
+	if ($rowSettings['users_start_with_myevents']==1) {
 		$users_start_with_myevents = "1";
 	}else{
 		$users_start_with_myevents = "0";
@@ -34,7 +34,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 	  $_SESSION['onlyShowUserEvents'] = $users_start_with_myevents; // 1 if users_start_with_myevents is set in settings, can be changed by user during session
 			
 	//statistic 
-	  if (($debug) && ($rowSettings['version']=='2.6.3')) insertStatistics("user",__FILE__,"login",null,$_SERVER['HTTP_USER_AGENT']);
+	  if (($debug) && ($rowSettings['version']=='2.6.4')) insertStatistics("user",__FILE__,"login",null,$_SERVER['HTTP_USER_AGENT']);
 
 	
    	// admin section

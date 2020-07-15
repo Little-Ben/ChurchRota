@@ -26,6 +26,11 @@ Changelog of Church Rota
    - X.Y.Z   ->   SCM only release          ->  less tested
 
 ---------------------------------------------------------------------------
+V2.6.4 - SCM only - Benjamin Schmitt - 2020-07-16
+- minor code cleaning
+- changelog and version number
+
+---------------------------------------------------------------------------
 V2.6.3 - SCM only - Benjamin Schmitt - 2018-03-07
 - addUser: remove spaces and special chars from username (add/edit)
 - location: new possibility to deactivate location

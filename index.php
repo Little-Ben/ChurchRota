@@ -138,13 +138,13 @@ if(isLoggedIn()) {
 	$resultSettings = mysql_query($sqlSettings) or die(mysql_error());
 	$rowSettings = mysql_fetch_array($resultSettings, MYSQL_ASSOC);
 	
-	if ($rowSettings[event_sorting_latest]==1) {
+	if ($rowSettings['event_sorting_latest']==1) {
 		$dateOrderBy = "date desc";
 	}else{
 		$dateOrderBy = "date asc";
 	}
 	
-	if ($rowSettings[logged_in_show_snapshot_button]==1) {
+	if ($rowSettings['logged_in_show_snapshot_button']==1) {
 		$logged_in_show_snapshot_button = "1";
 	}else{
 		$logged_in_show_snapshot_button = "0";
