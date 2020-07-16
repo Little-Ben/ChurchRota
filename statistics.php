@@ -126,7 +126,7 @@ include('includes/header.php');
 		<?php
 			$sql = "SELECT s.date,s.detail1,s.detail2,s.detail3,s.type,trim(concat(u.firstName,' ',u.lastName)) as name from cr_statistics s,cr_users u where u.ID=s.userID";
 			if ($debug==false) $sql = $sql . " and s.type = 'system'";
-			$sql = $sql . " ORDER BY date desc " . $limit;
+			$sql = $sql . " ORDER BY date desc, detail1, detail2 desc " . $limit;
 			$result = mysql_query($sql) or die(mysql_error());
 			while($row = mysql_fetch_array($result, MYSQL_ASSOC)) { 
 				extract($row);
