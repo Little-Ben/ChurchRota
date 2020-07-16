@@ -78,8 +78,8 @@ function sendMail($to, $subject, $message, $from, $bcc = "")  {
 		$sqlSettings = "SELECT * FROM cr_settings";
 		$resultSettings = mysql_query($sqlSettings) or die(mysql_error());
 		$rowSettings = mysql_fetch_array($resultSettings, MYSQL_ASSOC);
-		$cr_version = $rowSettings[version];
-		$cr_owner = $rowSettings[owner];
+		$cr_version = $rowSettings['version'];
+		$cr_owner = $rowSettings['owner'];
 		
 		$message = $message . $crlf . $crlf;
 		$message = $message . "-- \r\n"; //needs exactly this syntax, only one space before linebreak
@@ -583,7 +583,7 @@ function notifyAttack($fileName,$attackType,$attackerID) {
 
 		$subject = "SECURITY-ALERT - Attack blocked successfully";
 		$message =  "Type:\t\t " . $attackType . "<br>\r\n" . 
-					"Attacker:\t " . $row[name] . "<br>\r\n" .
+					"Attacker:\t " . $row['name'] . "<br>\r\n" .
 					"Date:\t\t " . date("Y-m-d H:i:s") . "<br>\r\n" .
 					"Script:\t\t " . $fileName . "\r\n " . "<br>\r\n" ;
 		
@@ -614,9 +614,9 @@ function notifyInfo($fileName,$infoMsg,$userID) {
 	
 	while($row = mysql_fetch_array($userresult, MYSQL_ASSOC)) {
 
-		$subject = "Info - " . $infoMsg . " - " . $row[name] ;
+		$subject = "Info - " . $infoMsg . " - " . $row['name'] ;
 		$message =  "Type:\t\t " . $infoMsg . "<br>\r\n" . 
-					"User:\t\t " . $row[name] . "<br>\r\n" .
+					"User:\t\t " . $row['name'] . "<br>\r\n" .
 					"Date:\t\t " . date("Y-m-d H:i:s") . "<br>\r\n" .
 					"Script:\t\t " . $fileName . "\r\n " . "<br>\r\n" ;
 		

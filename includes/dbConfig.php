@@ -21,7 +21,7 @@ include_once('fix_mysql.inc.php');
 //generate masked password
 $pwdMasked = "";
 $len = strlen($password);
-for ($i = 0; $i < $len; $i++) 
+for ($i = 0; $i < $len; $i++)
 {
 	$pwdMasked .= "*";
 }
@@ -29,7 +29,7 @@ for ($i = 0; $i < $len; $i++)
 // Connect to the database server
 $dbh = @mysql_connect($host,$username,$password) or die ("Connection to $host with login '$username'/'$pwdMasked' failed.");
 
-// Choose the right database 
+// Choose the right database
 $db = @mysql_select_db($dbname, $dbh) or die ("Connection made, but database '$dbname' was not found.");
 
 
