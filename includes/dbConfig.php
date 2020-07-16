@@ -1,5 +1,5 @@
 <?php
-include_once('fix_mysql.inc.php');
+
 // Enter the name of your Database
 $dbname = '';
 
@@ -12,7 +12,11 @@ $password = '';
 // Unless your host tells you differently, this should remain as 'localhost'
 $host = 'localhost';
 
+//--------------------------------------------------------------------------------
 // CONFIGURATION COMPLETE. Please upload files and navigate to install.php
+// Do not change below this line.
+//--------------------------------------------------------------------------------
+include_once('fix_mysql.inc.php');
 
 //generate masked password
 $pwdMasked = "";
