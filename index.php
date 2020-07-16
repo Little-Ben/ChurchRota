@@ -274,8 +274,8 @@ if(isLoggedIn()) {
 		?>
 		<div class="elementBackground" id="event<?php echo $eventID; ?>">
 			<h2><?php echo '<a name="section' . $eventID . '">';
-			setlocale(LC_TIME, $rowSettings[lang_locale]);
-			echo strftime($rowSettings[time_format_long],strtotime($row['sundayDate']));
+			setlocale(LC_TIME, $rowSettings['lang_locale']);
+			echo strftime($rowSettings['time_format_long'],strtotime($row['sundayDate']));
 			//echo $row['sundayDate'];
 			echo "</a>";
 			if(isAdmin()||$userisBandAdmin||$userisEventEditor) { 
@@ -291,7 +291,7 @@ if(isLoggedIn()) {
 				echo "<a href='#' data-reveal-id='deleteModal".$eventID."'><img src='graphics/close.png' /></a>"; 
 			}?></h2>
 			<div class="elementHead arrowwaiting"><p><?php if($rehearsal != "1") { ?><strong>Rehearsal:</strong> <?php echo 
-			strftime($rowSettings[time_format_normal],strtotime($row['rehearsalDateFormatted']));
+			strftime($rowSettings['time_format_normal'],strtotime($row['rehearsalDateFormatted']));
 			?><br /><?php } ?>
 			<strong>Location:</strong> <?php echo $row['eventLocation']; ?><br />
 			<strong>Type:</strong> <?php echo $row['eventType']; ?></p>
@@ -304,7 +304,7 @@ if(isLoggedIn()) {
 			} ?>
 			<div id="deleteModal<?php echo $eventID; ?>" class="reveal-modal">
      			<h1>Really delete event?</h1>
-				<p>Are you sure you really want to delete the event taking place on <?php echo strftime($rowSettings[time_format_normal],strtotime($row['sundayDate'])); ?>? There is no way of undoing this action.</p>
+				<p>Are you sure you really want to delete the event taking place on <?php echo strftime($rowSettings['time_format_normal'],strtotime($row['sundayDate'])); ?>? There is no way of undoing this action.</p>
 				<p><a class="button" href="index.php?eventremove=true&wholeEventID=<?php echo $eventID; ?>">Sure, delete the event</a></p>
      			<a class="close-reveal-modal">&#215;</a>
 			</div>
@@ -312,18 +312,19 @@ if(isLoggedIn()) {
 			<div class="elementContent">
 			<table>
 			<?php
-				$sqlPeople = "SELECT *,
-				(SELECT CONCAT(`firstname`, ' ', `lastname`) FROM cr_users WHERE `cr_users`.id = `cr_skills`.`userID` ORDER BY `cr_users`.firstname) 
-				AS `name`, 
-				(SELECT `description` FROM cr_groups WHERE `cr_skills`.`groupID` = `cr_groups`.`groupID`) AS `category`, 
-				(SELECT notified FROM cr_eventPeople WHERE cr_skills.skillID = cr_eventPeople.skillID AND eventID = '$eventID') AS `notified`, 
-				(SELECT `formatgroup` FROM cr_groups WHERE `cr_skills`.`groupID` = `cr_groups`.`groupID`) AS `formatgroup`, 
+				$sqlPeople = "SELECT skillID,
+				(SELECT CONCAT(`firstname`, ' ', `lastname`) FROM cr_users WHERE `cr_users`.id = `cr_skills`.`userID` ORDER BY `cr_users`.firstname)
+				AS `name`,
+				(SELECT `description` FROM cr_groups WHERE `cr_skills`.`groupID` = `cr_groups`.`groupID`) AS `category`,
+				(SELECT notified FROM cr_eventPeople WHERE cr_skills.skillID = cr_eventPeople.skillID AND eventID = '$eventID') AS `notified`,
+				(SELECT `formatgroup` FROM cr_groups WHERE `cr_skills`.`groupID` = `cr_groups`.`groupID`) AS `formatgroup`,
 				GROUP_CONCAT(skill) AS joinedskill
-				FROM cr_skills 
-				WHERE skillID IN (SELECT skillID FROM cr_eventPeople WHERE eventID = '$eventID' AND deleted = 0) 
-				GROUP BY userID, groupID ORDER BY groupID, name";
-				
-				$resultPeople = mysql_query($sqlPeople) or die(mysql_error());
+				FROM cr_skills
+				WHERE skillID IN (SELECT skillID FROM cr_eventPeople WHERE eventID = '$eventID' AND deleted = 0)
+				GROUP BY  skillID,userID, groupID, name, category,notified, formatgroup ORDER BY groupID, name";
+
+
+				$resultPeople = mysql_query($sqlPeople) or die("SQL Error: " . mysql_error() . " " . $sqlPeople);
 				echo "<p>";
 				$i = 1;
 				$categoryheader = "";

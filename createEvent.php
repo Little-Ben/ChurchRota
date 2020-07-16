@@ -99,13 +99,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	
 	if($action == "edit") {
-		$sql = "UPDATE cr_events SET date = '$date', rehearsalDate = '$rehearsaldateactual', location = '$location', 
-		rehearsal = '$norehearsal', type = '$type', comment = '$comment' WHERE id = '$id'";
-		mysql_query($sql) or die(mysql_error());
+		$sql = "UPDATE cr_events SET date = ".dbToDate($date).", rehearsalDate = ".dbToDate($rehearsaldateactual).", location = '$location', 
+		rehearsal = ".dbToInt($norehearsal).", type = '$type', comment = '$comment' WHERE id = '$id'";
+		mysql_query($sql) or die("Error creating the Event: " . mysql_error() . " " . $sql);
 	} else {
 		$sql = "INSERT INTO cr_events (date, rehearsalDate, type, location, rehearsal, comment)
-		VALUES ('$date', '$rehearsaldateactual', '$type', '$location', '$norehearsal', '$comment')";
-		mysql_query($sql) or die(mysql_error());
+		VALUES (".dbToDate($date).", ".dbToDate($rehearsaldateactual).", '$type', '$location', ".dbToInt($norehearsal).", '$comment')";
+		mysql_query($sql) or die("Error creating the Event: " . mysql_error() . " " . $sql);
 		$id = mysql_insert_id();
 		$eventID = mysql_insert_id();
 	}

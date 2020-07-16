@@ -293,14 +293,14 @@ function notifyEveryone($eventID, $skillID = -1, $userID = -1) {
 	$sqlSettings = "SELECT * FROM cr_settings";
 	$resultSettings = mysql_query($sqlSettings) or die(mysql_error());
 	$rowSettings = mysql_fetch_array($resultSettings, MYSQL_ASSOC);
-	$lang_locale = $rowSettings[lang_locale];
-	$time_format_normal = $rowSettings[time_format_normal];
+	$lang_locale = $rowSettings['lang_locale'];
+	$time_format_normal = $rowSettings['time_format_normal'];
 	//$userTZ="Europe/Berlin";
-	$userTZ=$rowSettings[time_zone];
-	$google_group_calendar=$rowSettings[google_group_calendar];
-	$overviewemail = $rowSettings[overviewemail];
-	$siteadmin = $rowSettings[adminemailaddress];
-	$lang_locale = $rowSettings[lang_locale];
+	$userTZ=$rowSettings['time_zone'];
+	$google_group_calendar=$rowSettings['google_group_calendar'];
+	$overviewemail = $rowSettings['overviewemail'];
+	$siteadmin = $rowSettings['adminemailaddress'];
+	$lang_locale = $rowSettings['lang_locale'];
 	setlocale(LC_TIME, $lang_locale); //de_DE
 	
 	
@@ -457,13 +457,13 @@ function notifyOverview($subject,$message) {
 		$sqlSettings = "SELECT * FROM cr_settings";
 		$resultSettings = mysql_query($sqlSettings) or die(mysql_error());
 		$rowSettings = mysql_fetch_array($resultSettings, MYSQL_ASSOC);
-		$lang_locale = $rowSettings[lang_locale];
-		$time_format_normal = $rowSettings[time_format_normal];
+		$lang_locale = $rowSettings['lang_locale'];
+		$time_format_normal = $rowSettings['time_format_normal'];
 		//$userTZ="Europe/Berlin";
-		$userTZ=$rowSettings[time_zone];
-		$google_group_calendar=$rowSettings[google_group_calendar];
-		$overviewemail = $rowSettings[overviewemail];
-		$siteadmin = $rowSettings[adminemailaddress];
+		$userTZ=$rowSettings['time_zone'];
+		$google_group_calendar=$rowSettings['google_group_calendar'];
+		$overviewemail = $rowSettings['overviewemail'];
+		$siteadmin = $rowSettings['adminemailaddress'];
 		
 		if ($subject=="")
 		{
@@ -552,8 +552,8 @@ function notifyOverview($subject,$message) {
 		
 		$i=0;
 		while($rowRcpt = mysql_fetch_array($resultRcpt, MYSQL_ASSOC)) {
-			$bcc = $bcc . "," . $rowRcpt[email];
-			$bcc_names = $bcc_names . "\r\n" . $rowRcpt[firstName] . " " . $rowRcpt[lastName];
+			$bcc = $bcc . "," . $rowRcpt['email'];
+			$bcc_names = $bcc_names . "\r\n" . $rowRcpt['firstName'] . " " . $rowRcpt['lastName'];
 			$i=$i+1;
 		}
 		

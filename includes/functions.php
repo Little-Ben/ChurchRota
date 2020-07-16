@@ -39,6 +39,26 @@ if((isset($holdQuery)) || ($holdQuery == true)) {
 	}
 }
 
+function dbToDate($date) {
+
+	if ($date != '') {
+		$retVal = "str_to_date('$date','%Y-%m-%d %H:%i:%s')";
+	}else{
+		$retVal = "NULL";
+	}
+	return $retVal;
+}
+
+function dbToInt($val,$defaultVal='0') {
+
+	if ($val != '') {
+		$retVal = "$val";
+	}else{
+		$retVal = "$defaultVal";
+	}
+	return $retVal;
+}
+
 function isAdmin() {
 	if($_SESSION['isAdmin'] == "1") {
 		return true;
